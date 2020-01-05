@@ -1,0 +1,325 @@
+<div class="page-header">
+  <div class="row">
+    <div class="col-sm-3">
+      <h3 class="mb-2 mb-sm-0">الأحصائيات</h3>
+    </div>
+    <div class="col-sm-9 text-right">
+      <div class="d-flex justify-content-sm-end">
+        <!-- Filter By Dashboard Type -->
+        <div uib-dropdown auto-close="outsideClick">
+          <a uib-dropdown-toggle class="btn btn-link d-flex align-items-center"><i class="ic-chart ml-2"></i>{{ (filter_data.dashboard_type) ? (('dashboard_types' | filter_lists) | filter:filter_data.dashboard_type)[0].label : 'احصائيات عامة'  }}</a>
+          <ul class="dropdown-menu dropdown-menu-right text-right md-size" uib-dropdown-menu>
+            <li class="title-label">
+              <b>الأحصائيات حسب</b>
+            </li>
+            <li ng-repeat="item in ('dashboard_types' | filter_lists)"><a ng-click="filterResults('dashboard_type',item.key)">{{ item.label }}</a></li>
+          </ul>
+        </div>
+        <!-- Filter By Nationality -->
+        <div uib-dropdown auto-close="outsideClick" ng-show="['training','practical-training','contracts','workshifts'].indexOf(filter_data.dashboard_type) == -1">
+          <a uib-dropdown-toggle class="btn btn-link d-flex align-items-center"><i class="ic-staff ml-2"></i>{{ (filter_data.nationality) ? (('nationalities' | filter_lists) | filter:filter_data.nationality)[0].label : 'كل الجنسيات'  }}</a>
+          <ul class="dropdown-menu dropdown-menu-right text-right md-size" uib-dropdown-menu>
+            <li class="title-label">
+              <b>حسب الجنسية</b>
+            </li>
+            <li ng-repeat="item in ('nationalities' | filter_lists)"><a ng-click="filterResults('nationality',item.key)">{{ item.label }}</a></li>
+          </ul>
+        </div>
+        <!-- Filter By Date -->
+        <div uib-dropdown auto-close="outsideClick" ng-show="['workshifts'].indexOf(filter_data.dashboard_type) > -1">
+          <a uib-dropdown-toggle class="btn btn-link d-flex align-items-center"><i class="ic-calendar ml-2"></i>{{ (filter_data.day) ? (('workshift_days' | filter_lists) | filter:{key: filter_data.day})[0].label : 'كل الأيام'  }}</a>
+          <ul class="dropdown-menu dropdown-menu-right text-right md-size" uib-dropdown-menu>
+            <li class="title-label">
+              <b>حسب اليوم</b>
+            </li>
+            <li ng-repeat="item in ('workshift_days' | filter_lists)"><a ng-click="filterResults('day',item.key)">{{ item.label }}</a></li>
+          </ul>
+        </div>
+        <!-- Filter By Station -->
+        <div uib-dropdown auto-close="outsideClick" ng-show="['workshifts'].indexOf(filter_data.dashboard_type) > -1">
+          <a uib-dropdown-toggle class="btn btn-link d-flex align-items-center"><i class="ic-map-marker ml-2"></i>{{ (filter_data.station) ? filter_data.station : 'كل المحطات'  }}</a>
+          <ul class="dropdown-menu text-right md-size" uib-dropdown-menu>
+            <li class="title-label">
+              <b>حسب المحطة</b>
+            </li>
+            <li><a ng-click="filterResults('station',null)">كل المحطات</a></li>
+            <li ng-repeat="item in ('stations' | filter_lists)"><a ng-click="filterResults('station',item)">{{ item }}</a></li>
+          </ul>
+        </div>
+        <!-- Filter By Station Shifts -->
+        <div uib-dropdown auto-close="outsideClick" ng-show="['workshifts'].indexOf(filter_data.dashboard_type) > -1 && filter_data.station && station_shifts_list.length">
+          <a uib-dropdown-toggle class="btn btn-link d-flex align-items-center"><i class="ic-calendar ml-2"></i>{{ (filter_data.station_shift) ? filter_data.station_shift : 'كل الورديات'  }}</a>
+          <ul class="dropdown-menu text-right md-size" uib-dropdown-menu>
+            <li class="title-label">
+              <b>حسب الوردية</b>
+            </li>
+            <li><a ng-click="filterResults('station_shift',null)">كل الورديات</a></li>
+            <li ng-repeat="item in (station_shifts_list | filter: {station: filter_data.station})"><a ng-click="filterResults('station_shift',item.shift)">{{ item.shift }}</a></li>
+          </ul>
+        </div>
+        <!-- Filter By Date -->
+        <div uib-dropdown auto-close="outsideClick" ng-show="['training','practical-training','contracts','workshifts'].indexOf(filter_data.dashboard_type) == -1">
+          <a uib-dropdown-toggle class="btn btn-link d-flex align-items-center"><i class="ic-calendar ml-2"></i>{{ (filter_data['date']) ? (('dates' | filter_lists) | filter:filter_data.date)[0].label : (c_start_date | dateF: 'dd/MM/yyyy')+((c_start_date && c_end_date) ? ' - ' : '')+(c_end_date | dateF: 'dd/MM/yyyy')  }}</a>
+          <ul class="dropdown-menu md-size" uib-dropdown-menu>
+            <li class="title-label">
+              <b>حسب التاريخ</b>
+            </li>
+            <li ng-repeat="item in ('dates' | filter_lists)"><a ng-click="filterResults('date',item.key)">{{ item.label }}</a></li>
+            <li class="divider or" text="أو"></li>
+            <li class="px-4 pb-3">
+              <div class="text-muted mt-2 mb-1">تاريخ الإبتداء</div>
+              <input type="text" class="form-control" date-input ng-model-options="{timezone: 'utc'}" ng-class="{'focus': open_start_date}" datepicker-append-to-body="true" close-on-date-selection="false" uib-datepicker-popup="dd/MM/y" ng-focus="open_start_date = true" ng-model="c_start_date" is-open="open_start_date" />
+              <div class="text-muted mb-1 mt-2">تاريخ الإنتهاء</div>
+              <input type="text" class="form-control" date-input ng-model-options="{timezone: 'utc'}" ng-class="{'focus': open_end_date}" datepicker-append-to-body="true" close-on-date-selection="false" uib-datepicker-popup="dd/MM/y" ng-focus="open_end_date = true" ng-model="c_end_date" is-open="open_end_date" />
+              <button class="btn btn-primary mt-3 btn-block" ng-click="filterResults('date','custom')">فلترة</button>
+            </li>
+          </ul>
+        </div>
+        <a class="btn btn-default btn-icon mr-auto mr-sm-2" ng-click="getData()"><i class="ic-refresh"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Charts -->
+<div ng-show="!isLoading">
+  <!-- WorkShift Statistics -->
+  <div ng-show="['workshifts'].indexOf(filter_data.dashboard_type) > -1">
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="white-box dashboard-widget">
+          <h4 class="title font-weight-bold mb-2">لمحة عامة <span class="help-info" uib-tooltip="العدد الكلي للحضور مع عدد تسجيلات الدخول وتسجيلات الخروج">!</span></h4>
+          <div class="text-center">
+            <h1 class="num ng-binding">
+              {{ statistics.total_attendance | number: 0 }}
+            </h1>
+            <h3 class="font-weight-bold mt-1 pb-2">الحضور الكلي</h3>
+            <hr class="my-5">
+            <div class="row" style="height: 95px;">
+              <div class="col-6">
+                <h1 class="mb-1 mt-2 font-weight-bold">{{ statistics.total_correct_attendance | number: 0 }}</h1>
+                <h4 class="font-weight-bold">الصحيح</h4>
+              </div>
+              <div class="col-6">
+                <h1 class="mb-1 mt-2 font-weight-bold">{{ statistics.total_incorrect_attendance | number: 0 }}</h1>
+                <h4 class="font-weight-bold">المخالف</h4>
+              </div>
+              <!-- <div class="col-6">
+                <h1 class="mb-1 mt-2 font-weight-bold">{{ statistics.total_checkin | number: 0 }}</h1>
+                <h4 class="font-weight-bold">الدخول</h4>
+              </div>
+              <div class="col-6">
+                <h1 class="mb-1 mt-2 font-weight-bold">{{ statistics.total_checkout | number: 0 }}</h1>
+                <h4 class="font-weight-bold">الخروج</h4>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="white-box dashboard-widget">
+          <h4 class="title font-weight-bold mb-2">نسبة الحضور الصحيح والمخالف <span class="help-info" uib-tooltip="نسبة الحضور الصحيح الى المحطة الصحيحة المسندة إليه والحضور الخاطئ بمحطة أخرى">!</span></h4>
+          <div echarts init-loader="true" style="width: 100%; height: 237px;" class="mt-4" options="charts.attendance_correction_chart_1.options" events="charts.attendance_correction_chart_1.events"></div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="white-box dashboard-widget">
+          <h4 class="title font-weight-bold mb-2">نسبة الحضور والغياب <span class="help-info" uib-tooltip="نسبة الحضور الكلي والغياب الكلي">!</span></h4>
+          <div echarts init-loader="true" style="width: 100%; height: 237px;" class="mt-4" options="charts.attendance_absence_chart_2.options" events="charts.attendance_absence_chart_2.events"></div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div ng-hide="filter_data.station" class="col-sm-6">
+        <div class="white-box dashboard-widget">
+          <h4 class="title font-weight-bold mb-2">حسب المحطات <span class="help-info" uib-tooltip="الإحصائيات حسب المحطات">!</span></h4>
+          <div echarts init-loader="true" style="width: 100%; height: 537px;" class="mt-4" options="charts.stations_chart_3.options" events="charts.stations_chart_3.events"></div>
+        </div>
+      </div>
+      <div ng-class="(!filter_data.station) ? 'col-sm-6' : 'col-sm-12'">
+        <div class="white-box dashboard-widget">
+          <h4 class="title font-weight-bold mb-2">حسب المسميات الوظيفية <span class="help-info" uib-tooltip="الإحصائيات حسب المسميات الوظيفية">!</span></h4>
+          <div echarts init-loader="true" style="width: 100%; height: 537px;" class="mt-4" options="charts.jobs_chart_2.options" events="charts.jobs_chart_2.events"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Contracts Statistics -->
+  <div ng-show="['contracts'].indexOf(filter_data.dashboard_type) > -1">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="white-box dashboard-widget">
+          <h4 class="title font-weight-bold mb-2">لمحة عامة <span class="help-info" uib-tooltip="العدد الكلي للمستهدفين للعقود مع عدد الموقعين والغير موقعين عقودهم">!</span></h4>
+          <div class="text-center">
+            <h1 class="num ng-binding">
+              {{ statistics.count_all | number: 0 }}
+            </h1>
+            <h3 class="font-weight-bold mt-1 pb-2">المستهدفين</h3>
+            <hr class="my-5">
+            <div class="row" style="height: 95px;">
+              <div class="col-6">
+                <h1 class="mb-1 mt-2 font-weight-bold">{{ statistics.count_signed | number: 0 }}</h1>
+                <h4 class="font-weight-bold">وقعوا عقودهم</h4>
+              </div>
+              <div class="col-6">
+                <h1 class="mb-1 mt-2 font-weight-bold">{{ statistics.count_not_signed | number: 0 }}</h1>
+                <h4 class="font-weight-bold">لم يوقعوا عقودهم</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="white-box dashboard-widget">
+          <h4 class="title font-weight-bold mb-2" ng-show="filter_data.dashboard_type == 'contracts'">نسبة التوقيع <span class="help-info" uib-tooltip="نسبة الموقعين عقودهم من الغير موقعين">!</span></h4>
+          <div echarts init-loader="true" style="width: 100%; height: 237px;" class="mt-4" options="charts.contracts_chart_1.options" events="charts.contracts_chart_1.events"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Training Statistics -->
+  <div ng-show="['practical-training','training'].indexOf(filter_data.dashboard_type) > -1">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="white-box dashboard-widget">
+          <h4 class="title font-weight-bold mb-2">لمحة عامة <span class="help-info" uib-tooltip="العدد الكلي للمستهدفين للتدريب النظري مع عدد الحضور والمرشحين للعمل">!</span></h4>
+          <div class="text-center">
+            <h1 class="num ng-binding">
+              {{ statistics.count_all | number: 0 }}
+            </h1>
+            <h3 class="font-weight-bold mt-1 pb-2">المستهدفين حتى اليوم</h3>
+            <hr class="my-5">
+            <div class="row" style="height: 95px;">
+              <div class="col-6">
+                <h1 class="mb-1 mt-2 font-weight-bold">{{ statistics.count_attendance | number: 0 }}</h1>
+                <h4 class="font-weight-bold">الحضور الفعلي</h4>
+              </div>
+              <div class="col-6" ng-show="filter_data.dashboard_type == 'training'">
+                <h1 class="mb-1 mt-2 font-weight-bold">{{ statistics.count_practical | number: 0 }}</h1>
+                <h4 class="font-weight-bold">المرشحين للعمل</h4>
+              </div>
+              <div class="col-6" ng-show="filter_data.dashboard_type == 'practical-training'">
+                <h1 class="mb-1 mt-2 font-weight-bold">{{ statistics.count_absence | number: 0 }}</h1>
+                <h4 class="font-weight-bold">الغياب</h4>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="white-box dashboard-widget">
+          <h4 class="title font-weight-bold mb-2" ng-show="filter_data.dashboard_type == 'training'">نسبة الإنجاز <span class="help-info" uib-tooltip="نسبة المجتازين والغير مجتازين التدريب النظري">!</span></h4>
+          <h4 class="title font-weight-bold mb-2" ng-show="filter_data.dashboard_type == 'practical-training'">نسبة الحضور والغياب <span class="help-info" uib-tooltip="نسبة الحضور والغياب من العدد الكلي للمستهدفين">!</span></h4>
+          <div echarts init-loader="true" style="width: 100%; height: 237px;" class="mt-4" options="charts.training_chart_1.options" events="charts.new_old_staff.events"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-show="['all','interviews'].indexOf(filter_data.dashboard_type) > -1">
+    <div class="row">
+      <div class="col-lg-4 col-sm-6">
+        <div class="white-box dashboard-widget">
+          <h4 class="title font-weight-bold mb-2">لمحة عامة <span class="help-info" uib-tooltip="العدد الكلي للمتقدمين للتوظيف في قطار المشاعر">!</span></h4>
+          <div class="text-center">
+            <h1 class="num ng-binding">
+              {{ statistics.count_all | number: 0 }}
+            </h1>
+            <h3 class="font-weight-bold mt-1 pb-2">متقدم</h3>
+            <hr class="my-5">
+            <div class="row" style="height: 95px;">
+              <div class="col-6">
+                <h1 class="mb-1 mt-2 font-weight-bold">%{{ getNationalityRate('saudi') }}</h1>
+                <h4 class="font-weight-bold">سعودي</h4>
+              </div>
+              <div class="col-6">
+                <h1 class="mb-1 mt-2 font-weight-bold">%{{ getNationalityRate('foreign') }}</h1>
+                <h4 class="font-weight-bold">أجنبي</h4>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-lg-4 col-sm-6">
+        <div class="white-box dashboard-widget">
+          <h4 class="title font-weight-bold mb-2">القدامى والجدد <span class="help-info" uib-tooltip="مجموع ونسبة القدامى الذين عملوا في القطار مسبقاً والجدد بالنسبة للعدد الكلي للمتقدمين">!</span></h4>
+          <div echarts init-loader="true" style="width: 100%; height: 237px;" class="mt-4" options="charts.new_old_staff.options" events="charts.new_old_staff.events"></div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-sm-6">
+        <div class="white-box dashboard-widget">
+          <h4 class="title font-weight-bold mb-2">السعوديين والأجانب <span class="help-info" uib-tooltip="مجموع ونسبة السعوديين والأجانب بالنسبة للعدد الكلي للمتقدمين">!</span></h4>
+          <div echarts init-loader="true" style="width: 100%; height: 237px;" class="mt-4" options="charts.saudi_foreign.options" events="charts.saudi_foreign.events"></div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6">
+        <div class="white-box dashboard-widget">
+          <h4 class="title font-weight-bold mb-2">المقابلات <span class="help-info" uib-tooltip="مجموعة المقابلات بتقسيمها على الحضور والمقبولين والمرفوضين">!</span></h4>
+          <div echarts init-loader="true" style="width: 100%; height: 237px;" class="mt-4" options="charts.interviews.options" events="charts.interviews.events"></div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="white-box dashboard-widget">
+          <h4 class="title font-weight-bold mb-2">المدينة <span class="help-info" uib-tooltip="مجموع ونسبة المتقدمين حسب المدينة">!</span></h4>
+          <div echarts init-loader="true" style="width: 100%; height: 237px;" class="mt-4" options="charts.cities.options" events="charts.cities.events"></div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="white-box dashboard-widget">
+          <h4 class="title font-weight-bold mb-2">معدل الأعمار <span class="help-info" uib-tooltip="مجموع ونسبة المتقدمين حسب أعمارهم">!</span></h4>
+          <div echarts init-loader="true" style="width: 100%; height: 237px;" class="mt-4" options="charts.ages.options" events="charts.ages.events"></div>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6">
+        <div class="white-box dashboard-widget">
+          <h4 class="title font-weight-bold mb-2">اللغات <span class="help-info" uib-tooltip="مجموع ونسبة المتقدمين حسب اللغات">!</span></h4>
+          <div echarts init-loader="true" style="width: 100%; height: 237px;" class="mt-4" options="charts.languages.options" events="charts.languages.events"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="row" ng-show="['interviews','workshifts'].indexOf(filter_data.dashboard_type) == -1">
+    <div class="col-sm-12">
+      <div class="white-box dashboard-widget">
+        <h4 class="title font-weight-bold mb-2" ng-show="filter_data.dashboard_type == 'all'">هدف التوظيف والمتحقق منه <span class="help-info" uib-tooltip="الهدف المتوقع توظيفه على كل مسمى وظيفي والمتحقق منه">!</span></h4>
+        <h4 class="title font-weight-bold mb-2" ng-show="filter_data.dashboard_type == 'training'">هدف التدريب التوظيفي والمتحقق منه <span class="help-info" uib-tooltip="الهدف المتوقع توظيفه على كل مسمى وظيفي والمتحقق منه">!</span></h4>
+        <h4 class="title font-weight-bold mb-2" ng-show="filter_data.dashboard_type == 'contracts'">هدف توقيع العقود والمتحقق منه حسب الوظائف <span class="help-info" uib-tooltip="هدف توقيع المرشحين على حسب وظائفهم والمتحقق منه فعلياً (الموقعين عقودهم)">!</span></h4>
+        <div class="row justify-content-center">
+          <div class="col-lg-12">
+            <div class="pt-3">
+              <div class="row text-left">
+                <div class="col-md-8"></div>
+                <div class="col-md-3 text-left text-md-right">
+                  <h3>Station</h3>
+                </div>
+              </div>
+              <div echarts init-loader="true" style="width: 100%; height: 260px;" class="mt-4" options="charts.goal_vs_actual_recruitment_station.options" events="charts.goal_vs_actual_recruitment_station.events"></div>
+            </div>
+            <div class="pt-3">
+              <div class="row text-left">
+                <div class="col-md-8"></div>
+                <div class="col-md-3 text-left text-md-right">
+                  <h3>Waiting Area</h3>
+                </div>
+              </div>
+              <div echarts init-loader="true" style="width: 100%; height: 140px;" class="mt-4" options="charts.goal_vs_actual_recruitment_waiting_area.options" events="charts.goal_vs_actual_recruitment_waiting_area.events"></div>
+            </div>
+            <div class="pt-3">
+              <div class="row text-left">
+                <div class="col-md-8"></div>
+                <div class="col-md-3 text-left text-md-right">
+                  <h3>Access Control</h3>
+                </div>
+              </div>
+              <div echarts init-loader="true" style="width: 100%; height: 80px;" class="mt-4" options="charts.goal_vs_actual_recruitment_access_control.options" events="charts.goal_vs_actual_recruitment_access_control.events"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
