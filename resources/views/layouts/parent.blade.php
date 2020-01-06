@@ -35,9 +35,9 @@
   <flash-message duration="6000" show-close="true" on-dismiss="myCallback(flash)"></flash-message>
   @yield('layout_content')
   @if(domain() != 'localhost')
-  <script src="{{ secure_asset('assets/js/site/vendor.js?v='.config('app.asset_ver')) }}" type="text/javascript"></script>
-  <script src="{{ secure_asset('assets/js/site/app.js?v='.config('app.asset_ver')) }}" type="text/javascript"></script>
-  <script src="{{ secure_asset('assets/js/site/auth.js?v='.config('app.asset_ver')) }}" type="text/javascript"></script>
+  <script src="{{ asset('assets/js/site/vendor.js?v='.config('app.asset_ver')) }}" type="text/javascript"></script>
+  <script src="{{ asset('assets/js/site/app.js?v='.config('app.asset_ver')) }}" type="text/javascript"></script>
+  <script src="{{ asset('assets/js/site/auth.js?v='.config('app.asset_ver')) }}" type="text/javascript"></script>
   @else
   <script src="{{ asset('assets/js/site/vendor.js?v='.config('app.asset_ver')) }}" type="text/javascript"></script>
   <script src="{{ asset('assets/js/site/app.js?v='.config('app.asset_ver')) }}" type="text/javascript"></script>
