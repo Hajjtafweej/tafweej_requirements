@@ -15,11 +15,11 @@ class HttpsMiddleware
   */
   public function handle($request, Closure $next)
   {
-    if (!$request->secure() && domain() != 'localhost') {
-
-      return redirect()->secure(str_replace('crowd/','',$request->getRequestUri()));
-
-    }
+    // if (!$request->secure() && domain() != 'localhost') {
+    //
+    //   return redirect()->secure(str_replace('crowd/','',$request->getRequestUri()));
+    //
+    // }
     return $next($request);
   }
 }
