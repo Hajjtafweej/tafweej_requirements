@@ -9,7 +9,8 @@ class SurveyQuestion extends Model
   protected $guarded = ['id'];
   protected $casts = [
     'is_has_notes' => 'integer',
-    'survey_section_id' => 'integer'
+    'survey_section_id' => 'integer',
+    'main_section_id' => 'integer'
   ];
   /**
   * Survey

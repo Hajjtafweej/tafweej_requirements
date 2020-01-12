@@ -2,9 +2,8 @@
 @section('layout_content')
 <div class="page-container auth-page">
   <div class="container">
-    <div class="auth-title">
-      بوابة مكاتب شؤون الحجاج
-    </div>
+    <div class="auth-title">بوابة التنسيق والتواصل للمنظومة الشاملة للتفويج</div>
+    <div class="auth-subtitle">مكاتب شؤون الحجاج</div>
     @yield('content')
   </div>
 </div>

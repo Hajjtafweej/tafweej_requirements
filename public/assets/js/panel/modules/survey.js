@@ -56,19 +56,34 @@ App.directive('surveyList', function(Helpers,API,$uibModal,$filter) {
                 },
                 section: {
                   checkIsDone: function(section) {
-
+                    return false;
+                  },
+                  mainSectionInvalid: {},
+                  checkValidation: function() {
+                    var final_result = true;
+                    angular.forEach($scope.answer_survey_modal.required_questions,function(question){
+                      if (!$scope.answer_survey_modal.surveySectionData[question.id].value) {
+                        final_result = false;
+                      }
+                    });
+                    return final_result;
+                  },
+                  checkIsValid: function(section) {
+                    var final_result = true;
+                    angular.forEach($filter('filter')($scope.answer_survey_modal.required_questions,{main_section_id: section.id},true),function(question){
+                      if (!$scope.answer_survey_modal.surveySectionData[question.id].value) {
+                        final_result = false;
+                      }
+                    });
+                    $scope.answer_survey_modal.section.mainSectionInvalid[section.id] = (final_result === false) ? true : false;
+                    return final_result;
                   },
                   setCurrentMainSection: function($index,Form,formValidity) {
                     if ($scope.answer_survey_modal.isMainSectionLoading) {
                       return false;
                     }
                     if (Form && Form.$dirty) {
-                      if (!Helpers.isValid(Form.$valid)) {
-                        Flash.create('danger','يرجى منك التحقق من المدخلات المطلوبة');
-                        return false;
-                      }else {
-                        $scope.answer_survey_modal.onSave(Form,true);
-                      }
+                      $scope.answer_survey_modal.onSave(Form,true);
                     }
 
 
@@ -77,7 +92,6 @@ App.directive('surveyList', function(Helpers,API,$uibModal,$filter) {
                     API.GET('survey/main-section/'+$scope.answer_survey_modal.current_main_section.id).then(function(d){
                       $scope.answer_survey_modal.current_main_section.data = d.data;
                       $timeout(function(){
-
                         $scope.answer_survey_modal.isMainSectionLoading = false;
                       },200);
 
@@ -91,7 +105,7 @@ App.directive('surveyList', function(Helpers,API,$uibModal,$filter) {
                   prepareSectionData: function(first_section,section) {
                     angular.forEach(section.details.questions,function(question,question_i){
                       first_section.all_questions.push(question);
-                      // If there is edit on this question we should prevent reset the field
+                      // If there is editing on this question we should to prevent field reset
                       if (!$scope.answer_survey_modal.surveySectionData[question.id]) {
                         if (question.last_answer_value) {
                           // Prepare values of fields
@@ -180,7 +194,8 @@ App.directive('surveyList', function(Helpers,API,$uibModal,$filter) {
                   $scope.answer_survey_modal.isLoading = true;
                   API.GET('survey/show/'+survey.id).then(function(d){
                     $scope.answer_survey_modal.isLoading = false;
-                    $scope.answer_survey_modal.data = d.data;
+                    $scope.answer_survey_modal.data = d.data.survey;
+                    $scope.answer_survey_modal.required_questions = d.data.required_questions;
                     $scope.answer_survey_modal.section.setCurrentMainSection(0);
                   });
                 },
@@ -201,8 +216,11 @@ App.directive('surveyList', function(Helpers,API,$uibModal,$filter) {
                   return prepareAnswers;
                 },
                 onSave: function(Form,isHideMessage) {
-                  if (!Helpers.isValid(Form.$valid)) {
-                    Flash.create('danger','يرجى منك التحقق من المدخلات المطلوبة');
+                  $scope.answer_survey_modal.isSendClicked = true;
+                  if (!Helpers.isValid(Form.$valid) || !$scope.answer_survey_modal.section.checkValidation()) {
+                    if (!isHideMessage) {
+                      Flash.create('danger','يرجى منك التحقق من المدخلات المطلوبة');
+                    }
                     return false;
                   }
                   $scope.answer_survey_modal.isSending = true;
@@ -249,20 +267,22 @@ App.directive('surveyList', function(Helpers,API,$uibModal,$filter) {
   };
 });
 /* Survey Section */
-App.directive('surveySection', function(Helpers,API,$uibModal) {
+App.directive('surveySection', function(Helpers,API,$uibModal,$filter) {
   return {
     templateUrl: Helpers.getTemp('survey/survey-section-directive'),
     scope: {
+      mainSection: '=',
       isFirstParentSection: '=',
+      isMainSectionInvalid: '=',
       section: '=',
       parentNo: '=',
-      no: '=',
       surveySectionData: '='
     },
     link: function($scope, element, $a) {
+      $scope.no = $a.no;
       $scope.getSectionNo = function(){
         $scope.parent_no_text = (!$scope.isFirstParentSection) ? ($scope.parentNo+1)+'-' : '';
-        return $scope.parent_no_text+($scope.no+1);
+        return $scope.no;
       };
       $scope.collapseSection = function(section){
         if ($scope.isFirstParentSection) {
@@ -299,6 +319,7 @@ App.directive('surveySection', function(Helpers,API,$uibModal) {
         days: ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31'],
         hijri_days: ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30'],
         months: ['01','02','03','04','05','06','07','08','09','10','11','12'],
+        hajj_days: ['7','8','9','10','11','12','13','14'],
         establishments: $scope.prepareLists(window.lists.establishments),
         makkah_towns: $scope.prepareLists(window.lists.makkah_towns),
         madinah_towns: $scope.prepareLists(window.lists.madinah_towns),
@@ -307,12 +328,41 @@ App.directive('surveySection', function(Helpers,API,$uibModal) {
       };
 
 
-      $scope.getPercentageOptions = function(){
-        var percentage_list = [];
-        for (var i = 0; i <= 100; i++) {
-          percentage_list.push(i);
+      $scope.getPercentageOptions = function(section){
+        var percentage_list = [0];
+        var calculate_percentage = 100;
+        if (section.details.is_apply_percentage) {
+          angular.forEach(section.details.questions,function(question){
+            if ($scope.surveySectionData[question.id].value) {
+              calculate_percentage -=  $scope.surveySectionData[question.id].value;
+            }
+          })
+        }
+        calculate_percentage = (!calculate_percentage) ? 0 : calculate_percentage;
+        for (var i = 0; i <= calculate_percentage; i++) {
+          if ( i && (i % 5 === 0)) {
+            percentage_list.push(i);
+          }
         }
         return percentage_list;
+      };
+
+      /*
+      * Prepare Question Field
+      */
+      $scope.prepareSectionQuestions = function(questions){
+        var result = [];
+        angular.forEach(questions,function(question){
+          switch (question.type) {
+            case 'select_with_other':
+              if (angular.isArray(question.options) && !$filter('filter')(question.options,{id: 'other'}).length) {
+                question.options.push({id: 'other',title: 'أخرى'});
+              }
+            break;
+          }
+          result.push(question);
+        });
+        return result;
       };
     }
   };

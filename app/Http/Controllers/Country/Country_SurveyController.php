@@ -15,7 +15,7 @@ class Country_SurveyController extends Controller
 	/**
 	* Get list of Surveys
 	*
-	* @param integer $id meeting id
+	* @param integer $id survey id
 	* @param object $q
 	*
 	* @return array
@@ -25,7 +25,6 @@ class Country_SurveyController extends Controller
 		$Surveys = Survey::onlyActive()->select('id',DB::raw('title_ar as title'),'created_at')->with('LastAnswer')->calculateCompletion(user()->id);
 
 		/* Check if completed */
-		\Log::info($q->completion);
 		if ($q->completion && $q->completion != 'all') {
 			$count_mark = ($q->completion == 'completed') ? '==' : '!=';
 			$Surveys = $Surveys->having('questions_count', $count_mark, 'completed_questions_count');
@@ -39,7 +38,7 @@ class Country_SurveyController extends Controller
 	/**
 	* Show survey
 	*
-	* @param integer $id meeting id
+	* @param integer $id survey id
 	* @param object $q
 	*
 	* @return array
@@ -47,12 +46,46 @@ class Country_SurveyController extends Controller
 	public function getShow($id = null,Request $q)
 	{
 		$Survey = Survey::where('id',$id)->select('id',DB::raw('title_ar as title'),'created_at')->with(['MainSections' => function($Section){
-			return $Section->select('id','survey_id',DB::raw('title_ar as title'))->orderBy('ordering');
+			return $Section->select('id','survey_id','is_required','is_apply_percentage',DB::raw('title_ar as title'))->orderBy('ordering');
 		}])->calculateCompletion(user()->id)->first();
 		if (!$Survey) {
 			return response()->json(['message' => 'survey_not_found'],404);
 		}
-		return response()->json($Survey);
+
+		$this->requiredQuestions = collect([]);
+		$this->prepareRequiredQuestionsIds(0,0);
+
+		return response()->json(['survey' => $Survey,'required_questions' => $this->requiredQuestions]);
+	}
+
+	/**
+	* When we had to build a validation system for the main sections it is need to get all the required questions
+	* once the survey opens so to let us check unfilled questions when click on save survey button
+	*
+	* @param integer $survey_id
+	* @param integer $parent_id
+	* @param object $q
+	*
+	* @return array
+	*/
+	public function prepareRequiredQuestionsIds($main_section_id,$parent_id)
+	{
+		$getSubSections = SurveySection::where('parent_id',$parent_id)->select('id')->with(['Questions' => function($Question) use($main_section_id){
+
+			return $Question->select('id',DB::raw('('.(($main_section_id == 0) ? 'survey_section_id' : '"'.$main_section_id.'"').') as main_section_id'),'survey_section_id');
+		}]);
+		if ($parent_id == 0) {
+			$getSubSections = $getSubSections->where('is_required',1);
+		}
+		$getSubSections = $getSubSections->get();
+
+		if($getSubSections->count()){
+			foreach($getSubSections as $subSection){
+				$this->requiredQuestions = $this->requiredQuestions->merge($subSection->Questions);
+				$main_section_id = ($parent_id == 0) ? $subSection->id : $main_section_id;
+				$this->prepareRequiredQuestionsIds($main_section_id,$subSection->id);
+			}
+		}
 	}
 
 
@@ -76,7 +109,7 @@ class Country_SurveyController extends Controller
 	*/
 	public function prepareSubSections($parent_id)
 	{
-		$getSubSections = SurveySection::where('parent_id',$parent_id)->select('id','survey_id',DB::raw('title_ar as title'))->with(['Questions' => function($Question){
+		$getSubSections = SurveySection::where('parent_id',$parent_id)->select('id','survey_id','is_required','is_apply_percentage',DB::raw('title_ar as title'))->with(['Questions' => function($Question){
 			return $Question->select('id','survey_id','type','survey_section_id',DB::raw('title_ar as title'),'is_has_notes')->with(['Options' => function($Section){
 				return $Section->select('id','survey_question_id',DB::raw('title_ar as title'));
 			}])->with('LastAnswerValue');
@@ -164,7 +197,7 @@ class Country_SurveyController extends Controller
 						$SurveyAnswerValue->survey_question_id = $question_id;
 					}
 					// If question type is multiple choices field then validate it
-					if (in_array($Question->type,['select','checkbox','radio']) || ($Question->type == 'select_with_other' && !(isset($question_value['is_other']) && $question_value['is_other']))) {
+					if (in_array($Question->type,['select','checkbox','radio']) || ($Question->type == 'select_with_other' && !(isset($question_value['other_value']) || $question_value['value'] == 'other'))) {
 						$checkQuestionOption = SurveyQuestionOption::where([['survey_id',$id],['id',$question_value['value']]])->firstOrFail();
 						$SurveyAnswerValue->value = $checkQuestionOption->id;
 						$SurveyAnswerValue->survey_question_option_id = $checkQuestionOption->id;
@@ -180,6 +213,9 @@ class Country_SurveyController extends Controller
 							break;
 							case 'timerange':
 							$SurveyAnswerValue->value = $question_value['value'].'-'.$question_value['to_value'];
+							break;
+							case 'select_with_other':
+							$SurveyAnswerValue->value = ($question_value['value'] == 'other') ? $question_value['other_value'] : $question_value['value'];
 							break;
 							default:
 							$SurveyAnswerValue->value = $question_value['value'];

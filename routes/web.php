@@ -9,6 +9,10 @@ Route::get('forget-password', '\App\Http\Controllers\Auth\LoginController@forget
 Route::get('/',function(){
   return redirect('/login');
 })->middleware('guest')->name('home_page');
+Route::group(['prefix' => 'download','middleware' => 'auth'],function(){
+  Route::get('file/{folder}/{file}','SiteController@getDownloadFile');
+  Route::get('presentation/{id}','Country\Country_PresentationController@getDownload');
+});
 
 /* Web API */
 Route::group(['prefix' => 'api'],function(){
