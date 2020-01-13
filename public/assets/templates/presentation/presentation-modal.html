@@ -6,7 +6,7 @@
 	<!-- Main Section Steps -->
 	<div class="survey-steps-top">
 		<ul class="d-flex justify-content-between">
-			<li class="col-auto" ng-repeat="(main_section_index,main_section) in answer_survey_modal.data.main_sections" ng-click="answer_survey_modal.section.setCurrentMainSection(main_section_index,surveyForm)" ng-class="{'active': answer_survey_modal.current_main_section.id == main_section.id,'completed': answer_survey_modal.section.checkIsDone(main_section),'invalid': answer_survey_modal.isSendClicked && !answer_survey_modal.section.checkIsValid(main_section)}">
+			<li class="col-auto" ng-repeat="(main_section_index,main_section) in answer_survey_modal.data.main_sections"  ng-click="answer_survey_modal.section.setCurrentMainSection(main_section_index,surveyForm)" ng-class="{'active': answer_survey_modal.current_main_section.id == main_section.id,'completed': answer_survey_modal.section.checkIsDone(main_section)}">
 				<span class="point" ng-show="answer_survey_modal.section.checkIsDone(main_section) || answer_survey_modal.current_main_section.id == main_section.id" ng-click="steps.setCurrentStep(step.no)"><i class="ic-check"></i></span>
 				<span class="point" ng-hide="answer_survey_modal.section.checkIsDone(main_section) || answer_survey_modal.current_main_section.id == main_section.id"><i class="ic-check"></i></span>
 				<span ng-bind="main_section.title"></span>
@@ -33,7 +33,7 @@
 			<!-- Start The Sub Sections -->
 			<div ng-repeat="(sub_section_i,sub_section) in answer_survey_modal.current_main_section.data" ng-init="sub_section.is_collapsed = (sub_section_i > 0) ? true : false">
 				<!-- Start Sub Section Questions -->
-				<survey-section main-section="answer_survey_modal.current_main_section" is-main-section-invalid="answer_survey_modal.section.mainSectionInvalid[answer_survey_modal.current_main_section.id]" section="sub_section" is-first-parent-section="true" parent-no="0" no="{{ sub_section_i+1 }}" survey-section-data="answer_survey_modal.surveySectionData"></survey-section>
+				<survey-section section="sub_section" is-first-parent-section="true" parent-no="0" no="sub_section_i" survey-section-data="answer_survey_modal.surveySectionData"></survey-section>
 			</div>
 		</div>
 	</div>

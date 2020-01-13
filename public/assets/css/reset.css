@@ -1,10 +1,7 @@
 @font-face {
     font-family: 'Janna LT';
     src: url('../fonts/Janna/JannaLT-Regular.eot');
-    src: url('../fonts/Janna/JannaLT-Regular.eot?#iefix') format('embedded-opentype'),
-        url('../fonts/Janna/JannaLT-Regular.woff2') format('woff2'),
-        url('../fonts/Janna/JannaLT-Regular.woff') format('woff'),
-        url('../fonts/Janna/JannaLT-Regular.ttf') format('truetype');
+    src: url('../fonts/Janna/JannaLT-Regular.eot?#iefix') format('embedded-opentype'), url('../fonts/Janna/JannaLT-Regular.woff2') format('woff2'), url('../fonts/Janna/JannaLT-Regular.woff') format('woff'), url('../fonts/Janna/JannaLT-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -12,18 +9,13 @@
 @font-face {
     font-family: 'Janna LT';
     src: url('../fonts/Janna/JannaLT-Bold.eot');
-    src: url('../fonts/Janna/JannaLT-Bold.eot?#iefix') format('embedded-opentype'),
-        url('../fonts/Janna/JannaLT-Bold.woff2') format('woff2'),
-        url('../fonts/Janna/JannaLT-Bold.woff') format('woff'),
-        url('../fonts/Janna/JannaLT-Bold.ttf') format('truetype');
+    src: url('../fonts/Janna/JannaLT-Bold.eot?#iefix') format('embedded-opentype'), url('../fonts/Janna/JannaLT-Bold.woff2') format('woff2'), url('../fonts/Janna/JannaLT-Bold.woff') format('woff'), url('../fonts/Janna/JannaLT-Bold.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
 }
 
 :root {
-    --light-bg: #EEF2F6; --silvder-bg: #e1e4e9; --primary: #0DA2B1;--secondary: #12AEA3; --text-primary: #078794; --default-border: #CCCDD6; --light-border: #D7D8E0;--gray-base: #171a1d; --gray-dark: #212529; --gray: #343a40; --gray-light: #51555a; --gray-lighter: #74787d; --red: #ee0d0d;
-    --font-main:'Janna LT',Roboto,Arial;
-}
+    --light-bg: #EEF2F6; --silvder-bg: #e1e4e9; --primary: #0DA2B1;--secondary: #12AEA3; --text-primary: #078794; --default-border: #CCCDD6; --light-border: #D7D8E0;--gray-base: #171a1d; --gray-dark: #212529; --gray: #343a40; --gray-light: #51555a; --gray-lighter: #74787d; --red: #d80707; --font-main:'Janna LT',Roboto,Arial; }
 
 *,*::before,*::after {
     box-sizing: border-box
@@ -63,11 +55,12 @@ body {
     top: 0;
     color: var(--gray-dark);
     overflow-y: scroll;
+    overflow-x: hidden;
     text-align: right;
 }
 
 body.light-bg {
-  background: var(--light-bg);
+    background: var(--light-bg);
 }
 
 [tabindex="-1"]:focus {
@@ -327,9 +320,11 @@ h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
     line-height: 1.8;
     color: inherit;
 }
+
 h1,h2,h3,h4,h5,h6 {
     font-weight: bold;
 }
+
 b.h4 {
     font-weight: bold;
 }
@@ -359,11 +354,11 @@ h6,.h6 {
 }
 
 .cursor-help {
-  cursor: help;
+    cursor: help;
 }
 
 .cursor-pointer {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .lead {
@@ -401,9 +396,11 @@ hr {
     border: 0;
     border-top: 1px solid var(--light-border);
 }
+
 hr.light {
     border-color: var(--light-border);
 }
+
 small,.small {
     font-size: 90%;
     font-weight: 400;
@@ -2098,10 +2095,7 @@ span.form-control {
     opacity: 1
 }
 
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active  {
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
@@ -2419,12 +2413,12 @@ select.form-control-lg:not([size]):not([multiple]),.input-group-lg>select.form-c
 /* Form Lined */
 .form-group-lined .form-control {
     border: none;
-
     border-bottom: 2px solid var(--light-border);
     border-radius: 0px;
     padding-left: 0;
     transition: border .2s ease;
 }
+
 .form-group-lined.form-group-lg .form-control {
     padding-top: 15px;
     font-size: 15px;
@@ -2434,19 +2428,21 @@ select.form-control-lg:not([size]):not([multiple]),.input-group-lg>select.form-c
 .form-group-lined .form-control:focus {
     border-color: var(--primary);
 }
+
 .form-group-lined .input-icon > i {
     right: 2px;
 }
+
 .form-group-lined.form-group-lg .input-icon > i {
     font-size: 20px;
     margin-top: -12px;
 }
+
 .form-group-lined .input-icon input,.form-group-lined input-icon .dropdown-toggle {
     padding-right: 35px;
 }
 
 /* End Form Lined */
-
 .btn {
     display: inline-block;
     text-align: center;
@@ -2500,48 +2496,59 @@ a.btn.disabled,fieldset:disabled a.btn {
     text-align: center;
     border-radius: 50%;
 }
+
 .btn-icon.btn-loading {
     opacity: 1;
     overflow: initial;
 }
+
 .btn-icon.btn-lg {
     width: 50px;
     height: 50px;
     line-height: 60px;
 }
+
 .btn-icon.btn-sm {
     width: 30px;
     height: 30px;
     line-height: 30px;
 }
+
 .btn-icon .circle-loader {
     display: inline-block;
     border-width: 2px;
 }
+
 .btn-icon.btn-sm .circle-loader {
     width: 30px;
     height: 30px;
     margin-top: -1px;
 }
+
 .btn-icon.btn-lg .circle-loader {
     width: 50px;
     height: 50px;
     border-width: 3px;
 }
+
 .btn-icon.btn-loading i {
     display: none;
 }
+
 .btn-white {
-    background:#fff;
+    background: #fff;
     border-color: var(--default-border);
 }
+
 .btn-white:not(:disabled):not(.disabled):not([disabled]):hover {
     border-color: var(--primary);
 }
+
 .btn-white:not(:disabled):not(.disabled):not([disabled]):active {
     box-shadow: 0 0 0 1px var(--primary);
     border-color: var(--primary);
 }
+
 .btn-primary {
     color: #fff!important;
     background-color: #0DA2B1;
@@ -2565,9 +2572,11 @@ a.btn.disabled,fieldset:disabled a.btn {
     background-color: #048996;
     border-color: #048996
 }
+
 .btn-loading {
     position: relative;
 }
+
 .btn-loading:not(.btn-icon) .circle-loader {
     display: inline-block;
     width: 20px;
@@ -2579,15 +2588,19 @@ a.btn.disabled,fieldset:disabled a.btn {
     border-top-color: var(--primary);
     margin-top: -10px;
 }
+
 .btn:not(.btn-loading) .circle-loader {
     display: none;
 }
+
 .btn-loading:not(.btn-icon) {
     padding-left: 50px !important;
 }
+
 .btn-loading.btn-lg:not(.btn-icon) {
     padding-left: 60px !important;
 }
+
 .btn-secondary {
     color: #fff;
     background-color: #0f3052;
@@ -2759,7 +2772,6 @@ a.btn.disabled,fieldset:disabled a.btn {
 }
 
 .btn-outline-primary:hover {
-    /* background: #f1fafb; */
     color: var(--text-primary);
     border-color: var(--text-primary);
 }
@@ -2800,7 +2812,7 @@ a.btn.disabled,fieldset:disabled a.btn {
 }
 
 .btn-outline-light:active {
-    background:var(--light-bg);
+    background: var(--light-bg);
 }
 
 .btn-link {
@@ -2848,7 +2860,6 @@ a.btn.disabled,fieldset:disabled a.btn {
 .btn-block + .btn-block {
     margin-top: .5rem
 }
-
 
 input[type="submit"].btn-block,input[type="reset"].btn-block,input[type="button"].btn-block {
     width: 100%
@@ -2902,12 +2913,14 @@ tbody.collapse.show {
     border-bottom: 0;
     border-left: .3em solid transparent
 }
+
 .form-control.dropdown-toggle::after {
     position: absolute;
     left: 12px;
     top: 50%;
     margin-top: -2px;
 }
+
 .dropdown-toggle:empty::after {
     margin-left: 0
 }
@@ -3065,10 +3078,12 @@ tbody.collapse.show {
     color: #6c757d;
     white-space: nowrap
 }
+
 .dropdown-menu-right {
     right: 0;
     left: auto;
 }
+
 .btn-group,.btn-group-vertical {
     position: relative;
     display: -webkit-inline-box;
@@ -3199,6 +3214,19 @@ tbody.collapse.show {
     width: 100%
 }
 
+.input-group .btn-light {
+    border-color: var(--default-border);
+}
+
+.input-group .btn-light.btn-close {
+    width: 38px;
+    font-size: 12px;
+    padding: 2px 0 0 !important;
+    border-radius: 4px 0 0 4px !important;
+    text-align: center;
+}
+
+
 .input-group>.form-control,.input-group>.custom-select,.input-group>.custom-file {
     position: relative;
     -webkit-box-flex: 1;
@@ -3259,6 +3287,7 @@ tbody.collapse.show {
 .input-group-prepend .btn + .btn,.input-group-prepend .btn + .input-group-text,.input-group-prepend .input-group-text + .input-group-text,.input-group-prepend .input-group-text + .btn,.input-group-append .btn + .btn,.input-group-append .btn + .input-group-text,.input-group-append .input-group-text + .input-group-text,.input-group-append .input-group-text + .btn {
     margin-left: -1px
 }
+
 .input-group-center {
     margin-left: -1px;
     margin-right: -1px;
@@ -4072,7 +4101,6 @@ tbody.collapse.show {
     border-color: #fdfdfe;
 }
 
-
 .alert-light .alert-link {
     color: #686868
 }
@@ -4372,13 +4400,13 @@ tbody.collapse.show {
     border-color: #1b1e21
 }
 
-
 button.close {
     padding: 0;
     background-color: transparent;
     border: 0;
     -webkit-appearance: none
 }
+
 /* Modal */
 .close {
     float: left;
@@ -4389,8 +4417,8 @@ button.close {
     opacity: 0.5;
     filter: alpha(opacity=20);
 }
-.close:hover,
-.close:focus {
+
+.close:hover, .close:focus {
     color: #000000;
     text-decoration: none;
     background: var(--light-bg);
@@ -4398,10 +4426,12 @@ button.close {
     opacity: 0.8;
     filter: alpha(opacity=50);
 }
+
 .modal-open {
     overflow: hidden !important;
     padding-right: 17px !important;
 }
+
 .modal {
     display: none;
     overflow: hidden;
@@ -4414,6 +4444,7 @@ button.close {
     -webkit-overflow-scrolling: touch;
     outline: 0;
 }
+
 .modal.fade .modal-dialog {
     -webkit-transform: translate(0, -25%);
     -ms-transform: translate(0, -25%);
@@ -4423,21 +4454,25 @@ button.close {
     -o-transition: -o-transform 0.3s ease-out;
     transition: transform 0.3s ease-out;
 }
+
 .modal.in .modal-dialog {
     -webkit-transform: translate(0, 0);
     -ms-transform: translate(0, 0);
     -o-transform: translate(0, 0);
     transform: translate(0, 0);
 }
+
 .modal-open .modal {
     overflow-x: hidden;
     overflow-y: hidden;
 }
+
 .modal-dialog {
     position: relative;
     width: auto;
     margin: 10px;
 }
+
 .modal-content {
     position: relative;
     background-color: #ffffff;
@@ -4446,6 +4481,7 @@ button.close {
     background-clip: padding-box;
     outline: 0;
 }
+
 .modal-backdrop {
     position: fixed;
     top: 0;
@@ -4455,14 +4491,17 @@ button.close {
     left: 0;
     background-color: #1b212b;
 }
+
 .modal-backdrop.fade {
     opacity: 0;
     filter: alpha(opacity=0);
 }
+
 .modal-backdrop.in {
     opacity: 0.5;
     filter: alpha(opacity=50);
 }
+
 .modal-header {
     padding: 10px 25px;
     border-bottom: 1px solid var(--light-border);
@@ -4474,6 +4513,11 @@ button.close {
     -ms-flex-align: center!important;
     align-items: center!important;
 }
+
+.modal-header.no-border {
+    border: none;
+}
+
 .modal-header .close {
     font-size: 28px;
     outline: none !important;
@@ -4485,12 +4529,14 @@ button.close {
     margin-left: -5px;
     border-radius: 50%;
 }
+
 .modal-title {
     margin: 0;
     line-height: 1.42857143;
     font-weight: 600;
     font-size: 20px;
 }
+
 .modal-body {
     position: relative;
     padding: 25px 30px 30px;
@@ -4498,24 +4544,30 @@ button.close {
     overflow-y: scroll !important;
     max-height: calc(100vh - 180px);
 }
+
 .auto-scroll {
     overflow-y: auto !important;
 }
+
 .modal-footer {
     padding: 20px 25px;
     text-align: right;
     border-top: 1px solid #ddd;
 }
+
 .modal-footer .btn + .btn {
     margin-right: 5px;
     margin-bottom: 0;
 }
+
 .modal-footer .btn-group .btn + .btn {
     margin-left: -1px;
 }
+
 .modal-footer .btn-block + .btn-block {
     margin-left: 0;
 }
+
 .modal-scrollbar-measure {
     position: absolute;
     top: -9999px;
@@ -4523,26 +4575,31 @@ button.close {
     height: 50px;
     overflow: scroll;
 }
+
 @media (min-width: 768px) {
     .modal-dialog:not(.modal-lg) {
         width: 768px;
         margin: 20px auto;
     }
+
     .modal-content {
         -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.23);
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.23);
     }
+
     .modal-sm {
         width: 500px;
         margin: 20px auto;
     }
 }
+
 @media (min-width: 1250px) {
     .modal-lg {
         width: 1250px;
         margin: 20px auto;
     }
 }
+
 button.close {
     padding: 0;
     cursor: pointer;
@@ -4550,15 +4607,13 @@ button.close {
     border: 0;
     -webkit-appearance: none;
 }
-.modal-header:before,
-.modal-header:after,
-.modal-footer:before,
-.modal-footer:after {
+
+.modal-header:before, .modal-header:after, .modal-footer:before, .modal-footer:after {
     content: " ";
     display: table;
 }
-.modal-header:after,
-.modal-footer:after {
+
+.modal-header:after, .modal-footer:after {
     clear: both;
 }
 
@@ -4673,130 +4728,147 @@ button.close {
     background-color: #000;
     border-radius: .25rem
 }
+
 .popover {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1060;
-  display: none;
-  max-width: 276px;
-  padding: 1px;
-  font-style: normal;
-  font-weight: 400;
-  line-break: auto;
-  text-align: right;
-  text-align: start;
-  text-decoration: none;
-  text-shadow: none;
-  text-transform: none;
-  letter-spacing: normal;
-  word-break: normal;
-  word-spacing: normal;
-  word-wrap: normal;
-  white-space: normal;
-  background-color: #ffffff;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
-  border-radius: 6px;
-  -webkit-box-shadow: 0 0px 14px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0px 14px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1060;
+    display: none;
+    max-width: 276px;
+    padding: 1px;
+    font-style: normal;
+    font-weight: 400;
+    line-break: auto;
+    text-align: right;
+    text-align: start;
+    text-decoration: none;
+    text-shadow: none;
+    text-transform: none;
+    letter-spacing: normal;
+    word-break: normal;
+    word-spacing: normal;
+    word-wrap: normal;
+    white-space: normal;
+    background-color: #ffffff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border-radius: 6px;
+    -webkit-box-shadow: 0 0px 14px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0px 14px rgba(0, 0, 0, 0.3);
 }
+
 .popover.top {
-  margin-top: -10px;
+    margin-top: -10px;
 }
+
 .popover.right {
-  margin-left: 10px;
+    margin-left: 10px;
 }
+
 .popover.bottom {
-  margin-top: 10px;
+    margin-top: 10px;
 }
+
 .popover.left {
-  margin-left: -10px;
+    margin-left: -10px;
 }
+
 .popover > .arrow {
-  border-width: 11px;
+    border-width: 11px;
 }
-.popover > .arrow,
+
+.popover > .arrow, .popover > .arrow:after {
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+}
+
 .popover > .arrow:after {
-  position: absolute;
-  display: block;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
+    content: "";
+    border-width: 10px;
 }
-.popover > .arrow:after {
-  content: "";
-  border-width: 10px;
-}
+
 .popover.top > .arrow {
-  bottom: -11px;
-  left: 50%;
-  margin-left: -11px;
-  border-bottom-width: 0;
+    bottom: -11px;
+    left: 50%;
+    margin-left: -11px;
+    border-bottom-width: 0;
 }
+
 .popover.top > .arrow:after {
-  bottom: 1px;
-  content: " ";
-  border-top-color: #ffffff;
-  border-bottom-width: 0;
-  left: -10px;
+    bottom: 1px;
+    content: " ";
+    border-top-color: #ffffff;
+    border-bottom-width: 0;
+    left: -10px;
 }
+
 .popover.right > .arrow {
-  top: 50%;
-  left: -11px;
-  margin-top: -11px;
-  border-right-color: #999999;
-  border-right-color: rgba(0, 0, 0, 0.25);
-  border-left-width: 0;
+    top: 50%;
+    left: -11px;
+    margin-top: -11px;
+    border-right-color: #999999;
+    border-right-color: rgba(0, 0, 0, 0.25);
+    border-left-width: 0;
 }
+
 .popover.right > .arrow:after {
-  bottom: -10px;
-  left: 1px;
-  content: " ";
-  border-right-color: #ffffff;
-  border-left-width: 0;
+    bottom: -10px;
+    left: 1px;
+    content: " ";
+    border-right-color: #ffffff;
+    border-left-width: 0;
 }
+
 .popover.bottom > .arrow {
-  top: -11px;
-  left: 50%;
-  margin-left: -11px;
-  border-top-width: 0;
-  border-bottom-color: #999999;
-  border-bottom-color: rgba(0, 0, 0, 0.25);
+    top: -11px;
+    left: 50%;
+    margin-left: -11px;
+    border-top-width: 0;
+    border-bottom-color: #999999;
+    border-bottom-color: rgba(0, 0, 0, 0.25);
 }
+
 .popover.bottom > .arrow:after {
-  top: 1px;
-  margin-left: -10px;
-  content: " ";
-  border-top-width: 0;
-  border-bottom-color: #ffffff;
+    top: 1px;
+    margin-left: -10px;
+    content: " ";
+    border-top-width: 0;
+    border-bottom-color: #ffffff;
 }
+
 .popover.left > .arrow {
-  top: 50%;
-  right: -11px;
-  margin-top: -11px;
-  border-right-width: 0;
-  border-left-color: #999999;
-  border-left-color: rgba(0, 0, 0, 0.25);
+    top: 50%;
+    right: -11px;
+    margin-top: -11px;
+    border-right-width: 0;
+    border-left-color: #999999;
+    border-left-color: rgba(0, 0, 0, 0.25);
 }
+
 .popover.left > .arrow:after {
-  right: 1px;
-  bottom: -10px;
-  content: " ";
-  border-right-width: 0;
-  border-left-color: #ffffff;
+    right: 1px;
+    bottom: -10px;
+    content: " ";
+    border-right-width: 0;
+    border-left-color: #ffffff;
 }
+
 .popover-title {
-  padding: 8px 14px;
-  margin: 0;
-  font-size: 14px;
-  background-color: #f7f7f7;
-  border-bottom: 1px solid #ebebeb;
-  border-radius: 5px 5px 0 0;
+    padding: 8px 14px;
+    margin: 0;
+    font-size: 14px;
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #ebebeb;
+    border-radius: 5px 5px 0 0;
 }
+
 .popover-content {
-  padding: 10px 14px 15px;
+    padding: 10px 14px 15px;
 }
 
 .align-baseline {
@@ -7668,7 +7740,6 @@ a.bg-dark:hover,a.bg-dark:focus,button.bg-dark:hover,button.bg-dark:focus {
     text-align: center!important
 }
 
-
 @media (min-width: 576px) {
     .text-sm-left {
         text-align:left!important
@@ -7699,7 +7770,6 @@ a.bg-dark:hover,a.bg-dark:focus,button.bg-dark:hover,button.bg-dark:focus {
     .text-md-center {
         text-align: center!important
     }
-
 
     .text-md-initial {
         text-align: initial!important
@@ -7841,9 +7911,11 @@ a.text-dark:hover,a.text-dark:focus {
 .text-muted {
     color: var(--gray-lighter);
 }
+
 a.text-muted:hover {
     color: var(--gray-light);
 }
+
 .primary-bg {
     background-color: var(--primary);
 }
@@ -7867,15 +7939,18 @@ a.text-muted:hover {
     background-color: transparent;
     border: 0
 }
+
 .text-seperator {
     position: relative;
 }
+
 .text-seperator span {
-    background:#fff;
+    background: #fff;
     padding: 0 20px;
     position: relative;
     z-index: 1;
 }
+
 .text-seperator:after {
     height: 1px;
     width: 100%;
@@ -7885,7 +7960,6 @@ a.text-muted:hover {
     margin-top: -0.5px;
     background-color: var(--light-border);
     right: 0;
-
 }
 
 .visible {
@@ -7964,14 +8038,15 @@ a.text-muted:hover {
         border: 1px solid #ddd!important
     }
 }
+
 /* Start Progress Circle */
 .progress-circle {
-  background-color: #E2EAEF;
-  border-radius: 50%;
-  display: inline-block;
-  position: relative;
-  min-width: 65px;
-  min-height: 65px;
+    background-color: #E2EAEF;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    min-width: 65px;
+    min-height: 65px;
 }
 
 .progress-circle.clickable {
@@ -7979,337 +8054,443 @@ a.text-muted:hover {
 }
 
 .progress-circle:before {
-  align-items: center;
-  background-color: #fff;
-  border-radius: 50%;
-  content: attr(data-string) '%';
-  display: flex;
-  font-size: 14px;
-  justify-content: center;
-  font-weight: bold;
-  z-index: 1;
-  position: absolute;
-  transition: all .3s ease;
-  left: 6px;
-  right: 6px;
-  color: var(--gray-base);
-  top: 6px;
-  bottom: 6px;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 50%;
+    content: attr(data-string) '%';
+    display: flex;
+    font-size: 14px;
+    justify-content: center;
+    font-weight: bold;
+    z-index: 1;
+    position: absolute;
+    transition: all .3s ease;
+    left: 6px;
+    right: 6px;
+    color: var(--gray-base);
+    top: 6px;
+    bottom: 6px;
 }
+
+.progress-circle[data-string="0"]:before {
+    color: #b9bbbd;
+}
+
 .progress-circle.active:before {
     /* color: var(--primary); */
 }
-.progress-circle:after {
-  background-color: var(--primary);
-  border-radius: 50%;
-  content: '';
-  position: absolute;
-  height: 100%;
-  width: 100%;
-}
 
+.progress-circle:after {
+    background-color: var(--primary);
+    border-radius: 50%;
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
 
 .progress-circle[data-progress="0"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(90deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(90deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="1"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(93.6deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(93.6deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="2"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(97.2deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(97.2deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="3"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(100.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(100.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="4"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(104.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(104.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="5"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(108deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(108deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="6"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(111.6deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(111.6deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="7"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(115.2deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(115.2deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="8"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(118.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(118.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="9"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(122.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(122.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="10"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(126deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(126deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="11"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(129.6deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(129.6deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="12"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(133.2deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(133.2deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="13"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(136.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(136.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="14"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(140.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(140.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="15"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(144deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(144deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="16"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(147.6deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(147.6deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="17"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(151.2deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(151.2deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="18"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(154.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(154.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="19"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(158.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(158.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="20"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(162deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(162deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="21"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(165.60000000000002deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(165.60000000000002deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="22"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(169.2deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(169.2deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="23"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(172.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(172.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="24"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(176.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(176.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="25"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(180deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(180deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="26"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(183.60000000000002deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(183.60000000000002deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="27"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(187.2deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(187.2deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="28"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(190.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(190.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="29"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(194.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(194.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="30"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(198deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(198deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="31"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(201.60000000000002deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(201.60000000000002deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="32"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(205.2deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(205.2deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="33"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(208.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(208.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="34"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(212.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(212.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="35"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(216deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(216deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="36"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(219.6deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(219.6deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="37"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(223.20000000000002deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(223.20000000000002deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="38"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(226.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(226.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="39"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(230.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(230.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="40"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(234deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(234deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="41"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(237.6deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(237.6deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="42"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(241.20000000000002deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(241.20000000000002deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="43"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(244.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(244.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="44"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(248.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(248.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="45"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(252deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(252deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="46"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(255.6deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(255.6deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="47"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(259.20000000000005deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(259.20000000000005deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="48"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(262.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(262.8deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="49"]:after {
-  background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(266.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(90deg, #E2EAEF 50%, transparent 50%, transparent), linear-gradient(266.4deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="50"]:after {
-  background-image: linear-gradient(-90deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-90deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="51"]:after {
-  background-image: linear-gradient(-86.4deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-86.4deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="52"]:after {
-  background-image: linear-gradient(-82.8deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-82.8deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="53"]:after {
-  background-image: linear-gradient(-79.2deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-79.2deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="54"]:after {
-  background-image: linear-gradient(-75.6deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-75.6deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="55"]:after {
-  background-image: linear-gradient(-72deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-72deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="56"]:after {
-  background-image: linear-gradient(-68.4deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-68.4deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="57"]:after {
-  background-image: linear-gradient(-64.8deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-64.8deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="58"]:after {
-  background-image: linear-gradient(-61.2deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-61.2deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="59"]:after {
-  background-image: linear-gradient(-57.6deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-57.6deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="60"]:after {
-  background-image: linear-gradient(-54deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-54deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="61"]:after {
-  background-image: linear-gradient(-50.4deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-50.4deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="62"]:after {
-  background-image: linear-gradient(-46.8deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-46.8deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="63"]:after {
-  background-image: linear-gradient(-43.199999999999996deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-43.199999999999996deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="64"]:after {
-  background-image: linear-gradient(-39.6deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-39.6deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="65"]:after {
-  background-image: linear-gradient(-36deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-36deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="66"]:after {
-  background-image: linear-gradient(-32.4deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-32.4deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="67"]:after {
-  background-image: linear-gradient(-28.799999999999997deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-28.799999999999997deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="68"]:after {
-  background-image: linear-gradient(-25.200000000000003deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-25.200000000000003deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="69"]:after {
-  background-image: linear-gradient(-21.599999999999994deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-21.599999999999994deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="70"]:after {
-  background-image: linear-gradient(-18deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-18deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="71"]:after {
-  background-image: linear-gradient(-14.399999999999991deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-14.399999999999991deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="72"]:after {
-  background-image: linear-gradient(-10.799999999999997deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-10.799999999999997deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="73"]:after {
-  background-image: linear-gradient(-7.200000000000003deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-7.200000000000003deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="74"]:after {
-  background-image: linear-gradient(-3.599999999999994deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(-3.599999999999994deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="75"]:after {
-  background-image: linear-gradient(0deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(0deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="76"]:after {
-  background-image: linear-gradient(3.600000000000009deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(3.600000000000009deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="77"]:after {
-  background-image: linear-gradient(7.200000000000003deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(7.200000000000003deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="78"]:after {
-  background-image: linear-gradient(10.799999999999997deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(10.799999999999997deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="79"]:after {
-  background-image: linear-gradient(14.400000000000006deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(14.400000000000006deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="80"]:after {
-  background-image: linear-gradient(18deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(18deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="81"]:after {
-  background-image: linear-gradient(21.60000000000001deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(21.60000000000001deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="82"]:after {
-  background-image: linear-gradient(25.200000000000003deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(25.200000000000003deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="83"]:after {
-  background-image: linear-gradient(28.799999999999997deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(28.799999999999997deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="84"]:after {
-  background-image: linear-gradient(32.400000000000006deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(32.400000000000006deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="85"]:after {
-  background-image: linear-gradient(36deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(36deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="86"]:after {
-  background-image: linear-gradient(39.599999999999994deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(39.599999999999994deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="87"]:after {
-  background-image: linear-gradient(43.20000000000002deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(43.20000000000002deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="88"]:after {
-  background-image: linear-gradient(46.80000000000001deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(46.80000000000001deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="89"]:after {
-  background-image: linear-gradient(50.400000000000006deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(50.400000000000006deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="90"]:after {
-  background-image: linear-gradient(54deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(54deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="91"]:after {
-  background-image: linear-gradient(57.599999999999994deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(57.599999999999994deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="92"]:after {
-  background-image: linear-gradient(61.20000000000002deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(61.20000000000002deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="93"]:after {
-  background-image: linear-gradient(64.80000000000001deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(64.80000000000001deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="94"]:after {
-  background-image: linear-gradient(68.4deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(68.4deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="95"]:after {
-  background-image: linear-gradient(72deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(72deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="96"]:after {
-  background-image: linear-gradient(75.6deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(75.6deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="97"]:after {
-  background-image: linear-gradient(79.20000000000002deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(79.20000000000002deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="98"]:after {
-  background-image: linear-gradient(82.80000000000001deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(82.80000000000001deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="99"]:after {
-  background-image: linear-gradient(86.4deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
+    background-image: linear-gradient(86.4deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, #E2EAEF 50%, #E2EAEF);
 }
+
 .progress-circle[data-progress="100"]:after {
-  background-image: linear-gradient(90deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, var(--primary) 50%, var(--primary));
+    background-image: linear-gradient(90deg, var(--primary) 50%, transparent 50%, transparent), linear-gradient(270deg, var(--primary) 50%, var(--primary) 50%, var(--primary));
 }
+
 /* End Progress Circle */

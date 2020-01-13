@@ -46,7 +46,7 @@ class Survey extends Model
   *
   */
   public function LastAnswer(){
-    return $this->hasOne('App\SurveyAnswer')->orderBy('id','DESC');
+    return $this->hasOne('App\SurveyAnswer')->where('user_id',user()->id)->orderBy('id','DESC');
   }
 
   /**

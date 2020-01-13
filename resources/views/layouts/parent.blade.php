@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}" />
-  <title>{{ (url()->current() == url('/')) ? $__env->yieldContent('title') : (trim($__env->yieldContent('title')) ? $__env->yieldContent('title') : 'بوابة مكاتب شؤون الحجاج') }}</title>
+  <title>{{ (url()->current() == url('/')) ? $__env->yieldContent('title') : (trim($__env->yieldContent('title')) ? $__env->yieldContent('title') : 'بوابة التنسيق والتواصل للمنظومة الشاملة للتفويج') }}</title>
   @if (trim($__env->yieldContent('meta_description')))
   <meta name="description" content="@yield('meta_description')" />
   @endif

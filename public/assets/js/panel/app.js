@@ -1,4 +1,4 @@
-var App = angular.module('App', ['ngLocale','ngRoute', 'ngCookies', 'ngResource', 'datatables', 'angular-loading-bar', 'ngFlash', 'ui.bootstrap', 'flow', 'ui.select', 'ngSanitize', 'angularMoment','ui.timepicker','thatisuday.dropzone','slickCarousel']);
+var App = angular.module('App', ['ngLocale','ngRoute', 'ngCookies', 'ngResource', 'datatables', 'ngFlash', 'ui.bootstrap', 'flow', 'ui.select', 'ngSanitize', 'angularMoment','ui.timepicker','thatisuday.dropzone','slickCarousel']);
 /* API */
 App.factory('API', function($http, $location, $rootScope, $window) {
   var api_factory = {
@@ -187,9 +187,14 @@ App.config(['$sceDelegateProvider','$routeProvider', '$locationProvider', '$inte
         controller: 'HomeCtrl'
       })
       .when('/surveys', {
-        templateUrl: templates_path+'pages/surveys.html?v='+assets_ver,
-        controller: 'DatatableCtrl'
+        templateUrl: templates_path+'pages/surveys.html?v='+assets_ver
       })
+      .when('/presentations', {
+        templateUrl: templates_path+'pages/presentations.html?v='+assets_ver
+      })
+      // .when('/gallery', {
+      //   templateUrl: templates_path+'pages/gallery.html?v='+assets_ver
+      // })
 
 	  if(window.auth.is_admin == 1){
 		  $routeProvider.otherwise('/dashboard');
@@ -200,30 +205,17 @@ App.config(['$sceDelegateProvider','$routeProvider', '$locationProvider', '$inte
 }]);
 
 /* Start Run */
-App.run(function($rootScope) {
-	var perms = ['manage_resident','delete_card','review_card','approve_card','cancel_card','print_card','instead_lost_card','card_history','community_represent_card'];
-	$rootScope.auth_perm = {};
-	angular.forEach(perms,function(perm_v,perm_k){
-		if(window.auth.is_supervisor == 1){
-			$rootScope.auth_perm[perm_v] = true;
-		}else {
-      var r = false;
-      if (perm_v == 'manage_resident' && window.auth.admin_group == 'requester') {
-        r = true;
-      }else if (perm_v == 'review_card' && window.auth.admin_group == 'reviewer') {
-        r = true;
-      }else if (perm_v == 'approve_card' && window.auth.admin_group == 'approval') {
-        r = true;
-      }else if (perm_v == 'print_card' && window.auth.admin_group == 'printer') {
-        r = true;
-      }else if (perm_v == 'instead_lost_card' && window.auth.admin_group == 'requester') {
-        r = true;
-      }else if (perm_v == 'community_represent_card' && window.auth.admin_group == 'community_representative') {
-        r = true;
-      }
-      $rootScope.auth_perm[perm_v] = r;
-		}
-	});
+App.run(function($rootScope,$location) {
+  $rootScope.$watch(function() {
+    return $location.path();
+  },
+  function(a){
+    if ($location.$$url == '/home') {
+      $rootScope.isHomePage = true;
+    }else {
+      $rootScope.isHomePage = false;
+    }
+  });
 });
 
 /* Add highlight on current active tab */

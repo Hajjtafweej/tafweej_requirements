@@ -1,12 +1,12 @@
 <div class="survey-section" ng-class="{'collapsed': isFirstParentSection && section.is_collapsed,'collapsable': isFirstParentSection}">
-  <div class="survey-section-title" ng-click="collapseSection(section)" ng-class="{'small': !isFirstParentSection}"><span ng-class="{'dark-bg': !isFirstParentSection}">{{ getSectionNo() }}</span>{{ section.details.title }}
+  <div class="survey-section-title" ng-click="collapseSection(section)" ng-class="{'small': !isFirstParentSection,'invalid': isMainSectionInvalid && isFirstParentSection && section.all_questions.length != countSectionAnswers(section)}"><span ng-class="{'dark-bg': !isFirstParentSection && getSectionNo().length == 3,'light-bg': !isFirstParentSection && getSectionNo().length > 3}">{{ getSectionNo() }}</span>{{ section.details.title }}
     <div class="completion-count" ng-if="isFirstParentSection" ng-class="{'text-primary': section.all_questions.length == countSectionAnswers(section)}">
       ({{ section.all_questions.length }}/{{ countSectionAnswers(section) }})
     </div>
   </div>
   <div class="survey-section-content" ng-if="!section.is_collapsed">
     <!-- Start Questions -->
-    <div ng-repeat="question in section.details.questions" class="survey-question">
+    <div ng-repeat="question in prepareSectionQuestions(section.details.questions)" class="survey-question">
       <div class="row align-items-center mt-1 mb-3">
         <div class="col-lg-4 pb-1 pb-lg-0">
           <div class="survey-question-title">
@@ -56,6 +56,17 @@
                   </div>
                   <div ng-switch-when="time">
                     <input id="question_{{ question.id }}_time_value" class="form-control" placeholder="أختر" ui-timepicker="{show2400: true,step: 5,timeFormat: 'H:i'}" ng-model="surveySectionData[question.id].value">
+                  </div>
+                  <div ng-switch-when="hajj_days">
+                    <div class="input-group">
+                      <select class="form-control" ng-model="surveySectionData[question.id].value">
+                        <option disabled value="">أختر</option>
+                        <option ng-repeat="day in lists.hajj_days" value="{{ day }}">{{ day }}</option>
+                      </select>
+                      <div class="input-group-append">
+                        <span class="input-group-text">ذي الحجة</span>
+                      </div>
+                    </div>
                   </div>
                   <div ng-switch-when="timerange">
                     <div class="input-group">
@@ -113,9 +124,13 @@
                     <div class="input-group">
                       <select class="form-control" ng-model="surveySectionData[question.id].value">
                         <option disabled value="">أختر النسبة</option>
-                        <option ng-repeat="item in getPercentageOptions()" value="{{ item }}">{{ item }}</option>
+                        <option ng-if="surveySectionData[question.id].value && !(getPercentageOptions(section) | filter: surveySectionData[question.id].value).length" value="{{ surveySectionData[question.id].value }}">{{ surveySectionData[question.id].value }}</option>
+                        <option ng-repeat="item in getPercentageOptions(section)" value="{{ item }}">{{ item }}</option>
                       </select>
-                      <div class="input-group-append">
+                      <div class="input-group-append" ng-show="surveySectionData[question.id].value">
+                        <button type="button" class="btn btn-light btn-close" ng-click="surveySectionData[question.id].value = null"><i class="ic-close"></i></button>
+                      </div>
+                      <div class="input-group-append" ng-show="!surveySectionData[question.id].value">
                         <span class="input-group-text">%</span>
                       </div>
                     </div>
@@ -152,7 +167,7 @@
     </div>
     <!-- Start Sub Sections -->
     <div ng-repeat="(sub_section_i,sub_section) in section.sections">
-      <survey-section section="sub_section" parent-no="no" no="sub_section_i" survey-section-data="surveySectionData"></survey-section>
+      <survey-section main-section="mainSection" section="sub_section" parent-no="no" no="{{ no+'-'+(sub_section_i+1) }}" survey-section-data="surveySectionData"></survey-section>
     </div>
   </div>
 </div>

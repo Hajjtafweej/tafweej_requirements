@@ -21,7 +21,7 @@ class SurveySection extends Model
   *
   */
   public function Questions(){
-    return $this->hasMany('App\SurveyQuestion')->with('Options');
+    return $this->hasMany('App\SurveyQuestion');
   }
 
   /**

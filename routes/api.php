@@ -16,8 +16,10 @@ Route::group(['middleware' => $auth_middleware],function(){
       Route::get('/main-section/{id}','Country_SurveyController@getMainSectionDetails');
     });
 
-    Route::group(['prefix' => 'meeting'],function(){
-      Route::get('/show/{id}','Country_MeetingController@getShow');
+    Route::group(['prefix' => 'presentation'],function(){
+      Route::get('/list','Country_PresentationController@getList');
+      Route::get('/show/{id}','Country_PresentationController@getShow');
+      Route::post('/download/{id}','Country_PresentationController@getDownload');
     });
 
     Route::group(['prefix' => 'gallery'],function(){

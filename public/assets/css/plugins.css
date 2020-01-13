@@ -3088,7 +3088,7 @@ flash-message .alert {
 
 .slick-dots {
     position: absolute;
-    bottom: 10px;
+    bottom: -30px;
     display: block;
     width: 100%;
     padding: 0;
@@ -3133,7 +3133,7 @@ flash-message .alert {
 .slick-dots li button:before {
     width: 6px;
     height: 6px;
-    background: gray;
+    background: var(--gray-lighter);
     opacity: .6;
     content: '';
     display: block;
@@ -3141,8 +3141,8 @@ flash-message .alert {
 }
 
 .slick-dots li.slick-active button:before {
-    width: 7px;
-    height: 7px;
+    width: 6px;
+    height: 6px;
     opacity: 1;
-    background: var(--gray);
+    background: var(--primary);
 }

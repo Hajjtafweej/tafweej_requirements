@@ -24,6 +24,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.ic-menu2:before {
+  content: "\e94b";
+}
+.ic-presentation:before {
+  content: "\e94c";
+}
+.ic-plan:before {
+  content: "\e94d";
+}
 .ic-lock:before {
   content: "\e92f";
 }
