@@ -38,7 +38,7 @@ return [
     'arar' => 'Jadidat Arar Port',
     'bathaa' => 'Al Batha Port',
     'haditha' => 'Al Hadithah Land Port',
-    'king_fahad_bridge' => 'King Fahad Causeway Authority',
-    'jaddah_seaport' => 'Jeddah Islamic Port'
+    'king_fahad_bridge' => 'Ports terrestres',
+    'jaddah_seaport' => 'Ports maritimes'
   ]
 ];
