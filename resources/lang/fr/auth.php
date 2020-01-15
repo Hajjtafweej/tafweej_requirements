@@ -3,7 +3,7 @@
 return [
   'login_title' => 'S\'identifier',
   'logout' => 'Se déconnecter',
-  'login' => 'S\'identifier',
+  'login' => 'Entrée',
   'username' => 'Nom d\'utilisateur',
   'password' => 'Mot de passe',
   'forget' => 'Oubliée?',
