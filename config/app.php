@@ -66,7 +66,7 @@ return [
     'app_settings' => [
 
     ],
-    'app_asset_ver' => 119, // this version related with /app extension
+    'app_asset_ver' => 120, // this version related with /app extension
     'asset_ver' => 19, // for normal website version
 
     /*
