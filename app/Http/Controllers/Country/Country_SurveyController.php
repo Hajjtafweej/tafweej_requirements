@@ -22,7 +22,7 @@ class Country_SurveyController extends Controller
 	*/
 	public function getList($id = null,Request $q)
 	{
-		$Surveys = Survey::onlyActive()->select('id',DB::raw('title_ar as title'),'created_at')->with('LastAnswer')->calculateCompletion(user()->id);
+		$Surveys = Survey::onlyActive()->select('id',DB::raw('title_'.app()->getLocale().' as title'),'created_at')->with('LastAnswer')->calculateCompletion(user()->id);
 
 		/* Check if completed */
 		if ($q->completion && $q->completion != 'all') {
@@ -45,8 +45,8 @@ class Country_SurveyController extends Controller
 	*/
 	public function getShow($id = null,Request $q)
 	{
-		$Survey = Survey::where('id',$id)->select('id',DB::raw('title_ar as title'),'created_at')->with(['MainSections' => function($Section){
-			return $Section->select('id','survey_id','is_required','is_apply_percentage',DB::raw('title_ar as title'))->orderBy('ordering');
+		$Survey = Survey::where('id',$id)->select('id',DB::raw('title_'.app()->getLocale().' as title'),'created_at')->with(['MainSections' => function($Section){
+			return $Section->select('id','survey_id','is_required','is_apply_percentage',DB::raw('title_'.app()->getLocale().' as title'))->orderBy('ordering');
 		}])->calculateCompletion(user()->id)->first();
 		if (!$Survey) {
 			return response()->json(['message' => 'survey_not_found'],404);
@@ -109,9 +109,9 @@ class Country_SurveyController extends Controller
 	*/
 	public function prepareSubSections($parent_id)
 	{
-		$getSubSections = SurveySection::where('parent_id',$parent_id)->select('id','survey_id','is_required','is_apply_percentage',DB::raw('title_ar as title'))->with(['Questions' => function($Question){
-			return $Question->select('id','survey_id','type','survey_section_id',DB::raw('title_ar as title'),'is_has_notes')->with(['Options' => function($Section){
-				return $Section->select('id','survey_question_id',DB::raw('title_ar as title'));
+		$getSubSections = SurveySection::where('parent_id',$parent_id)->select('id','survey_id','is_required','is_apply_percentage',DB::raw('title_'.app()->getLocale().' as title'))->with(['Questions' => function($Question){
+			return $Question->select('id','survey_id','type','type_options','survey_section_id',DB::raw('title_'.app()->getLocale().' as title'),'is_has_notes')->with(['Options' => function($Section){
+				return $Section->select('id','survey_question_id',DB::raw('title_'.app()->getLocale().' as title'));
 			}])->with('LastAnswerValue');
 		}])->get();
 
@@ -188,7 +188,7 @@ class Country_SurveyController extends Controller
 				$is_can_save = true;
 				$Question = SurveyQuestion::where([['survey_id',$id],['id',$question_id]])->firstOrFail();
 				$SurveyAnswerValue = SurveyAnswerValue::where([['survey_id',$id],['survey_question_id',$question_id],['survey_answer_id',$SurveyAnswer->id]])->first();
-				if(!is_null($question_value['value'])){
+				if(isset($question_value['value']) && !is_null($question_value['value'])){
 					if(!$SurveyAnswerValue){
 						$SurveyAnswerValue = new SurveyAnswerValue;
 						$SurveyAnswerValue->survey_id = $id;
@@ -197,13 +197,31 @@ class Country_SurveyController extends Controller
 						$SurveyAnswerValue->survey_question_id = $question_id;
 					}
 					// If question type is multiple choices field then validate it
-					if (in_array($Question->type,['select','checkbox','radio']) || ($Question->type == 'select_with_other' && !(isset($question_value['other_value']) || $question_value['value'] == 'other'))) {
-						$checkQuestionOption = SurveyQuestionOption::where([['survey_id',$id],['id',$question_value['value']]])->firstOrFail();
-						$SurveyAnswerValue->value = $checkQuestionOption->id;
-						$SurveyAnswerValue->survey_question_option_id = $checkQuestionOption->id;
+					if (in_array($Question->type,['select','radio']) || ($Question->type == 'select_with_other' && !(isset($question_value['other_value']) || $question_value['value'] == 'other'))) {
+						$checkQuestionOption = SurveyQuestionOption::where([['survey_id',$id],['id',$question_value['value']]])->count();
+						if (!$checkQuestionOption) {
+							abort(404);
+						}else {
+							$SurveyAnswerValue->value = $question_value['value'];
+							$SurveyAnswerValue->survey_question_option_id = $question_value['value'];
+						}
 					}else {
 						$SurveyAnswerValue->survey_question_option_id = 0;
 						switch ($Question->type) {
+							case 'checkbox':
+								$checkboxValues = [];
+								if (is_array($question_value['value'])) {
+									foreach ($question_value['value'] as $value_id => $value_bool) {
+										if ($value_bool) {
+											$checkQuestionOption = SurveyQuestionOption::where([['survey_id',$id],['id',$value_id]])->count();
+											if ($checkQuestionOption) {
+												$checkboxValues[] = $value_id;
+											}
+										}
+									}
+								}
+								$SurveyAnswerValue->value = (count($checkboxValues)) ? join(',',$checkboxValues) : null;
+							break;
 							case 'date_hijri': case 'date':
 							if(!isset($question_value['value']['day']) || !isset($question_value['value']['month'])){
 								$is_can_save = false;

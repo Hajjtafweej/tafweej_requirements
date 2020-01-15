@@ -7,7 +7,6 @@ ui-select
 Summernote Editor
 dropzone
 Cropper
-JQuery Timepicker
 slick
 */
 /* Datatable */
@@ -924,6 +923,11 @@ body > .select2-container.open {
     font-style: normal;
 }
 
+[dir="ltr"] .ui-select-bootstrap .ui-select-toggle > .caret {
+   right: 14px;
+   left: auto;
+}
+
 .ui-select-bootstrap .ui-select-toggle > .caret:before {
     font-family: 'hajjcountries';
     content: '\e90d';
@@ -973,6 +977,16 @@ body > .select2-container.open {
     font-size: 14px;
     overflow: hidden;
     font-weight: 400;
+}
+
+[dir="ltr"] .ui-select-bootstrap > .ui-select-match > .btn {
+
+}
+
+[dir="ltr"] .ui-select-bootstrap > .ui-select-match > .btn {
+    text-align: left !important;
+    padding-left: 12px !important;
+    padding-right: 30px;
 }
 
 .ui-select-bootstrap.inline {
@@ -1140,6 +1154,11 @@ body > .ui-select-bootstrap.open {
 .ui-select-bootstrap .ui-select-match-text {
     width: 100%;
     padding-left: 1em;
+}
+
+[dir="ltr"] .ui-select-bootstrap .ui-select-match-text {
+    padding-right: 1em;
+    padding-left: 0px;
 }
 
 .ui-select-bootstrap .ui-select-match-text span {
@@ -2796,82 +2815,6 @@ body > .ui-select-bootstrap.open {
     cursor: not-allowed
 }
 
-/* JQuery Timepicker */
-.ui-timepicker-wrapper {
-    overflow-y: auto;
-    height: 150px;
-    width: calc(100% - 18px);
-    background: #fff;
-    -webkit-box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.22);
-    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.22);
-    outline: none;
-    z-index: 10001;
-    margin: 0;
-}
-
-.form-xs-width .ui-timepicker-wrapper {
-    max-width: 150px;
-}
-
-body > .ui-timepicker-wrapper {
-    width: 110px;
-}
-
-.ui-timepicker-wrapper.ui-timepicker-with-duration {
-    width: 13em;
-}
-
-.ui-timepicker-wrapper.ui-timepicker-with-duration.ui-timepicker-step-30, .ui-timepicker-wrapper.ui-timepicker-with-duration.ui-timepicker-step-60 {
-    width: 11em;
-}
-
-.ui-timepicker-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.ui-timepicker-duration {
-    margin-left: 5px;
-    color: var(--gray-darker);
-}
-
-.ui-timepicker-list:hover .ui-timepicker-duration {
-    color: var(--gray-darker);
-}
-
-.ui-timepicker-list li {
-    padding: 6px 12px !important;
-    cursor: pointer;
-    white-space: nowrap;
-    color: var(--gray-base);
-    list-style: none;
-    margin: 0;
-}
-
-.ui-timepicker-list:hover .ui-timepicker-selected {
-    background: #fff;
-    color: var(--gray-base);
-}
-
-li.ui-timepicker-selected, .ui-timepicker-list li:hover, .ui-timepicker-list .ui-timepicker-selected:hover {
-    background: var(--primary);
-    color: #fff;
-}
-
-li.ui-timepicker-selected .ui-timepicker-duration, .ui-timepicker-list li:hover .ui-timepicker-duration {
-    color: var(--default-border-color);
-}
-
-.ui-timepicker-list li.ui-timepicker-disabled, .ui-timepicker-list li.ui-timepicker-disabled:hover, .ui-timepicker-list li.ui-timepicker-selected.ui-timepicker-disabled {
-    color: var(--gray-darker);
-    cursor: default;
-}
-
-.ui-timepicker-list li.ui-timepicker-disabled:hover, .ui-timepicker-list li.ui-timepicker-selected.ui-timepicker-disabled {
-    background: var(--light-bg);
-}
-
 /* Flash Message */
 flash-message {
     position: fixed;
@@ -3048,7 +2991,8 @@ flash-message .alert {
 }
 
 .slick-prev {
-    left: -25px;
+    left: 20px;
+    right: auto;
 }
 
 [dir='rtl'] .slick-prev {
@@ -3057,7 +3001,7 @@ flash-message .alert {
 }
 
 .slick-prev:before {
-    content: '\e903';
+    content: '\e938';
 }
 
 [dir='rtl'] .slick-prev:before {
@@ -3065,8 +3009,10 @@ flash-message .alert {
 }
 
 .slick-next {
-    right: -25px;
+    right: 20px;
+    left: auto;
 }
+
 
 [dir='rtl'] .slick-next {
     right: auto;
@@ -3074,7 +3020,7 @@ flash-message .alert {
 }
 
 .slick-next:before {
-    content: '\e904';
+    content: '\e93a';
 }
 
 [dir='rtl'] .slick-next:before {
@@ -3145,4 +3091,35 @@ flash-message .alert {
     height: 6px;
     opacity: 1;
     background: var(--primary);
+}
+/* Timepicker */
+.timepicker .seperator {
+    font-size: 22px;
+    color: var(--gray-lighter);
+    border-radius: 5px;
+    padding-top: 20px;
+}
+.timepicker .label {
+    background:var(--light-bg);
+    border-radius: 5px;
+    padding: 5px 10px;
+    text-align: center;
+    font-weight: bold;
+    color: var(--gray-lighter);
+    margin-bottom: 10px;
+}
+.timepicker .active {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: #fff !important;
+    cursor: default !important;
+}
+.timepicker .btn {
+    padding: 4px 8px;
+    font-weight: 600;
+    width: 100%;
+}
+.timepicker-dropdown {
+    width: 100%;
+    margin-bottom: 20px;
 }

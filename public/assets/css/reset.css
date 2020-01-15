@@ -21,8 +21,9 @@
     box-sizing: border-box
 }
 
-.ltr {
-    direction: ltr
+[dir="rtl"] .ltr {
+    direction: ltr;
+    text-align: right;
 }
 
 html {
@@ -32,7 +33,6 @@ html {
     -ms-overflow-style: scrollbar;
     -webkit-tap-highlight-color: transparent;
     height: 100%;
-    direction: rtl;
 }
 
 @-ms-viewport {
@@ -56,7 +56,11 @@ body {
     color: var(--gray-dark);
     overflow-y: scroll;
     overflow-x: hidden;
-    text-align: right;
+}
+
+[dir="ltr"] body {
+    font-family: Roboto;
+    text-align: left;
 }
 
 body.light-bg {
@@ -2054,7 +2058,7 @@ span.form-control {
     border: 0
 }
 
-.form-control:focus {
+.form-control:focus,.form-control.active {
     color: var(--gray-base);
     background-color: #fff;
     border-color: var(--primary);
@@ -2084,6 +2088,14 @@ span.form-control {
 .form-control::placeholder {
     color: #6c757d;
     opacity: 1
+}
+
+.form-control.dropdown-toggle {
+    cursor: pointer;
+}
+
+.dropdown.open > .form-control.dropdown-toggle {
+    border-color: var(--primary);
 }
 
 .form-xs-width {
@@ -2199,13 +2211,13 @@ select.form-control-lg:not([size]):not([multiple]),.input-group-lg>select.form-c
 .form-check {
     position: relative;
     display: block;
-    padding-left: 1.25rem
+    padding-right: 20px;
 }
 
 .form-check-input {
     position: absolute;
-    margin-top: .25px;
-    margin-left: -1.25rem
+    margin-top: 3px;
+    margin-right: -1.25rem;
 }
 
 .form-check-input:disabled~.form-check-label {
@@ -2213,7 +2225,7 @@ select.form-control-lg:not([size]):not([multiple]),.input-group-lg>select.form-c
 }
 
 .form-check-label {
-    margin-bottom: 0
+    margin-bottom: 0;
 }
 
 .form-check-inline {
@@ -2423,6 +2435,14 @@ select.form-control-lg:not([size]):not([multiple]),.input-group-lg>select.form-c
     padding-top: 15px;
     font-size: 15px;
     padding-bottom: 15px;
+    font-family: var(--font-main);
+}
+
+[dir="ltr"] .form-group-lined.form-group-lg .form-control {
+
+padding-left: 35px;
+
+padding-right: 12px !important;
 }
 
 .form-group-lined .form-control:focus {
@@ -2432,6 +2452,12 @@ select.form-control-lg:not([size]):not([multiple]),.input-group-lg>select.form-c
 .form-group-lined .input-icon > i {
     right: 2px;
 }
+
+[dir="ltr"] .form-group-lined .input-icon > i {
+    left: 2px;
+    right: auto;
+}
+
 
 .form-group-lined.form-group-lg .input-icon > i {
     font-size: 20px;
@@ -2727,7 +2753,7 @@ a.btn.disabled,fieldset:disabled a.btn {
     border-color: #e5ecf3;
 }
 
-.btn-light:active {
+.btn-light:active,.btn-light.active {
     color: var(--gray-base);
     background-color: #dae2ea;
     border-color: #dae2ea;
@@ -2901,24 +2927,23 @@ tbody.collapse.show {
     position: relative
 }
 
-.dropdown-toggle::after {
+.dropdown-toggle:not(.input-group)::after {
     display: inline-block;
-    width: 0;
-    height: 0;
-    margin-left: .255em;
-    vertical-align: .255em;
-    content: "";
-    border-top: .3em solid;
-    border-right: .3em solid transparent;
-    border-bottom: 0;
-    border-left: .3em solid transparent
+    content: "\e90d";
+    font-family: 'hajjcountries';
 }
 
 .form-control.dropdown-toggle::after {
     position: absolute;
-    left: 12px;
+    left: 15px;
     top: 50%;
-    margin-top: -2px;
+    margin-top: -7px;
+    font-size: 10px;
+}
+
+[dir="ltr"] .form-control.dropdown-toggle::after {
+    right: 15px;
+    left: auto;
 }
 
 .dropdown-toggle:empty::after {
@@ -2938,10 +2963,18 @@ tbody.collapse.show {
     color: #212529;
     text-align: right;
     list-style: none;
-    box-shadow: 0 2px 10px #0000003b;
+    box-shadow: 0 1px 13px rgba(0, 0, 0, 0.2);
     background-color: #fff;
     background-clip: padding-box;
     border-radius: 4px;
+}
+
+[dir="ltr"] .dropdown-menu {
+    text-align: left;
+}
+
+body > .dropdown-menu {
+    z-index: 99999999;
 }
 
 .dropup .dropdown-menu {
@@ -3226,7 +3259,6 @@ tbody.collapse.show {
     text-align: center;
 }
 
-
 .input-group>.form-control,.input-group>.custom-select,.input-group>.custom-file {
     position: relative;
     -webkit-box-flex: 1;
@@ -3391,6 +3423,12 @@ tbody.collapse.show {
     margin-bottom: 0;
     cursor: pointer;
     padding-right: 28px;
+    font-size: 15px;
+}
+
+[dir="ltr"] .custom-control-label {
+    padding-left: 28px;
+    padding-right: auto;
 }
 
 .custom-control-label::before {
@@ -3409,6 +3447,11 @@ tbody.collapse.show {
     user-select: none;
 }
 
+[dir="ltr"] .custom-control-label::before {
+    left: 0;
+    right: auto;
+}
+
 .custom-control-label::after {
     position: absolute;
     top: 1px;
@@ -3420,6 +3463,11 @@ tbody.collapse.show {
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 50% 50%
+}
+
+[dir="ltr"] .custom-control-label::after {
+    left: -2px;
+    right: auto;
 }
 
 .custom-checkbox .custom-control-label::before {
@@ -4528,6 +4576,11 @@ button.close {
     margin-right: auto;
     margin-left: -5px;
     border-radius: 50%;
+}
+
+[dir="ltr"] .modal-header .close {
+    margin-right: -5px;
+    margin-left: auto;
 }
 
 .modal-title {

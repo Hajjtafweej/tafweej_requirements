@@ -3,7 +3,6 @@
 	prepareFilterDate
 	dateF
 	price
-	summernoteOptions
 	capitalize
 	trusted
 	random
@@ -11,9 +10,8 @@
 	asset
 	global_asset
 	filesize
-	card_status
-	card_request_type
-	card_cancel_reason
+	lang
+	lang_prop
 */
 /* Prepare Filter Date */
 App.filter('prepareFilterDate', function($filter) {
@@ -99,43 +97,6 @@ App.filter('price', function($filter) {
 		return $filter('currency')(v,'',0)+((without_currency) ? '' : ' ريال');
 	}
 });
-/* Summernote */
-App.filter('summernoteOptions', function($sce){
-	return function(d,extra){
-		var r = {
-			height: 120,
-			disableDragAndDrop: true,
-			dialogsInBody: true,
-			tooltip: false,
-			lang: "tr-TR",
-			fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New'], // 'Open Sans','Montserrat'
-			callbacks: {
-	        onPaste: function (e) {
-	            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-	            e.preventDefault();
-	            document.execCommand('insertText', false, bufferText);
-	        }
-	    }
-		};
-		if(extra){
-			for (var attrname in extra) {
-				if (extra.toolbar == 'reach') {
-					r.toolbar = [
-						['headline', ['style']],
-						['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],
-						['fontclr', ['color']],
-						['alignment', ['ul', 'ol', 'paragraph']],
-						['table', ['table']],
-						['insert', ['link','picture','hr']]
-					];
-				}else {
-					r[attrname] = extra[attrname];
-				}
-			}
-		}
-		return r;
-	}
-});
 
 App.filter('capitalize', function() {
     return function(input) {
@@ -157,7 +118,7 @@ App.filter('random', function(){
 	}
 });
 
-App.filter('filter_lists', function($sce){
+App.filter('filter_lists', function($sce,$filter){
 	return function(list_type){
 		var l = [];
 		switch (list_type) {
@@ -165,13 +126,13 @@ App.filter('filter_lists', function($sce){
 				l = [
 					{
 						key: 'all',
-						label: 'جميع الأوقات'
+						label: $filter('lang')('all_times')
 					}, {
 						key: 'today',
-						label: 'اليوم'
+						label: $filter('lang')('today')
 					}, {
 						key: 'yesterday',
-						label: 'أمس'
+						label: $filter('lang')('yesterday')
 					}
 				];
 			break;
@@ -238,42 +199,17 @@ App.filter('filesize', function(Helpers){
 });
 
 /**
-	* Card status
+	* Lang translation
 */
-App.filter('card_status', function($filter,Helpers){
-	return function(v){
-		var status_list = Helpers.cardStatusList;
-		var r = $filter('filter')(status_list,{value: v});
-		return (r && angular.isArray(r) && r.length) ? r[0] : {class: '',label: ''};
-	}
-});
-
-/**
-	* Card request type
-*/
-App.filter('card_request_type', function($filter,Helpers){
-	return function(v){
-		var status_list = [
-			{value: 'instead-lost',class: 'default',label: 'بدل ضائع'},
-			{value: 'delete',class: 'danger',label: 'حذف بطاقة'},
-			{value: 'edit',class: 'warning',label: 'تعديل بطاقة'},
-			{value: 'new',class: 'blue-dark',label: 'إصدار بطاقة'}
-		];
-		var r = $filter('filter')(status_list,{value: v});
-		return (r && angular.isArray(r) && r.length) ? r[0] : {class: '',label: ''};
-	}
-});
-
-/**
-	* Card canceled_reason
-*/
-App.filter('card_cancel_reason', function($filter,Helpers){
-	return function(v){
-		var status_list = [
-			{value: 'instead-lost',label: 'طلب بدل ضائع'},
-			{value: 'delete',label: 'طلب حذف البطاقة'}
-		];
-		var r = $filter('filter')(status_list,{value: v});
-		return (r && angular.isArray(r) && r.length) ? r[0] : {value: '',label: ''};
+App.filter('lang', function() {
+	return function(v) {
+		var parts = v.split( "." ),
+			length = parts.length,
+			i,
+			property = window.lang || this;
+		for ( i = 0; i < length; i++ ) {
+			property = property[parts[i]];
+		}
+		return property;
 	}
 });

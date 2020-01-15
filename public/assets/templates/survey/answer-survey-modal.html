@@ -1,7 +1,7 @@
 <form name="surveyForm" id="surveyForm" role="form">
 	<div class="modal-header no-border">
 		<button type="button" class="close" ng-click="answer_survey_modal.cancel()" data-dismiss="modal">&times;</button>
-		<h4 class="modal-title">الاجابة على الاستبيان</h4>
+		<h4 class="modal-title">{{ 'survey.modal_title' | lang }}</h4>
 	</div>
 	<!-- Main Section Steps -->
 	<div class="survey-steps-top">
@@ -33,11 +33,11 @@
 			<!-- Start The Sub Sections -->
 			<div ng-repeat="(sub_section_i,sub_section) in answer_survey_modal.current_main_section.data" ng-init="sub_section.is_collapsed = (sub_section_i > 0) ? true : false">
 				<!-- Start Sub Section Questions -->
-				<survey-section main-section="answer_survey_modal.current_main_section" is-main-section-invalid="answer_survey_modal.section.mainSectionInvalid[answer_survey_modal.current_main_section.id]" section="sub_section" is-first-parent-section="true" parent-no="0" no="{{ sub_section_i+1 }}" survey-section-data="answer_survey_modal.surveySectionData"></survey-section>
+				<survey-section form="surveyForm" main-section="answer_survey_modal.current_main_section" is-main-section-invalid="answer_survey_modal.section.mainSectionInvalid[answer_survey_modal.current_main_section.id]" section="sub_section" is-first-parent-section="true" parent-no="0" no="{{ sub_section_i+1 }}" survey-section-data="answer_survey_modal.surveySectionData"></survey-section>
 			</div>
 		</div>
 	</div>
 	<div class="modal-footer text-center" ng-hide="answer_survey_modal.isLoading || answer_survey_modal.isMainSectionLoading">
-		<button type="submit" ng-loading="answer_survey_modal.isSending" ng-disabled="answer_survey_modal.isSending || !surveyForm.$dirty" class="btn btn-lg rounded" ng-class="(surveyForm.$dirty) ? 'btn-primary' : 'btn-light'" ng-click="answer_survey_modal.onSave(surveyForm)">حفظ الاستبيان</button>
+		<button type="submit" ng-loading="answer_survey_modal.isSending" ng-disabled="answer_survey_modal.isSending || !surveyForm.$dirty" class="btn btn-lg rounded" ng-class="(surveyForm.$dirty) ? 'btn-primary' : 'btn-light'" ng-click="answer_survey_modal.onSave(surveyForm)">{{ 'survey.save' | lang }}</button>
 	</div>
 </form>

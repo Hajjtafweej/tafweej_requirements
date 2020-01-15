@@ -1,6 +1,6 @@
-var App = angular.module('App', ['ngLocale','ngRoute', 'ngCookies', 'ngResource', 'datatables', 'ngFlash', 'ui.bootstrap', 'flow', 'ui.select', 'ngSanitize', 'angularMoment','ui.timepicker','thatisuday.dropzone','slickCarousel']);
+var App = angular.module('App', ['ngLocale','ngRoute', 'ngCookies', 'ngResource', 'datatables', 'ngFlash', 'ui.bootstrap', 'flow', 'ui.select', 'ngSanitize', 'angularMoment','thatisuday.dropzone','slickCarousel']);
 /* API */
-App.factory('API', function($http, $location, $rootScope, $window) {
+App.factory('API', function($http, $location, $rootScope, $window,$filter) {
   var api_factory = {
     is_web: false,
     without_api_prefix: ['flow-uploader/start-import'],
@@ -10,7 +10,8 @@ App.factory('API', function($http, $location, $rootScope, $window) {
       var api_prefix = (api_factory.without_api_prefix.indexOf(path) == -1) ? '/api'+perm_api_perfix : '';
       return {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-App-Locale': window.current_lang
         },
         url: baseUrl+((api_factory.is_web) ? api_prefix+'/web/'+path : api_prefix+'/'+path),
         method: type
@@ -32,7 +33,7 @@ App.factory('API', function($http, $location, $rootScope, $window) {
 
       var http = $http(json);
       return http.catch(function(e){
-        alert('حدث خطأ, يرجى المحاولة مرة اخرى');
+        alert($filter('lang')('unexpected_error_happened'));
         return true;
       });
     },
@@ -50,7 +51,7 @@ App.factory('API', function($http, $location, $rootScope, $window) {
       }
       return $http(json).catch(function(e){
         if (!e.data.message) {
-          alert('حدث خطأ, يرجى المحاولة مرة اخرى');
+          alert($filter('lang')('unexpected_error_happened'));
         }
         return true;
       });
@@ -69,7 +70,7 @@ App.factory('API', function($http, $location, $rootScope, $window) {
       }
       return $http(json).catch(function(e){
         if (!e.data.message) {
-          alert('حدث خطأ, يرجى المحاولة مرة اخرى');
+          alert($filter('lang')('unexpected_error_happened'));
         }
         return true;
       });
@@ -88,7 +89,7 @@ App.factory('API', function($http, $location, $rootScope, $window) {
       }
       return $http(json).catch(function(e){
         if (!e.data.message) {
-          alert('حدث خطأ, يرجى المحاولة مرة اخرى');
+          alert($filter('lang')('unexpected_error_happened'));
         }
         return true;
       });
@@ -98,7 +99,7 @@ App.factory('API', function($http, $location, $rootScope, $window) {
 });
 
 /* Helpers */
-App.factory('Helpers', function($cacheFactory,$http, Flash, $location, $uibModal, API) {
+App.factory('Helpers', function($cacheFactory,$http, Flash, $location,$filter, $uibModal, API) {
   return {
     /**
      * Add some red colors on invalid fields
@@ -143,7 +144,7 @@ App.factory('Helpers', function($cacheFactory,$http, Flash, $location, $uibModal
     * @return confirm
     **/
     confirmDelete: function(path) {
-      return confirm('هل أنت متأكد من عملية الحذف؟');
+      return confirm($filter('lang')('confirm_delete_msg'));
     },
     /**
     * Most used flash messages
@@ -155,7 +156,7 @@ App.factory('Helpers', function($cacheFactory,$http, Flash, $location, $uibModal
           flash_msg = '';
       switch (message) {
         case 'invalid_fields':
-          flash_msg = 'يرجى التأكد من الحقول جيداً';
+          flash_msg = $filter('lang')('check_required_fields');
         break;
       }
       if (flash_msg) {
@@ -284,6 +285,7 @@ App.controller('MainCtrl', function($http,$compile,$rootScope,$scope,$location, 
   $rootScope.auth = window.auth;
   $rootScope.curHijriYear = window.curHijriYear;
   $rootScope.curYear = moment().format('YYYY');
+  $rootScope.langProp = window.lang_properties;
   /* Sidebar */
   $('.sidebar .has-submenu > a').click(function(){
     $(this).parent().toggleClass('active');

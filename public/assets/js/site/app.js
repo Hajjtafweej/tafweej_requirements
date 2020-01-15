@@ -9,7 +9,8 @@ App.factory('API', function($http, $location, $rootScope, $window) {
     JSON: function(type, path) {
       return {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-App-Locale': window.current_lang
         },
         url: baseUrl+((api_factory.is_web) ? '/api/web/'+path : '/api/'+path),
         method: type
