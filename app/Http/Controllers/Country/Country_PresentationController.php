@@ -27,7 +27,7 @@ class Country_PresentationController extends Controller
 			if($validator->fails()) {
 				return response()->json(['message' => 'invalid_fields', 'errors' => $validator->messages()],401);
 			}
-			$Presentations = Presentation::select('id',DB::raw('title_ar as title'),'created_at','is_downloaded','downloaded_at')->where('user_id',user()->id)->withCount('uploads');
+			$Presentations = Presentation::select('id',DB::raw('title_'.app()->getLocale().' as title'),'created_at','is_downloaded','downloaded_at')->where('user_id',user()->id)->withCount('uploads');
 
 			/* Check if downloaded */
 			if ($q->download && $q->download != 'all') {
@@ -80,7 +80,7 @@ class Country_PresentationController extends Controller
 		*/
 		public function getDownload($id,Request $q)
 		{
-			$Presentation = Presentation::where('id',$id)->select('id',DB::raw('title_ar as title'))->where('user_id',user()->id)->with('Uploads')->firstOrFail();
+			$Presentation = Presentation::where('id',$id)->select('id',DB::raw('title_'.app()->getLocale().' as title'))->where('user_id',user()->id)->with('Uploads')->firstOrFail();
 			if (!$Presentation->downloaded_at) {
 				$Presentation->is_downloaded = 1;
 				$Presentation->downloaded_at = date('Y-m-d H:i:s');

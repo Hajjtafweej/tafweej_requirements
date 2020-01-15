@@ -7,7 +7,7 @@
   <div class="survey-section-content" ng-if="!section.is_collapsed">
     <!-- Start Questions -->
     <div ng-repeat="question in prepareSectionQuestions(section.details.questions)" class="survey-question">
-      <div class="row align-items-center mt-1 mb-3">
+      <div class="row" ng-class="{'align-items-center mt-1 mb-3': ['checkbox'].indexOf(question.type) == -1,'mb-0 mt-3': ['checkbox'].indexOf(question.type) != -1}">
         <div class="col-lg-4 pb-1 pb-lg-0">
           <div class="survey-question-title">
             {{ question.title }}
@@ -27,11 +27,11 @@
                   <div ng-switch-when="date">
                     <div class="input-group">
                         <select class="form-control" ng-required="surveySectionData[question.id].value.month" ng-model="surveySectionData[question.id].value.day">
-                          <option disabled value="">اليوم</option>
+                          <option disabled value="">{{ 'day' | lang }}</option>
                           <option ng-repeat="day in lists.days" value="{{ day }}">{{ day }}</option>
                         </select>
                         <select class="form-control" ng-required="surveySectionData[question.id].value.day" ng-model="surveySectionData[question.id].value.month">
-                          <option disabled value="">الشهر</option>
+                          <option disabled value="">{{ 'month' | lang }}</option>
                           <option ng-repeat="month in lists.months" value="{{ month }}">{{ month }}</option>
                         </select>
                       <div class="input-group-append">
@@ -42,11 +42,11 @@
                   <div ng-switch-when="date_hijri">
                     <div class="input-group">
                       <select class="form-control" ng-required="surveySectionData[question.id].value.month" ng-model="surveySectionData[question.id].value.day">
-                        <option disabled value="">اليوم</option>
+                        <option disabled value="">{{ 'day' | lang }}</option>
                         <option ng-repeat="day in lists.hijri_days" value="{{ day }}">{{ day }}</option>
                       </select>
                       <select class="form-control" ng-required="surveySectionData[question.id].value.day" ng-model="surveySectionData[question.id].value.month">
-                        <option disabled value="">الشهر</option>
+                        <option disabled value="">{{ 'month' | lang }}</option>
                         <option ng-repeat="month in lists.months" value="{{ month }}">{{ month }}</option>
                       </select>
                       <div class="input-group-append">
@@ -55,31 +55,26 @@
                     </div>
                   </div>
                   <div ng-switch-when="time">
-                    <input id="question_{{ question.id }}_time_value" class="form-control" placeholder="أختر" ui-timepicker="{show2400: true,step: 5,timeFormat: 'H:i'}" ng-model="surveySectionData[question.id].value">
+                    <time-picker is-timerange="false" dropdown-parent="question_{{ question.id }}" on-change="setFormDirty()" value="surveySectionData[question.id].value" hour-step="question.type_options.hour_step" minute-step="question.type_options.minute_step"></time-picker>
+                  </div>
+                  <div ng-switch-when="timerange">
+                    <time-picker is-timerange="true" dropdown-parent="question_{{ question.id }}" on-change="setFormDirty()" value="surveySectionData[question.id].value" to-value="surveySectionData[question.id].to_value" hour-step="question.type_options.hour_step" minute-step="question.type_options.minute_step"></time-picker>
                   </div>
                   <div ng-switch-when="hajj_days">
                     <div class="input-group">
                       <select class="form-control" ng-model="surveySectionData[question.id].value">
-                        <option disabled value="">أختر</option>
+                        <option disabled value="">{{ 'choose' | lang }}</option>
                         <option ng-repeat="day in lists.hajj_days" value="{{ day }}">{{ day }}</option>
                       </select>
                       <div class="input-group-append">
-                        <span class="input-group-text">ذي الحجة</span>
+                        <span class="input-group-text">{{ 'dhul_hijjah' | lang }}</span>
                       </div>
                     </div>
                   </div>
-                  <div ng-switch-when="timerange">
-                    <div class="input-group">
-                      <input class="form-control" id="question_{{ question.id }}_time_value" placeholder="أختر" ui-timepicker="{show2400: true,step: 5,timeFormat: 'H:i'}" ng-model="surveySectionData[question.id].value">
-                      <div class="input-group-center">
-                        <span class="input-group-text">الى</span>
-                      </div>
-                      <input class="form-control rounded-left" id="question_{{ question.id }}_time_to_value" placeholder="أختر" ui-timepicker="{show2400: true,step: 5,timeFormat: 'H:i'}" ng-model="surveySectionData[question.id].to_value">
-                    </div>
-                  </div>
+
                   <div ng-switch-when="establishments_list">
                     <ui-select ng-model="surveySectionData[question.id].value">
-                      <ui-select-match placeholder="أختر">{{ $select.selected.label }}</ui-select-match>
+                      <ui-select-match placeholder="{{ 'choose' | lang }}">{{ $select.selected.label }}</ui-select-match>
                       <ui-select-choices repeat="item.key as item in lists.establishments | filter: $select.search">
                         <div ng-bind-html="item.label | highlight: $select.search"></div>
                       </ui-select-choices>
@@ -87,7 +82,7 @@
                   </div>
                   <div ng-switch-when="makkah_towns_list">
                     <ui-select ng-model="surveySectionData[question.id].value">
-                      <ui-select-match placeholder="أختر">{{ $select.selected.label }}</ui-select-match>
+                      <ui-select-match placeholder="{{ 'search_town' | lang }}">{{ $select.selected.label }}</ui-select-match>
                       <ui-select-choices repeat="item.key as item in lists.makkah_towns | filter: $select.search">
                         <div ng-bind-html="item.label | highlight: $select.search"></div>
                       </ui-select-choices>
@@ -95,7 +90,7 @@
                   </div>
                   <div ng-switch-when="madinah_towns_list">
                     <ui-select ng-model="surveySectionData[question.id].value">
-                      <ui-select-match placeholder="أختر">{{ $select.selected.label }}</ui-select-match>
+                      <ui-select-match placeholder="{{ 'search_town' | lang }}">{{ $select.selected.label }}</ui-select-match>
                       <ui-select-choices repeat="item.key as item in lists.madinah_towns | filter: $select.search">
                         <div ng-bind-html="item.label | highlight: $select.search"></div>
                       </ui-select-choices>
@@ -103,7 +98,7 @@
                   </div>
                   <div ng-switch-when="transportation_list">
                     <ui-select ng-model="surveySectionData[question.id].value">
-                      <ui-select-match placeholder="أختر">{{ $select.selected.label }}</ui-select-match>
+                      <ui-select-match placeholder="{{ 'choose' | lang }}">{{ $select.selected.label }}</ui-select-match>
                       <ui-select-choices repeat="item.key as item in lists.transportation | filter: $select.search">
                         <div ng-bind-html="item.label | highlight: $select.search"></div>
                       </ui-select-choices>
@@ -111,19 +106,19 @@
                   </div>
                   <div ng-switch-when="ports_list">
                     <ui-select ng-model="surveySectionData[question.id].value">
-                      <ui-select-match placeholder="أختر">{{ $select.selected.label }}</ui-select-match>
+                      <ui-select-match placeholder="{{ 'choose' | lang }}">{{ $select.selected.label }}</ui-select-match>
                       <ui-select-choices repeat="item.key as item in lists.ports | filter: $select.search">
                         <div ng-bind-html="item.label | highlight: $select.search"></div>
                       </ui-select-choices>
                     </ui-select>
                   </div>
                   <div ng-switch-when="number">
-                    <input type="number" min="0" placeholder="ادخال رقماً" class="form-control" ng-model="surveySectionData[question.id].value">
+                    <input type="number" min="0" placeholder="{{ 'enter_numeric' | lang }}" class="form-control" ng-model="surveySectionData[question.id].value">
                   </div>
                   <div ng-switch-when="percentage">
                     <div class="input-group">
                       <select class="form-control" ng-model="surveySectionData[question.id].value">
-                        <option disabled value="">أختر النسبة</option>
+                        <option disabled value="">{{ 'choose_percentage' | lang }}</option>
                         <option ng-if="surveySectionData[question.id].value && !(getPercentageOptions(section) | filter: surveySectionData[question.id].value).length" value="{{ surveySectionData[question.id].value }}">{{ surveySectionData[question.id].value }}</option>
                         <option ng-repeat="item in getPercentageOptions(section)" value="{{ item }}">{{ item }}</option>
                       </select>
@@ -135,9 +130,15 @@
                       </div>
                     </div>
                   </div>
+                  <div ng-switch-when="checkbox">
+                    <div ng-repeat="option in question.options" class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" ng-model="surveySectionData[question.id].value[option.id]" id="option_{{ option.id }}">
+                      <label class="custom-control-label" for="option_{{ option.id }}">{{ option.title }}</label>
+                    </div>
+                  </div>
                   <div ng-switch-when="select">
                     <ui-select ng-model="surveySectionData[question.id].value">
-                      <ui-select-match placeholder="أختر">{{ $select.selected.title }}</ui-select-match>
+                      <ui-select-match placeholder="{{ 'choose' | lang }}">{{ $select.selected.title }}</ui-select-match>
                       <ui-select-choices repeat="item.id as item in question.options | filter: $select.search">
                         <div ng-bind-html="item.title | highlight: $select.search"></div>
                       </ui-select-choices>
@@ -145,20 +146,20 @@
                   </div>
                   <div ng-switch-when="select_with_other">
                     <ui-select ng-model="surveySectionData[question.id].value">
-                      <ui-select-match placeholder="أختر">{{ $select.selected.title }}</ui-select-match>
+                      <ui-select-match placeholder="{{ 'choose' | lang }}">{{ $select.selected.title }}</ui-select-match>
                       <ui-select-choices repeat="item.id as item in question.options | filter: $select.search">
                         <div ng-bind-html="item.title | highlight: $select.search"></div>
                       </ui-select-choices>
                     </ui-select>
                     <div class="mt-2" ng-show="surveySectionData[question.id].value == 'other'">
-                      <input type="text" class="form-control" ng-focus="surveySectionData[question.id].value == 'other'" placeholder="أدخل الخيار الآخر" ng-model="surveySectionData[question.id].other_value">
+                      <input type="text" class="form-control" ng-focus="surveySectionData[question.id].value == 'other'" placeholder="{{ 'enter_other_option' | lang }}" ng-model="surveySectionData[question.id].other_value">
                     </div>
                   </div>
                 </div>
                 <div class="mt-2 mb-2" ng-show="question.is_has_notes && question.show_notes_field">
-                  <textarea class="form-control" ng-focus="question.show_notes_field" placeholder="أضف هنا ملاحظاتك" ng-model="surveySectionData[question.id].notes"></textarea>
+                  <textarea class="form-control" ng-focus="question.show_notes_field" placeholder="{{ 'enter_notes_here' | lang }}" ng-model="surveySectionData[question.id].notes"></textarea>
                 </div>
-                <a ng-show="question.is_has_notes" class="survey-note-btn btn btn-light btn-sm text-muted" ng-click="question.show_notes_field = !question.show_notes_field" ng-bind="(!question.show_notes_field) ? 'أضف ملاحظة' : 'اخفاء الملاحظة'"></a>
+                <a ng-show="question.is_has_notes" class="survey-note-btn btn btn-light btn-sm text-muted" ng-click="question.show_notes_field = !question.show_notes_field" ng-bind="(!question.show_notes_field) ? ('add_note' | lang) : ('hide_note' | lang)"></a>
               </div>
             </div>
           </div>

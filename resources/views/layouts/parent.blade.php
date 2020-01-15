@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html ng-app="App">
+<html ng-app="App" dir="{{ LaravelLocalization::getCurrentLocaleDirection() }}">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  @if(LaravelLocalization::getCurrentLocaleDirection() == 'ltr')
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+  @endif
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}" />
   <title>{{ (url()->current() == url('/')) ? $__env->yieldContent('title') : (trim($__env->yieldContent('title')) ? $__env->yieldContent('title') : 'بوابة التنسيق والتواصل للمنظومة الشاملة للتفويج') }}</title>
@@ -45,6 +48,7 @@
   @endif
   <script type="text/javascript">
   window.angularjsPlugins = [];
+  window.lang = '{{ LaravelLocalization::getCurrentLocale() }}';
   </script>
 </body>
 </html>

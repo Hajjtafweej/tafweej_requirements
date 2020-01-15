@@ -74,10 +74,20 @@
         top: 18px;
     }
 
+    [dir="ltr"] .header .top .btn-outline-light {
+        right: 10px;
+        left: auto;
+    }
+
     .header .logo {
         position: absolute;
         right: 80px;
         top: 4px;
+    }
+
+    [dir="ltr"] .header .logo {
+        left: 80px;
+        right: auto;
     }
 
     .header .links {
@@ -91,10 +101,17 @@
         overflow: hidden;
         padding: 10px 0 0;
         width: 80%;
-        right: -300px;
         max-width: 300px;
         background-color: #fff;
         transition: all .3s ease;
+    }
+
+    [dir="ltr"] .header .links {
+        left: -300px;
+    }
+
+    [dir="rtl"] .header .links {
+        right: -300px;
     }
 
     .header .links ul {
@@ -110,10 +127,17 @@
     }
 
     .header .links li a {
-        padding: 15px 40px 15px 0 !important;
         display: block;
         margin: 0 !important;
         width: 100%;
+    }
+
+    [dir="rtl"] .header .links li a {
+        padding: 15px 40px 15px 0 !important;
+    }
+
+    [dir="ltr"] .header .links li a {
+        padding: 15px 0 15px 40px !important;
     }
 
     .header .links li a:before {
@@ -125,6 +149,15 @@
         font-size: 21px !important;
         right: 0;
         margin: 0;
+    }
+
+    .header .links .tooltip {
+        display: none !important;
+    }
+
+    [dir="ltr"] .header .links li>a>i {
+        left: 0;
+        right: auto;
     }
 
     .header li > a > .icon {
@@ -147,21 +180,32 @@
         border-left: 1px solid var(--light-bg);
     }
 
+    [dir="ltr"] .sidebar-toggle {
+        left: 0;
+        right: auto;
+        border-right: 1px solid var(--light-bg);
+        border-left: 0px;
+    }
+
     .sidebar-toggled:before {
         background: #00000012;
         position: fixed;
         width: 100%;
         content: '';
         height: 100%;
-        z-index: 1
+        z-index: 1;
     }
 
     .sidebar-toggled .sidebar-toggle {
         color: var(--primary);
     }
 
-    .sidebar-toggled .header .links {
+    [dir="rtl"] .sidebar-toggled .header .links {
         right: 0;
+    }
+
+    [dir="ltr"] .sidebar-toggled .header .links {
+        left: 0;
     }
 
     .page-header+.page-container {

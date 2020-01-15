@@ -2,52 +2,21 @@
   <div class="widget-heading">
     <div class="row align-items-center">
       <div class="col">
-        <h3 class="widget-title">الصور</h3>
+        <h3 class="widget-title">{{ 'gallery' | lang }}</h3>
       </div>
       <div class="col-auto mr-auto">
         <ul class="widget-tabs d-flex">
-          <li ng-click="survey.setFilter('tab','all')"  ng-class="{'active': survey.current_tab == 'all'}">الكل</li>
-          <li ng-click="survey.setFilter('tab','completed')" ng-class="{'active': survey.current_tab == 'completed'}">المكتملة</li>
-          <li ng-click="survey.setFilter('tab','incompleted')" ng-class="{'active': survey.current_tab == 'incompleted'}">غير مكتملة</li>
+          <li ng-click="survey.setFilter('tab','all')"  ng-class="{'active': survey.current_tab == 'all'}">{{ 'all' | lang }}</li>
+          <li ng-click="survey.setFilter('tab','completed')" ng-class="{'active': survey.current_tab == 'completed'}">{{ 'completed' | lang }}</li>
+          <li ng-click="survey.setFilter('tab','incompleted')" ng-class="{'active': survey.current_tab == 'incompleted'}">{{ 'incompleted' | lang }}</li>
         </ul>
       </div>
     </div>
   </div>
   <div class="widget-table">
-    <div class="row widget-table-heading mx-0">
-      <div class="col-4">العنوان</div>
-      <div class="col">تاريخ الإستبيان</div>
-      <div class="col">تاريخ آخر إجابة</div>
-      <div class="col-2"></div>
-    </div>
-    <div class="widget-table-body" ng-show="survey.isLoading">
-      <div class="dot-loader"></div>
-    </div>
-    <div class="widget-no-results" ng-show="!survey.isLoading && !survey.list.length"><i class="ic-checklist"></i>لا توجد استبانات ليتم عرضها</div>
-    <div class="widget-table-body" ng-hide="survey.isLoading">
-      <div ng-repeat="item in survey.list" class="widget-table-item">
-        <div class="row mx-0 align-items-center">
-          <div class="col-4">
-            <div class="d-flex align-items-center">
-              <div class="progress-circle clickable" data-progress="{{ survey.getCompletionRate(item,true) }}" data-string="{{ survey.getCompletionRate(item) }}" ng-click="survey.onAnswer(item)"></div>
-              <a class="widget-table-item-title mr-5" ng-click="survey.onAnswer(item)">{{ item.title }}</a>
-            </div>
-          </div>
-          <div class="col">{{ item.created_at | dateF }}</div>
-          <div class="col">
-            <div class="text-muted" ng-hide="item.last_answer">لم يتم الإجابة بعد</div>
-            <div ng-show="item.last_answer">{{ item.last_answer.created_at | dateF: 'yyyy/MM/dd HH:mm G' }}</div>
-          </div>
-          <div class="col-2 d-flex justify-content-end">
-            <button type="button" ng-click="survey.onAnswer(item)" class="btn btn-outline-primary rounded">
-              الاجابة
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+
   </div>
 </div>
 <div class="mt-3 d-flex justify-content-end" ng-if="view == 'summary'">
-  <a href="#/surveys" class="btn btn-light rounded btn-more">مشاهدة الكل<i class="ic-arrow-left mr-2"></i></a>
+  <a href="#/gallery" class="btn btn-light rounded btn-more">{{ 'view_all' | lang }}<i class="ic-arrow-left mr-2"></i></a>
 </div>

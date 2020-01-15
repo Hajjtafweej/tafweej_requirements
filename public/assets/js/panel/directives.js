@@ -5,6 +5,7 @@ Mask Input
 ngEnter
 ngLoading
 ngFocus
+timePicker
 */
 /* Echarts */
 echarts.registerTheme('App',{
@@ -190,6 +191,105 @@ App.directive('ngLoading', function() {
           }
         }
       },true);
+    }
+  };
+});
+App.directive('timePicker', function() {
+  return {
+    template: '<div uib-dropdown is-open="timepicker.isDropdownOpen" auto-close="outsideClick">'+
+    '<div ng-if="!isTimerange" class="form-control dropdown-toggle d-flex align-items-center" ng-class="{\'active\': timepicker.isDropdownOpen && timepicker.currentTab == \'from\'}" uib-dropdown-toggle><span class="text-muted" ng-hide="value">{{ "choose_time" | lang }}</span> <span ng-show="value">{{ value }}</span></div>'+
+    '<div class="input-group" ng-if="isTimerange" uib-dropdown-toggle><div class="form-control dropdown-toggle d-flex align-items-center" ng-class="{\'active\': timepicker.isDropdownOpen && timepicker.currentTab == \'from\'}" ng-click="timepicker.currentTab = \'from\'"><span class="text-muted" ng-hide="value">{{ "choose_time" | lang }}</span> <span ng-show="value">{{ value }}</span></div><div class="input-group-center"><span class="input-group-text" ng-click="timepicker.currentTab = \'to\'">{{ "to" | lang }}</span></div><div class="form-control dropdown-toggle d-flex align-items-center" ng-class="{\'active\': timepicker.isDropdownOpen && timepicker.currentTab == \'to\'}" ng-click="timepicker.currentTab = \'to\'"><span class="text-muted" ng-hide="toValue">{{ "choose_time" | lang }}</span> <span ng-show="toValue">{{ toValue }}</span></div></div>'+
+    '<div uib-dropdown-menu class="dropdown-menu timepicker-dropdown timepicker p-2 dropdown-menu-right"><div class="row">'+
+    '<div class="col-7"><div class="label">{{ "hour" | lang }}</div><div class="row mx-0"><div class="col px-0" ng-repeat="hour in timepicker.lists.hours"><button type="button" ng-click="timepicker.onClick(\'hour\',hour)" class="btn btn-light" ng-class="{\'active\': hour == timepicker[timepicker.currentTab].hour}">{{ hour }}</button></div></div></div>'+
+    '<div class="col-1 d-flex  align-items-center seperator">:</div>'+
+    '<div class="col-4"><div class="label">{{ "minute" | lang }}</div><div class="row mx-0"><div class="col px-0" ng-repeat="minute in timepicker.lists.minutes"><button type="button" ng-click="timepicker.onClick(\'minute\',minute)" class="btn btn-light" ng-class="{\'active\': minute == timepicker[timepicker.currentTab].minute}">{{ minute }}</button></div></div></div>'+
+    '</div></div></div>',
+    scope: {
+      isTimerange: '=',
+      value: '=',
+      toValue: '=',
+      hourStep: '=',
+      minuteStep: '=',
+      onChange: '&'
+    },
+    link: function($scope,$e,$a) {
+      $scope.isTimerange = (!$scope.isTimerange) ? false : $scope.isTimerange;
+      $scope.hourStep = (!$scope.hourStep) ? 1 : $scope.hourStep;
+      $scope.minuteStep = (!$scope.minuteStep) ? 5 : $scope.minuteStep;
+      $scope.timepicker = {
+        isDropdownOpen: false,
+        currentTab: 'from',
+        from: {
+          minute: null,
+          hour: null
+        },
+        to: {
+          minute: null,
+          hour: null
+        },
+        prepareLists: function(){
+          $scope.timepicker.lists = {
+            hours: [],
+            minutes: []
+          };
+          for(var hour_i = 0;hour_i < 24;hour_i++){
+            if (hour_i % $scope.hourStep == 0) {
+              $scope.timepicker.lists.hours.push(('0'+hour_i).slice(-2));
+            }
+          }
+          for(var minute_i = 0;minute_i < 60;minute_i++){
+            if (minute_i % $scope.minuteStep == 0) {
+              $scope.timepicker.lists.minutes.push(('0'+minute_i).slice(-2));
+            }
+          }
+        },
+        onClick: function(type,value){
+          $scope.timepicker[$scope.timepicker.currentTab][type] = value;
+          $scope.timepicker.clicked[type] = true;
+
+          if ($scope.timepicker[$scope.timepicker.currentTab].minute && $scope.timepicker[$scope.timepicker.currentTab].hour) {
+            $scope[($scope.timepicker.currentTab == 'from') ? 'value' : 'toValue'] = $scope.timepicker[$scope.timepicker.currentTab].hour+':'+$scope.timepicker[$scope.timepicker.currentTab].minute;
+            if(!$scope.isTimerange || ($scope.value && $scope.toValue)){
+              $scope.onChange();
+            }
+
+            if ($scope.timepicker.clicked.minute && $scope.timepicker.clicked.hour) {
+              $scope.timepicker.isDropdownOpen = false;
+            }
+          }
+        },
+        init: function(){
+          $scope.timepicker.prepareLists();
+          if ($scope.value) {
+            var split_value = $scope.value.split(':');
+            $scope.timepicker.from.hour = split_value[0];
+            $scope.timepicker.from.minute = split_value[1];
+          }
+          if ($scope.toValue) {
+            var split_to_value = $scope.toValue.split(':');
+            $scope.timepicker.to.hour = split_to_value[0];
+            $scope.timepicker.to.minute = split_to_value[1];
+          }
+          $scope.$watchGroup(['hourStep','minuteStep'],function(n,o){
+            $scope.timepicker.prepareLists();
+          });
+
+          $scope.$watch('timepicker.isDropdownOpen',function(n,o){
+            if (n) {
+              $scope.timepicker.clicked = {
+                minute: false,
+                hour: false
+              };
+            }
+          });
+
+        }
+      };
+
+
+
+      $scope.timepicker.init();
+
     }
   };
 });

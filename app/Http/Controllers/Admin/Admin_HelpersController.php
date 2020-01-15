@@ -20,8 +20,8 @@ class Admin_HelpersController extends Controller
 			switch ($type) {
 				case 'town-lists':
 					$List = [
-						'villages' => \App\Village::where('town_id',$q->town_id)->select('id','name')->get(),
-						'buildings' => \App\Building::where('town_id',$q->town_id)->select('id','code')->get()
+						'villages' => \App\Village::where('town_id',$q->town_id)->select('id','name')->orderBy('name')->get(),
+						'buildings' => \App\Building::where('town_id',$q->town_id)->select('id','code')->orderBy('name')->get()
 					];
 					break;
 			}

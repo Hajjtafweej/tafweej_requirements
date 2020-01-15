@@ -110,6 +110,16 @@ App.directive('surveyList', function(Helpers,API,$uibModal,$filter) {
                         if (question.last_answer_value) {
                           // Prepare values of fields
                           switch (question.type) {
+                            case 'checkbox':
+                              var splitCheckboxValue = (question.last_answer_value.value) ? question.last_answer_value.value.split(',') : [],
+                                  prepareCheckboxValue = {};
+                              angular.forEach(splitCheckboxValue,function(option,option_key){
+                                prepareCheckboxValue[option] = true;
+                              });
+                              $scope.answer_survey_modal.surveySectionData[question.id] = {
+                                value: prepareCheckboxValue
+                              };
+                            break;
                             case 'select_with_other':
                               if (!$filter('filter')(question.options,{id: parseInt(question.last_answer_value.value)},true).length) {
                                 $scope.answer_survey_modal.surveySectionData[question.id] = {
@@ -133,16 +143,11 @@ App.directive('surveyList', function(Helpers,API,$uibModal,$filter) {
                                 };
                               }
                             break;
-                            case 'time':
-                              $scope.answer_survey_modal.surveySectionData[question.id] = {
-                                value: moment(moment().format('YYYY-MM-DD')+' '+question.last_answer_value.value)
-                              };
-                            break;
                             case 'timerange':
                               var time_split = question.last_answer_value.value.split('-');
                               $scope.answer_survey_modal.surveySectionData[question.id] = {
-                                value: moment(moment().format('YYYY-MM-DD')+' '+time_split[0]),
-                                to_value: moment(moment().format('YYYY-MM-DD')+' '+time_split[1])
+                                value: time_split[0],
+                                to_value: time_split[1]
                               };
                             break;
                             case 'date_hijri': case 'date':
@@ -173,8 +178,8 @@ App.directive('surveyList', function(Helpers,API,$uibModal,$filter) {
                           // Set default value
                           var question_default_value = null;
                           switch (question.type) {
-                            case 'percentage':
-
+                            case 'checkbox':
+                              question_default_value = {};
                             break;
                           }
                           $scope.answer_survey_modal.surveySectionData[question.id] = {
@@ -204,13 +209,6 @@ App.directive('surveyList', function(Helpers,API,$uibModal,$filter) {
                   angular.forEach(prepareAnswers,function(item,item_k){
                     if(item.value === null){
                       delete prepareAnswers[item_k];
-                    }else {
-                      if ($('#question_'+item_k+'_time_value').length) {
-                        prepareAnswers[item_k].value = $('#question_'+item_k+'_time_value').val();
-                      }
-                      if ($('#question_'+item_k+'_time_to_value').length) {
-                        prepareAnswers[item_k].to_value = $('#question_'+item_k+'_time_to_value').val();
-                      }
                     }
                   });
                   return prepareAnswers;
@@ -219,7 +217,7 @@ App.directive('surveyList', function(Helpers,API,$uibModal,$filter) {
                   $scope.answer_survey_modal.isSendClicked = true;
                   if (!Helpers.isValid(Form.$valid) || !$scope.answer_survey_modal.section.checkValidation()) {
                     if (!isHideMessage) {
-                      Flash.create('danger','يرجى منك التحقق من المدخلات المطلوبة');
+                      Flash.create('danger',$filter('lang')('check_required_fields'));
                     }
                     return false;
                   }
@@ -228,15 +226,15 @@ App.directive('surveyList', function(Helpers,API,$uibModal,$filter) {
                     $scope.answer_survey_modal.isSending = false;
                     if (d.data && d.data.message == 'success') {
                       if (!isHideMessage) {
-                        Flash.create('success','تم حفظ الإستبانة بنجاح');
+                        Flash.create('success',$filter('lang')('survey.saved_successfully'));
                         $scope.answer_survey_modal.cancel();
                       }
                       $scope.survey.getList();
                       Form.$setPristine();
                     }else if (d.data && d.data.message == 'invalid_fields') {
-                      Flash.create('danger','يرجى منك التحقق من الحقول جيداً');
+                      Flash.create('danger',$filter('lang')('check_required_fields'));
                     }else {
-                      Flash.create('danger','حدث خطأ في ادخال البيانات يرجى المحاولة مره أخرى');
+                      Flash.create('danger',$filter('lang')('unexpected_error_happened'));
                     }
                   });
                 },
@@ -271,6 +269,7 @@ App.directive('surveySection', function(Helpers,API,$uibModal,$filter) {
   return {
     templateUrl: Helpers.getTemp('survey/survey-section-directive'),
     scope: {
+      form: '=',
       mainSection: '=',
       isFirstParentSection: '=',
       isMainSectionInvalid: '=',
@@ -356,13 +355,22 @@ App.directive('surveySection', function(Helpers,API,$uibModal,$filter) {
           switch (question.type) {
             case 'select_with_other':
               if (angular.isArray(question.options) && !$filter('filter')(question.options,{id: 'other'}).length) {
-                question.options.push({id: 'other',title: 'أخرى'});
+                question.options.push({id: 'other',title: $filter('lang')('other')});
               }
             break;
           }
           result.push(question);
         });
         return result;
+      };
+
+      /*
+      * Set form dirty
+      */
+      $scope.setFormDirty = function(){
+        if ($scope.form) {
+          $scope.form.$setDirty();
+        }
       };
     }
   };

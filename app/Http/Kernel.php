@@ -39,6 +39,7 @@ class Kernel extends HttpKernel
 
         'api' => [
             'throttle:60,1',
+            'api-localization',
             'bindings',
         ],
     ];
@@ -63,6 +64,11 @@ class Kernel extends HttpKernel
         'admin' =>   \App\Http\Middleware\AdminMiddleware::class,
         'jwt.auth' => 'Tymon\JWTAuth\Middleware\GetUserFromToken',
         'jwt.refresh' => 'Tymon\JWTAuth\Middleware\RefreshToken',
+        'api-localization' => \App\Http\Middleware\ApiLocalizationMiddleware::class,
+        'localize' => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRoutes::class,
+        'localizationRedirect' => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
+        'localeSessionRedirect' => \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,
+        'localeViewPath' => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationViewPath::class
     ];
 
     /**

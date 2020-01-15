@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html ng-app="App" dir="rtl" ng-controller="MainCtrl">
+<html ng-app="App" dir="{{ LaravelLocalization::getCurrentLocaleDirection() }}" ng-controller="MainCtrl">
 <head>
-  <title>بوابة التنسيق والتواصل للمنظومة الشاملة للتفويج</title>
+  <title>@lang('master.gate_title')</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta content="width=device-width, initial-scale=1" name="viewport" />
+  @if(LaravelLocalization::getCurrentLocaleDirection() == 'ltr')
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+  @endif
   <link href="{{ asset('assets/css/reset.css?v='.config('app.asset_ver')) }}" rel="stylesheet">
   <link href="{{ asset('assets/css/icons.css?v='.config('app.asset_ver')) }}" rel="stylesheet">
   <link href="{{ asset('assets/css/plugins.css?v='.config('app.asset_ver')) }}" rel="stylesheet">
@@ -29,7 +32,24 @@
   <script>
   var assets_ver = {{ config('app.app_asset_ver') }};
   window.auth = {!! auth()->user()->toJson() !!};
-  window.lists = {!! collect(Lang::get('lists'))->toJson() !!};
+  window.lists = {!! collect(Lang::get('lists'))->map(function ($item,$key) {
+    if (in_array($key,['makkah_towns','madinah_towns'])) {
+      return collect($item)->sortBy(function ($town){
+        return $town;
+      });
+    }else {
+      return $item;
+    }
+  })->toJson() !!};
+  window.lang = {!! collect(Lang::get('master'))->toJson() !!};
+  window.current_lang = '{{ LaravelLocalization::getCurrentLocale() }}';
+  window.lang_dir = '{{ LaravelLocalization::getCurrentLocaleDirection() }}';
+  window.lang_properties = {
+    short_side: '{{ (LaravelLocalization::getCurrentLocaleDirection() == 'ltr') ? 'l' : 'r' }}',
+    short_ops_side: '{{ (LaravelLocalization::getCurrentLocaleDirection() == 'ltr') ? 'r' : 'l' }}',
+    side: '{{ (LaravelLocalization::getCurrentLocaleDirection() == 'ltr') ? 'left' : 'right' }}',
+    ops_side: '{{ (LaravelLocalization::getCurrentLocaleDirection() == 'ltr') ? 'right' : 'left' }}'
+  }
   </script>
 </head>
 <body class="light-bg">
@@ -40,11 +60,20 @@
       <div class="container">
         <div class="row align-items-center">
           <div class="col">
-            <a class="logo" href="#/"><img src="{{ asset('assets/images/logo.png?v='.config('app.app_asset_ver')) }}" alt=""></a>
+            <a class="logo" href="#/"><img src="{{ asset('assets/images/logo_'.LaravelLocalization::getCurrentLocale().'.png?v='.config('app.app_asset_ver')) }}" alt=""></a>
           </div>
           <div class="col-auto mr-auto">
-            <!-- <a class="btn btn-outline-primary rounded" href="#/office/home">معلومات المكتب</a> -->
-            <a class="btn btn-outline-light rounded" href="/logout">تسجيل الخروج</a>
+            <div class="d-flex align-items-center">
+              <div class="header-has-submenu lang-submenu mx-1" ng-click="toggleLang = !toggleLang" ng-class="{'active': toggleLang}"><a class="btn btn-light" ng-class="{'active': toggleLang}"><i class="icon ic-globe"></i>
+{{ ['en' => 'English','ar' => 'عربي','fr' => 'Français'][LaravelLocalization::getCurrentLocale()] }}<i class="ic-caret-down"></i></a>
+<ul class="submenu">
+    <li><a href="{{ url('ar/panel') }}">عربي</a></li>
+    <li><a href="{{ url('en/panel') }}">English</a></li>
+    <li><a href="{{ url('fr/panel') }}">Français</a></li>
+                              </ul></div>
+                              <!-- <a class="btn btn-outline-primary rounded" href="#/office/home">معلومات المكتب</a> -->
+                              <a class="btn btn-outline-light rounded" href="/logout">@lang('auth.logout')</a>
+            </div>
           </div>
         </div>
       </div>
@@ -54,12 +83,12 @@
         <div class="row justify-content-center">
           <div class="col-xl-9">
             <ul findactivetab="1">
-              <li><a href="#/home"><i class="ic-home"></i>الرئيسية</a></li>
-              <li><a href="#/presentations"><i class="ic-presentation"></i>العروض المرئية</a></li>
-              <li uib-tooltip="قريباً"><a href="#/gallery"><i class="ic-photo-gallery"></i>الصور والفيديو</a></li>
-              <li><a href="#/surveys"><i class="ic-checklist"></i>الاستبانات</a></li>
-              <li uib-tooltip="قريباً"><a href="#/tafweej-plans"><i class="ic-plan"></i>خطط التفويج</a></li>
-              <li uib-tooltip="قريباً"><a href="#/tafweej-tables"><i class="ic-table"></i>جداول التفويج</a></li>
+              <li><a href="#/home"><i class="ic-home"></i>@lang('master.home_page')</a></li>
+              <li><a href="#/presentations"><i class="ic-presentation"></i>@lang('master.presentations')</a></li>
+              <li uib-tooltip="@lang('master.soon')"><a href="#/gallery"><i class="ic-photo-gallery"></i>@lang('master.gallery.title')</a></li>
+              <li><a href="#/surveys"><i class="ic-checklist"></i>@lang('master.surveys')</a></li>
+              <li uib-tooltip="@lang('master.soon')"><a href="#/tafweej-plans"><i class="ic-plan"></i>@lang('master.tafweej_plans')</a></li>
+              <li uib-tooltip="@lang('master.soon')"><a href="#/tafweej-tables"><i class="ic-table"></i>@lang('master.tafweej_tables')</a></li>
             </ul>
           </div>
         </div>
@@ -79,10 +108,10 @@
       <div class="row align-items-center">
         <div class="col-md-auto">
           <div class="d-none d-md-block">
-            جميع الحقوق محفوظة {{ date('Y') }}
+            @lang('master.copyright_text',['year' => date('Y')])
           </div>
         </div>
-        <div class="col-md-auto mr-md-auto">
+        <div class="col-md-auto {{ (LaravelLocalization::getCurrentLocaleDirection() == 'rtl') ? 'mr' : 'ml' }}-md-auto">
           <img class="img-fluid" src="{{ asset('assets/images/footer-logos.png') }}" alt="">
         </div>
       </div>

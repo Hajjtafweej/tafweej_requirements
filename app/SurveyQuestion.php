@@ -10,7 +10,8 @@ class SurveyQuestion extends Model
   protected $casts = [
     'is_has_notes' => 'integer',
     'survey_section_id' => 'integer',
-    'main_section_id' => 'integer'
+    'main_section_id' => 'integer',
+    'type_options' => 'object'
   ];
   /**
   * Survey
