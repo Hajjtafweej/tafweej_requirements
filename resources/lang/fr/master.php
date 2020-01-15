@@ -4,11 +4,11 @@ return [
   'gate_title' => 'Portail de coordination et de communication Pour le système global de Tafweej',
   'gate_subtitle' => 'Bureaux des pèlerins',
   'home_page' => 'La page principale',
-  'presentations' => 'Les présentations Powerpoint ',
+  'presentations' => 'Les présentations',
 
   'surveys' => 'Le questionnaire',
   'tafweej_plans' => 'Tafweej Plans',
-  'tafweej_tables' => 'Les tables de Tafwij(regroupement des pèlerins)',
+  'tafweej_tables' => 'Les tables de Tafwij',
   'gallery_recent_title' => 'Nouvelles photos et vidéos',
   'download' => 'Download',
   'view' => 'View',
