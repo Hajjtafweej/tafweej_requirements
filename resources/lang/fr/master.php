@@ -54,7 +54,7 @@ return [
   'choose' => 'Choisir',
   'save' => 'Save',
   'send' => 'Send',
-  'choose_percentage' => 'Choose',
+  'choose_percentage' => 'Choisir',
   'choose_time' => 'Choisir le temps',
   'to' => 'To',
   'dhul_hijjah' => 'Dhul Hijjah',
