@@ -28,7 +28,7 @@
         <button type="submit" class="btn btn-primary btn-lg btn-block rounded">@lang('master.send')</button>
       </div>
         <div class="text-center mt-4">
-          <a class="btn p-0 text-muted" href="{{ route('login') }}">@lang('master.back_to_login')</a>
+          <a class="btn p-0 text-muted" href="{{ route('login') }}">@lang('auth.back_to_login')</a>
         </div>
       </div>
     </div>

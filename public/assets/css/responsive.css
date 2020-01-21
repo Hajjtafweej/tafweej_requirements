@@ -242,6 +242,10 @@
     .widget-table-item .btn-outline-primary {
         width: 100%;
     }
+
+    .auth-panel {
+        padding: 20px 30px 35px;
+    }
 }
 
 @media (max-width: 355px) {

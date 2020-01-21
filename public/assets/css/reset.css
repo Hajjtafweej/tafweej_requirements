@@ -59,7 +59,7 @@ body {
 }
 
 [dir="ltr"] body {
-    font-family: Roboto;
+    font-family: Roboto,'Janna LT';
     text-align: left;
 }
 
@@ -3272,16 +3272,20 @@ body > .dropdown-menu {
     z-index: 3
 }
 
-.input-group>.form-control + .form-control,.input-group>.form-control + .custom-select,.input-group>.form-control + .custom-file,.input-group>.custom-select + .form-control,.input-group>.custom-select + .custom-select,.input-group>.custom-select + .custom-file,.input-group>.custom-file + .form-control,.input-group>.custom-file + .custom-select,.input-group>.custom-file + .custom-file {
+[dir="rtl"] .input-group>.form-control + .form-control,[dir="rtl"] .input-group>.form-control + .custom-select,[dir="rtl"] .input-group>.form-control + .custom-file,[dir="rtl"] .input-group>.custom-select + .form-control,[dir="rtl"] .input-group>.custom-select + .custom-select,[dir="rtl"] .input-group>.custom-select + .custom-file,[dir="rtl"] .input-group>.custom-file + .form-control,[dir="rtl"] .input-group>.custom-file + .custom-select,[dir="rtl"] .input-group>.custom-file + .custom-file {
     margin-right: -1px;
 }
 
-.input-group>.form-control:not(:last-child),.input-group>.custom-select:not(:last-child) {
+[dir="ltr"] .input-group>.form-control + .form-control,[dir="ltr"] .input-group>.form-control + .custom-select,[dir="ltr"] .input-group>.form-control + .custom-file,[dir="rtl"] .input-group>.custom-select + .form-control,[dir="ltr"] .input-group>.custom-select + .custom-select,[dir="ltr"] .input-group>.custom-select + .custom-file,[dir="ltr"] .input-group>.custom-file + .form-control,[dir="ltr"] .input-group>.custom-file + .custom-select,[dir="ltr"] .input-group>.custom-file + .custom-file {
+    margin-left: -1px;
+}
+
+
+[dir="rtl"] .input-group>.form-control:not(:last-child),[dir="rtl"] .input-group>.custom-select:not(:last-child) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0
 }
-
-.input-group>.form-control:not(:first-child),.input-group>.custom-select:not(:first-child) {
+[dir="ltr"] .input-group>.form-control:not(:last-child),[dir="ltr"] .input-group>.custom-select:not(:last-child) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0
 }
@@ -3324,13 +3328,22 @@ body > .dropdown-menu {
     margin-left: -1px;
     margin-right: -1px;
 }
+=
 
-.input-group-prepend {
+[dir="rtl"] .input-group-prepend {
     margin-left: -1px
 }
 
-.input-group-append {
+[dir="ltr"] .input-group-prepend {
     margin-right: -1px
+}
+
+[dir="rtl"] .input-group-append {
+    margin-right: -1px
+}
+
+[dir="ltr"] .input-group-append {
+    margin-left: -1px
 }
 
 .input-group-text {
@@ -3362,9 +3375,14 @@ body > .dropdown-menu {
     border-bottom-left-radius: 0
 }
 
-.input-group>.input-group-append>.btn,.input-group>.input-group-append>.input-group-text,.input-group>.input-group-prepend:not(:first-child)>.btn,.input-group>.input-group-prepend:not(:first-child)>.input-group-text,.input-group>.input-group-prepend:first-child>.btn:not(:first-child),.input-group>.input-group-prepend:first-child>.input-group-text:not(:first-child) {
+[dir="rtl"] .input-group>.input-group-append>.btn,[dir="rtl"]  .input-group>.input-group-append>.input-group-text,[dir="rtl"]  .input-group>.input-group-prepend:not(:first-child)>.btn,[dir="rtl"]  .input-group>.input-group-prepend:not(:first-child)>.input-group-text,[dir="rtl"]  .input-group>.input-group-prepend:first-child>.btn:not(:first-child),[dir="rtl"]  .input-group>.input-group-prepend:first-child>.input-group-text:not(:first-child) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0
+}
+
+[dir="ltr"] .input-group>.input-group-append>.btn,[dir="ltr"]  .input-group>.input-group-append>.input-group-text,[dir="ltr"]  .input-group>.input-group-prepend:not(:first-child)>.btn,[dir="ltr"]  .input-group>.input-group-prepend:not(:first-child)>.input-group-text,[dir="ltr"]  .input-group>.input-group-prepend:first-child>.btn:not(:first-child),[dir="ltr"]  .input-group>.input-group-prepend:first-child>.input-group-text:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0
 }
 
 .input-group>.input-group-center>.btn,.input-group>.input-group-center>.input-group-text {

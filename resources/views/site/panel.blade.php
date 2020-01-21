@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="App" dir="{{ LaravelLocalization::getCurrentLocaleDirection() }}" ng-controller="MainCtrl">
+<html ng-app="App" lang="{{ LaravelLocalization::getCurrentLocale() }}" dir="{{ LaravelLocalization::getCurrentLocaleDirection() }}" ng-controller="MainCtrl">
 <head>
   <title>@lang('master.gate_title')</title>
   <meta charset="utf-8">
@@ -81,7 +81,7 @@
     <div class="links">
       <div class="container">
         <div class="row justify-content-center">
-          <div class="col-xl-9">
+          <div class="col-xl-{{ (LaravelLocalization::getCurrentLocale() == 'fr') ? '12' : '9' }}">
             <ul findactivetab="1">
               <li><a href="#/home"><i class="ic-home"></i>@lang('master.home_page')</a></li>
               <li><a href="#/presentations"><i class="ic-presentation"></i>@lang('master.presentations')</a></li>
