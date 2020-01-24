@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Country;
+namespace App\Http\Controllers\Portal;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -8,7 +8,7 @@ use DB,Validator;
 use Illuminate\Validation\Rule;
 use \GeniusTS\HijriDate\Hijri as Hijri;
 use App\Meeting,App\Upload;
-class Country_MeetingController extends Controller
+class PortalMeetingController extends Controller
 {
 
 

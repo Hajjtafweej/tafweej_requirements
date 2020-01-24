@@ -14,7 +14,7 @@
 	use App\User;
 	use App\Http\Controllers\AdminController;
 
-	class Admin_FlowUploaderController extends Controller
+	class AdminFlowUploaderController extends Controller
 	{
 		//
 		public $file_path;

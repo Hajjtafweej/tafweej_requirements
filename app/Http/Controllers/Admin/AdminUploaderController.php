@@ -8,7 +8,7 @@
 	use Illuminate\Support\Facades\Validator;
 	use Image;
 
-	class Admin_UploaderController extends Controller
+	class AdminUploaderController extends Controller
 	{
 		//
 		public $file_path;

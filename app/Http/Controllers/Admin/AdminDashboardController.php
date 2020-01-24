@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use DB;
 
-class Admin_DashboardController extends Controller
+class AdminDashboardController extends Controller
 {
 
 	/**

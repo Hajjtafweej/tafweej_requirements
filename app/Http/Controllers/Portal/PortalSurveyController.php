@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Country;
+namespace App\Http\Controllers\Portal;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -8,7 +8,7 @@ use DB,Validator;
 use Illuminate\Validation\Rule;
 use \GeniusTS\HijriDate\Hijri as Hijri;
 use App\Survey,App\SurveyAnswer,App\SurveyAnswerValue,App\SurveySection,App\SurveyQuestion,App\SurveyQuestionOption;
-class Country_SurveyController extends Controller
+class PortalSurveyController extends Controller
 {
 
 
@@ -59,25 +59,23 @@ class Country_SurveyController extends Controller
 	}
 
 	/**
-	* When we had to build a validation system for the main sections it is need to get all the required questions
-	* once the survey opens so to let us check unfilled questions when click on save survey button
+	* When we build a validation system for the main sections it is need to get all the required questions for all main sections
+	* once the survey opens then check the unfilled questions while click on the save survey button
 	*
-	* @param integer $survey_id
+	* @param integer $main_section_id
 	* @param integer $parent_id
 	* @param object $q
 	*
 	* @return array
 	*/
-	public function prepareRequiredQuestionsIds($main_section_id,$parent_id)
+	public function prepareRequiredQuestionsIds($main_section_id,$parent_id,$is_first_child = true)
 	{
 		$getSubSections = SurveySection::where('parent_id',$parent_id)->select('id')->with(['Questions' => function($Question) use($main_section_id){
-
 			return $Question->select('id',DB::raw('('.(($main_section_id == 0) ? 'survey_section_id' : '"'.$main_section_id.'"').') as main_section_id'),'survey_section_id');
 		}]);
-		if ($parent_id == 0) {
-			$getSubSections = $getSubSections->where('is_required',1);
-		}
+		$getSubSections = $getSubSections->where('is_required',1);
 		$getSubSections = $getSubSections->get();
+
 
 		if($getSubSections->count()){
 			foreach($getSubSections as $subSection){
@@ -86,6 +84,7 @@ class Country_SurveyController extends Controller
 				$this->prepareRequiredQuestionsIds($main_section_id,$subSection->id);
 			}
 		}
+
 	}
 
 

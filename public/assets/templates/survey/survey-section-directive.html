@@ -1,5 +1,5 @@
 <div class="survey-section" ng-class="{'collapsed': isFirstParentSection && section.is_collapsed,'collapsable': isFirstParentSection}">
-  <div class="survey-section-title" ng-click="collapseSection(section)" ng-class="{'small': !isFirstParentSection,'invalid': isMainSectionInvalid && isFirstParentSection && section.all_questions.length != countSectionAnswers(section)}"><span ng-class="{'dark-bg': !isFirstParentSection && getSectionNo().length == 3,'light-bg': !isFirstParentSection && getSectionNo().length > 3}">{{ getSectionNo() }}</span>{{ section.details.title }}
+  <div class="survey-section-title" ng-click="collapseSection(section)" ng-class="{'small': !isFirstParentSection,'invalid': isMainSectionInvalid && section.details.is_required && isFirstParentSection && section.all_questions.length != countSectionAnswers(section)}"><span ng-class="{'dark-bg': !isFirstParentSection && getSectionNo().length == 3,'light-bg': !isFirstParentSection && getSectionNo().length > 3}">{{ getSectionNo() }}</span>{{ section.details.title }}
     <div class="completion-count" ng-if="isFirstParentSection" ng-class="{'text-primary': section.all_questions.length == countSectionAnswers(section)}">
       ({{ section.all_questions.length }}/{{ countSectionAnswers(section) }})
     </div>

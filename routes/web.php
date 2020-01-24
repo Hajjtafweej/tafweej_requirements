@@ -16,7 +16,7 @@ Route::group(
     })->middleware('guest')->name('home_page');
     Route::group(['prefix' => 'download','middleware' => 'auth'],function(){
       Route::get('file/{folder}/{file}','SiteController@getDownloadFile');
-      Route::get('presentation/{id}','Country\Country_PresentationController@getDownload');
+      Route::get('presentation/{id}','Portal\PortalPresentationController@getDownload');
     });
   });
   /* Web API */

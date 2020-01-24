@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Country;
+namespace App\Http\Controllers\Portal;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB,Validator;
 use Illuminate\Validation\Rule;
 use App\Gallery,App\Upload;
-class Country_GalleryController extends Controller
+class PortalGalleryController extends Controller
 {
 
 

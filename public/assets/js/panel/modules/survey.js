@@ -39,7 +39,7 @@ App.directive('surveyList', function(Helpers,API,$uibModal,$filter) {
           });
         },
         /*
-        * 1-3: On click answer button inside survey list then open the answer survey modal and all thier related functions
+        * 1-3: On click answer button inside survey list then open the answer survey modal and all related functions
         */
         onAnswer: function(survey){
           $uibModal.open({
@@ -292,7 +292,7 @@ App.directive('surveySection', function(Helpers,API,$uibModal,$filter) {
       $scope.countSectionAnswers = function(section){
         var count = 0;
         angular.forEach(section.all_questions,function(question,question_k){
-          if (question.last_answer_value || $scope.surveySectionData[question.id].value) {
+          if ((question.last_answer_value && question.last_answer_value.value) || (!angular.isObject($scope.surveySectionData[question.id].value) && $scope.surveySectionData[question.id].value) || (angular.isObject($scope.surveySectionData[question.id].value) && Object.keys($scope.surveySectionData[question.id].value).length > 0)) {
             count++;
           }
         });

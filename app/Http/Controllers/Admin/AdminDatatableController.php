@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use DB,Excel;
 
-class Admin_DatatableController extends Controller
+class AdminDatatableController extends Controller
 {
 
 	/**
@@ -278,7 +278,7 @@ class Admin_DatatableController extends Controller
 		$start_date = ($q->start_date) ? $q->start_date : false;
 		$end_date = ($q->end_date) ? $q->end_date : false;
 
-		$getResults = \App\User::selectRaw('users.id,users.name,users.email,users.sa_id,users.phone,users.is_supervisor,users.admin_group,users.created_at');
+		$getResults = \App\User::selectRaw('users.id,users.name,users.email,users.sa_id,users.phone,users.is_supervisor,users.Admingroup,users.created_at');
 
 		// Status filter
 		$date_field = 'created_at';
@@ -290,7 +290,7 @@ class Admin_DatatableController extends Controller
 			$getResults = $getResults->whereDate(DB::raw($date_field),'<=',$end_date);
 		}
 		if($q->perm && $q->perm != 'all'){
-			$getResults = $getResults->where('admin_group',$q->perm);
+			$getResults = $getResults->where('Admingroup',$q->perm);
 		}
 		$getResults = $getResults->authorized()->groupBy('users.id');
 

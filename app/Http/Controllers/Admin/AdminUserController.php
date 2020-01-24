@@ -9,7 +9,7 @@
 	use App\User;
 	use DB;
 
-	class Admin_UserController extends Controller
+	class AdminUserController extends Controller
 	{
 
 
@@ -35,19 +35,19 @@
 	  */
 		public function Save($id = null,Request $q)
 		{
-			$admin_groups = [
+			$Admingroups = [
 				'requester','community_representative','reviewer','approval','printer'
 			];
 			if (user()->is_supervisor) {
-				$admin_groups[] = 'supervisor';
-				$admin_groups[] = 'manage_users';
+				$Admingroups[] = 'supervisor';
+				$Admingroups[] = 'manage_users';
 			}
 
 			$validation = [
 				'name' => 'required',
 				'sa_id' => 'required',
 				'phone' => 'required',
-				'admin_group' => ['required',Rule::in($admin_groups)],
+				'Admingroup' => ['required',Rule::in($Admingroups)],
 	      'email' => 'required|email|max:255'
 			];
 			if (!$id) {
@@ -76,8 +76,8 @@
 			$User->phone = $q->phone;
 			if (user()->id != $id) {
 				$User->is_admin = 1;
-				$User->is_supervisor = (user()->is_supervisor && $q->admin_group == 'supervisor') ? 1 : 0;
-				$User->admin_group = $q->admin_group;
+				$User->is_supervisor = (user()->is_supervisor && $q->Admingroup == 'supervisor') ? 1 : 0;
+				$User->Admingroup = $q->Admingroup;
 			}
 	    $User->email = $q->email;
 			if ($q->password) {
