@@ -4,8 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 class SurveySection extends Model
 {
+  use SoftDeletes;
   protected $guarded = ['id'];
 
   /**

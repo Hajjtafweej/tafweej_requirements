@@ -5,7 +5,7 @@
 	</div>
 	<!-- Main Section Steps -->
 	<div class="survey-steps-top">
-		<ul class="d-flex justify-content-between">
+		<ul ng-class="(answer_survey_modal.data.main_sections.length > 5) ? 'd-flex justify-content-between': 'd-flex justify-content-center'">
 			<li class="col-auto" ng-repeat="(main_section_index,main_section) in answer_survey_modal.data.main_sections" ng-click="answer_survey_modal.section.setCurrentMainSection(main_section_index,surveyForm)" ng-class="{'active': answer_survey_modal.current_main_section.id == main_section.id,'completed': answer_survey_modal.section.checkIsDone(main_section),'invalid': answer_survey_modal.isSendClicked && !answer_survey_modal.section.checkIsValid(main_section)}">
 				<span class="point" ng-show="answer_survey_modal.section.checkIsDone(main_section) || answer_survey_modal.current_main_section.id == main_section.id" ng-click="steps.setCurrentStep(step.no)"><i class="ic-check"></i></span>
 				<span class="point" ng-hide="answer_survey_modal.section.checkIsDone(main_section) || answer_survey_modal.current_main_section.id == main_section.id"><i class="ic-check"></i></span>

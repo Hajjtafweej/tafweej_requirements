@@ -1,0 +1,30 @@
+<div class="page-header">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col">
+        <h3 class="widget-title">ادارة الأستبانات</h3>
+      </div>
+      <div class="col col-sm-auto d-flex justify-content-end align-items-center">
+        <div class="form-group form-group-light mb-0 ml-2">
+          <div class="input-icon">
+            <i class="ic-search"></i>
+            <input type="text" class="form-control default-font" placeholder="أبحث في الأستبانات" id="datatable_search" ng-model="datatable_search">
+          </div>
+        </div>
+        <a class="btn btn-primary rounded" ng-click="survey.add()">أضف أستبانة جديدة</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="page-header-container">
+  <div class="container">
+    <div class="widget">
+      <div class="widget-datatable" ng-class="{'loading': isDatatableLoading}">
+        <table ng-hide="isDatatableLoading" datatable dt-options="Options" dt-columns="Columns" dt-instance="dtInstance" class="datatable-clickable table-hover"></table>
+        <div class="widget-table-body" ng-show="isDatatableLoading">
+          <div class="dot-loader"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

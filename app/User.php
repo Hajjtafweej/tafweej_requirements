@@ -80,6 +80,13 @@ class User extends Authenticatable implements JWTSubject
     return [];
   }
 
+  /**
+  * Role
+  *
+  */
+  public function Role(){
+    return $this->belongsTo('App\UserRole');
+  }
 
 
 }

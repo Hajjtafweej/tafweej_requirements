@@ -24,32 +24,26 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         Gate::before(function($user, $ability) {
-          $abilities = ['manage_resident','view_cards','manage_users','delete_card','review_card','approve_card','cancel_card','print_card','instead_lost_card','community_represent_card'];
+          $abilities = ['admin_manage_surveys','admin_manage_users','admin_manage_users','admin_manage_gallery','admin_manage_presentations'];
             // Is supervisor
             if ($user->is_supervisor == 1) {
               return true;
             }elseif(in_array($ability,$abilities)){
-              if ($ability == 'view_cards' && user()->admin_group != 'manage_users'){
-                return true;
-              }else {
-                if ($ability == 'manage_resident' && user()->admin_group == 'requester') {
-                  return true;
-                }elseif ($ability == 'manage_users' && user()->admin_group == 'manage_users') {
-                  return true;
-                }elseif ($ability == 'review_card' && user()->admin_group == 'reviewer') {
-                  return true;
-                }elseif ($ability == 'approve_card' && user()->admin_group == 'approval') {
-                  return true;
-                }elseif ($ability == 'print_card' && user()->admin_group == 'printer') {
-                  return true;
-                }elseif ($ability == 'instead_lost_card' && user()->admin_group == 'requester') {
-                  return true;
-                }elseif ($ability == 'community_represent_card' && user()->admin_group == 'community_representative') {
-                  return true;
-                }else {
-                  return false;
-                }
-              }
+              // switch ($ability) {
+              //   case 'admin_manage_surveys':
+              //     return (user()->Role->is_admin_allow_surveys) ? true : false;
+              //   break;
+              //   case 'admin_manage_presentations':
+              //     return (user()->Role->is_admin_allow_presentations) ? true : false;
+              //   break;
+              //   case 'admin_manage_gallery':
+              //     return (user()->Role->is_admin_allow_gallery) ? true : false;
+              //   break;
+              //   case 'admin_manage_users':
+              //     return (user()->Role->is_admin_allow_users) ? true : false;
+              //   break;
+              // }
+              return true;
             }
         });
 

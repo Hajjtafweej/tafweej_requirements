@@ -1,6 +1,6 @@
 
 /* Start Angularjs */
-var App = angular.module('App',['ngSanitize', 'ngResource', 'angular-loading-bar','ngFlash','ui.bootstrap','thatisuday.dropzone']);
+var App = angular.module('App',['ngSanitize', 'ngResource', 'angular-loading-bar','ngFlash']);
 /* API */
 App.factory('API', function($http, $location, $rootScope, $window) {
   var api_factory = {

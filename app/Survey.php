@@ -10,6 +10,14 @@ class Survey extends Model
   protected $guarded = ['id'];
 
   /**
+  * Sections
+  *
+  */
+  public function Sections(){
+    return $this->hasMany('App\SurveySection');
+  }
+
+  /**
   * Main Sections
   *
   */
@@ -71,4 +79,26 @@ class Survey extends Model
 		}]);
   }
 
+  /**
+  * Model events
+  *
+  */
+  public static function boot() {
+    parent::boot();
+
+    static::deleting(function($Survey) {
+      $Survey->Sections()->delete();
+      $Survey->Questions()->delete();
+    });
+  }
+
+  /**
+  * Authorized
+  */
+  public function scopeAuthorized($query){
+    if (!user()->is_admin) {
+      $query = $query->whereIn(\DB::raw($this->table.'.user_role_id'),[0,user()->user_role_id]);
+    }
+    return $query;
+  }
 }

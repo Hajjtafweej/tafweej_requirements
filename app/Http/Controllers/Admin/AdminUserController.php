@@ -22,7 +22,7 @@
 	  */
 		public function getShow($id,Request $q)
 		{
-			$User = User::where('id',$id)->authorized()->firstOrFail();
+			$User = User::where('id',$id)->firstOrFail();
 			return response()->json($User);
 		}
 
@@ -35,53 +35,50 @@
 	  */
 		public function Save($id = null,Request $q)
 		{
-			$Admingroups = [
-				'requester','community_representative','reviewer','approval','printer'
-			];
-			if (user()->is_supervisor) {
-				$Admingroups[] = 'supervisor';
-				$Admingroups[] = 'manage_users';
-			}
 
 			$validation = [
 				'name' => 'required',
-				'sa_id' => 'required',
-				'phone' => 'required',
-				'Admingroup' => ['required',Rule::in($Admingroups)],
+				'username' => 'required',
+				'is_supervisor' => 'integer',
+				'is_admin' => 'integer',
+				'user_role_id' => 'integer',
 	      'email' => 'required|email|max:255'
 			];
-			if (!$id) {
-				$validation['password'] = 'required';
-			}
 			$validator = Validator::make($q->all(), $validation);
 
 			if($validator->fails()) {
 				return response()->json(['message' => 'invalid_fields', 'errors' => $validator->messages()]);
 			}
 
+			$checkUser = User::where('email',$q->email)->orWhere('username',$q->username)->select('id','email','username')->first();
+			if ($checkUser && $checkUser->id != $id) {
+				if ($checkUser->email == $q->email) {
+					return response()->json(['message' => 'email_already_exists']);
+				}elseif ($checkUser->username == $q->username) {
+					return response()->json(['message' => 'username_already_exists']);
+				}
+			}
+
 			if ($id) {
-				$User = User::where('id',$id)->authorized()->firstOrFail();
+				$User = User::where('id',$id)->firstOrFail();
 			}else {
 				$User = new User;
 			}
 
-			$checkUser = User::where('email',$q->email)->select('id','email')->first();
-			if ($checkUser && $checkUser->id != $id) {
-				if ($checkUser->email == $q->email) {
-					return response()->json(['message' => 'email_already_exists']);
-				}
-			}
 			$User->name = $q->name;
-			$User->sa_id = $q->sa_id;
-			$User->phone = $q->phone;
+			$User->username = $q->username;
+			$User->user_role_id = $q->user_role_id;
 			if (user()->id != $id) {
-				$User->is_admin = 1;
-				$User->is_supervisor = (user()->is_supervisor && $q->Admingroup == 'supervisor') ? 1 : 0;
-				$User->Admingroup = $q->Admingroup;
+				$User->is_supervisor = ($q->is_supervisor) ? 1 : 0;
+				if ($q->is_admin) {
+					$User->is_admin = 1;
+				}
 			}
 	    $User->email = $q->email;
 			if ($q->password) {
 				$User->password = bcrypt($q->password);
+			}elseif(!$id){
+				$User->password = bcrypt(config('app.app_settings.default_password'));
 			}
 			$User->save();
 
@@ -100,7 +97,7 @@
 			if (user()->id == $id) {
 				abort(403);
 			}
-			User::where('id',$id)->authorized()->delete();
+			User::where('id',$id)->delete();
 		}
 
 

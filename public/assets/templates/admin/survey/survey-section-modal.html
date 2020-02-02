@@ -1,0 +1,37 @@
+<form name="surveySectionForm" id="surveySectionForm" role="form">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="survey_section_modal.cancel()" data-dismiss="modal">&times;</button>
+		<h4 class="modal-title" ng-show="survey_section_modal.data.parent_id == 0">{{ (survey_section_modal.method == 'add') ? 'أضف تبويب جديد' : 'تعديل التبويب' }}</h4>
+		<h4 class="modal-title" ng-show="survey_section_modal.data.parent_id != 0">{{ (survey_section_modal.method == 'add') ? 'أضف قسم جديد للأستبانة' : 'تعديل القسم' }}</h4>
+	</div>
+	<!-- After Loading -->
+	<div class="modal-body" ng-hide="survey_section_modal.isLoading">
+		<div class="form-group">
+			<label for="survey_title_ar">عنوان القسم <span class="text-muted">(عربي)</span></label>
+			<input type="text" class="form-control" ng-focus="true" required id="survey_title_ar" ng-model="survey_section_modal.data.title_ar">
+		</div>
+		<div class="form-group">
+			<label for="survey_title_en">عنوان القسم <span class="text-muted">(انجليزي)</span></label>
+			<input type="text" class="form-control ltr" required id="survey_title_en" ng-model="survey_section_modal.data.title_en">
+		</div>
+		<div class="form-group">
+			<label for="survey_title_fr">عنوان القسم <span class="text-muted">(فرنسي)</span></label>
+			<input type="text" class="form-control ltr" required id="survey_title_fr" ng-model="survey_section_modal.data.title_fr">
+		</div>
+		<!-- Apply the fields below to the non-main sections -->
+		<div class="form-group mb-0 mt-5" ng-show="survey_section_modal.data.parent_id != 0">
+			<label>خيارات أخرى</label>
+			<div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" ng-true-value="1" ng-false-value="0" id="survey_section_required" ng-model="survey_section_modal.data.is_required">
+        <label class="custom-control-label" for="survey_section_required">الإجابة على القسم مطلوبة</label>
+      </div>
+			<div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" ng-true-value="1" ng-false-value="0" id="survey_section_apply_percentage" ng-model="survey_section_modal.data.is_apply_percentage">
+        <label class="custom-control-label" for="survey_section_apply_percentage">تقسيم النسب في الإجابة على 100%</label>
+      </div>
+		</div>
+	</div>
+	<div class="modal-footer text-center" ng-hide="survey_section_modal.isLoading">
+		<button type="submit" ng-loading="survey_section_modal.isSending" ng-disabled="survey_section_modal.isSending || !surveySectionForm.$dirty" class="btn rounded" ng-class="(surveySectionForm.$dirty) ? 'btn-primary' : 'btn-light'" ng-click="survey_section_modal.onSave(surveySectionForm)">حفظ</button>
+	</div>
+</form>

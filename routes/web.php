@@ -22,6 +22,12 @@ Route::group(
   /* Web API */
   Route::group(['prefix' => 'api'],function(){
     Route::group(['prefix' => 'web'],function(){
+      Route::group(['prefix' => 'admin','namespace' => 'Admin','middleware' => ['auth','admin']],function(){
+        Route::post('/dt/{module}','AdminDatatableController@getModule');
+        Route::post('/dt/{module}/{sub_module}/{module_id}','AdminDatatableController@getModule');
+        Route::post('/dt/{module}/{sub_module}/{module_id}/{sub_module_id}','AdminDatatableController@getModule');
+      });
+
       Route::group(['prefix' => 'auth'],function(){
         Route::post('login', 'AuthController@postLogin');
       });

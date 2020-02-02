@@ -10,6 +10,17 @@ class AdminHelpersController extends Controller
 
 
 	/**
+	* Get main lists when the application initilize
+	* @param string $type
+	* @return string
+	**/
+	public function getMainLists(Request $q){
+		return response()->json([
+			'users_roles' => \App\UserRole::select('id','name')->get()
+		]);
+	}
+
+	/**
 	* Get list data
 	* @param string $type
 	* @return string

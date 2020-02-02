@@ -64,9 +64,9 @@ return [
     */
     'asset_url' => env('ASSET_URL', null),
     'app_settings' => [
-
+      'default_password' => 11223344
     ],
-    'app_asset_ver' => 122, // this version related with /app extension
+    'app_asset_ver' => 123, // this version related with /app extension
     'asset_ver' => 19, // for normal website version
 
     /*

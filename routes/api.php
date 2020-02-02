@@ -13,7 +13,7 @@ Route::group(
     $auth_middleware = (request()->header('is_mobile')) ? 'jwt.auth' : 'auth';
     Route::group(['middleware' => $auth_middleware],function(){
 
-      Route::group(['prefix' => 'country','namespace' => 'Portal'],function(){
+      Route::group(['prefix' => 'portal','namespace' => 'Portal'],function(){
         Route::group(['prefix' => 'survey'],function(){
           Route::get('/list','PortalSurveyController@getList');
           Route::get('/show/{id}','PortalSurveyController@getShow');
@@ -34,13 +34,35 @@ Route::group(
         });
       });
 
-      Route::group(['prefix' => 'admin','middleware' => 'admin'],function(){
+      Route::group(['prefix' => 'admin','namespace' => 'Admin','middleware' => 'admin'],function(){
 
         Route::group(['prefix' => 'dashboard','middleware' => 'can:dashboard'],function(){
           Route::get('/statistics','AdminDashboardController@getStatistics');
         });
 
-        Route::group(['prefix' => 'user'],function(){
+        Route::group(['prefix' => 'survey'],function(){
+          Route::post('/add','AdminSurveyController@saveInfo');
+          Route::put('/update-info/{id}','AdminSurveyController@saveInfo');
+          Route::get('/show/{id}','AdminSurveyController@getShow');
+          Route::get('/main-section/{id}','AdminSurveyController@getMainSectionDetails');
+          Route::delete('/delete/{id}','AdminSurveyController@deleteSurvey');
+          Route::put('/activation/{id}','AdminSurveyController@Activation');
+
+          Route::group(['prefix' => 'section'],function(){
+            Route::post('/add','AdminSurveyController@saveSection');
+            Route::put('/update/{id}','AdminSurveyController@saveSection');
+            Route::delete('/delete/{id}','AdminSurveyController@deleteSection');
+          });
+
+          Route::group(['prefix' => 'question'],function(){
+            Route::post('/add','AdminSurveyController@saveQuestion');
+            Route::put('/update/{id}','AdminSurveyController@saveQuestion');
+            Route::delete('/delete/{id}','AdminSurveyController@deleteQuestion');
+          });
+
+        });
+
+        Route::group(['prefix' => 'user','middleware' => 'can:admin_manage_users'],function(){
           Route::get('/show/{id}','AdminUserController@getShow');
           Route::post('/add','AdminUserController@Save');
           Route::put('/update/{id}','AdminUserController@Save');
@@ -48,6 +70,7 @@ Route::group(
         });
 
         Route::group(['prefix' => 'helpers'],function(){
+          Route::get('/main-lists','AdminHelpersController@getMainLists');
           Route::get('/list/{type}','AdminHelpersController@getList');
         });
 

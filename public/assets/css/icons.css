@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.ic-eye-hide:before {
+  content: "\e94e";
+}
 .ic-menu2:before {
   content: "\e94b";
 }

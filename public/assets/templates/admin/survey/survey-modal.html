@@ -1,0 +1,63 @@
+<form name="surveyForm" id="surveyForm" role="form">
+	<div class="modal-header no-border">
+		<button type="button" class="close" ng-click="survey_modal.cancel()" data-dismiss="modal">&times;</button>
+		<h4 class="modal-title editable-text d-flex align-items-center" ng-click="survey_modal.editInfo()">{{ survey_modal.data.title_ar }}</h4>
+	</div>
+	<!-- Main Section Steps -->
+	<div class="survey-steps-top has-controls" ng-hide="survey_modal.isLoading">
+		<ul class="d-flex" ng-model="survey_modal.data.main_sections">
+			<li class="col-auto" ng-repeat="(main_section_index,main_section) in survey_modal.data.main_sections" ng-class="{'active': survey_modal.current_main_section.id == main_section.id,'completed': survey_modal.section.checkIsDone(main_section),'invalid': survey_modal.isSendClicked && !survey_modal.section.checkIsValid(main_section)}">
+				<div class="survey-controls">
+					<a class="btn btn-icon btn-light ml-1" ng-click="survey_modal.section.modal('edit',0,main_section,main_section_index)"><i class="ic-edit"></i></a>
+					<a class="btn btn-icon btn-light" ng-click="survey_modal.section.delete(main_section.id,main_section_index,survey_modal.data.main_sections)"><i class="ic-delete"></i></a>
+				</div>
+				<span class="point" ng-click="steps.setCurrentStep(step.no)"></span>
+				<span ng-click="survey_modal.section.setCurrentMainSection(main_section_index,surveyForm)" class="cursor-pointer" ng-bind="main_section.title_ar"></span>
+			</li>
+			<!-- Add main section button -->
+			<li class="col-auto survey-control-add cursor-pointer" ng-click="survey_modal.section.modal('add',0)">
+				<span class="point"><i class="ic-add"></i></span>
+				<span>أضف تبويب</span>
+			</li>
+			<!-- End Add main section button -->
+		</ul>
+	</div>
+	<!-- Loading -->
+	<div class="modal-body survey-steps-modal-body" ng-show="survey_modal.isLoading">
+		<div class="circle-loader" style="margin: 70px auto 70px;">
+
+		</div>
+	</div>
+	<!-- After Loading -->
+	<div class="modal-body survey-steps-modal-body" ng-hide="survey_modal.isLoading">
+
+		<!-- Main Section Loading -->
+		<div ng-show="survey_modal.isMainSectionLoading">
+			<div class="circle-loader" style="margin: 70px auto 50px;">
+
+			</div>
+		</div>
+		<!-- Main Section Questions & Sub Section -->
+		<div ng-hide="survey_modal.isMainSectionLoading">
+			<!-- Start Add main section message -->
+			<div class="alert alert-light mb-0 text-center py-5" ng-show="!survey_modal.data.main_sections.length"><h4>قم بإضافة أول تبويب لتتمكن من البدأ بإنشاء الأقسام الفرعية وأسئلتها</h4>
+				<div class="mt-3"><a class="btn btn-primary rounded" ng-click="survey_modal.section.modal('add',0)">أضف تبويب</a></div></div>
+				<!-- End Add main section message -->
+
+				<!-- Start The Sub Sections -->
+				<!-- <div ui-sortable="survey_modal.section.sortableOptions" ng-model="survey_modal.current_main_section.data"> -->
+				<div>
+					<div ng-repeat="(sub_section_i,sub_section) in survey_modal.current_main_section.data" ng-init="sub_section.is_collapsed = (sub_section_i > 0) ? true : false">
+						<!-- Start Sub Section Questions -->
+						<survey-section form="surveyForm" main-section="survey_modal.current_main_section" parent-sections="survey_modal.current_main_section.data" section="sub_section" section-index="sub_section_i" is-first-parent-section="true" parent-no="0" no="{{ sub_section_i+1 }}" survey-modal="survey_modal"></survey-section>
+					</div>
+				</div>
+				<!-- Start Add sub section button -->
+				<button type="button" ng-hide="!survey_modal.data.main_sections.length" class="btn survey-add-section-btn btn-block rounded mt-3 mb-3"  ng-click="survey_modal.section.modal('add',survey_modal.current_main_section.id,survey_modal.current_main_section.data)">أضف قسم رئيسي</button>
+				<!-- End Add sub section button -->
+			</div>
+		</div>
+		<div class="modal-footer text-center" ng-hide="survey_modal.isLoading || survey_modal.isMainSectionLoading">
+			<button type="button" class="btn rounded btn-light" ng-click="survey_modal.cancel()">أخفاء</button>
+		</div>
+	</form>

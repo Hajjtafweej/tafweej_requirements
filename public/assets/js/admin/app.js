@@ -1,4 +1,4 @@
-var App = angular.module('App', ['ngLocale','ngRoute', 'ngCookies', 'ngResource', 'datatables', 'ngFlash', 'ui.bootstrap', 'flow', 'ui.select', 'ngSanitize', 'angularMoment','thatisuday.dropzone','slickCarousel']);
+var App = angular.module('App', ['ngLocale','ngRoute', 'ngCookies', 'ngResource', 'datatables', 'ngFlash', 'ui.bootstrap','ui.sortable', 'flow', 'ui.select', 'ngSanitize', 'angularMoment','thatisuday.dropzone','slickCarousel']);
 /* API */
 App.factory('API', function($http, $location, $rootScope, $window,$filter) {
   var api_factory = {
@@ -6,14 +6,14 @@ App.factory('API', function($http, $location, $rootScope, $window,$filter) {
     without_api_prefix: ['flow-uploader/start-import'],
     // Prepare JSON Send
     JSON: function(type, path) {
-      var perm_api_perfix = '/portal';
+      var perm_api_perfix = '/admin';
       var api_prefix = (api_factory.without_api_prefix.indexOf(path) == -1) ? '/api'+perm_api_perfix : '';
       return {
         headers: {
           'Content-Type': 'application/json',
           'X-App-Locale': window.current_lang
         },
-        url: baseUrl+((api_factory.is_web) ? api_prefix+'/web/'+path : api_prefix+'/'+path),
+        url: baseUrl+api_prefix+'/'+path,
         method: type
       }
     },
@@ -99,13 +99,13 @@ App.factory('API', function($http, $location, $rootScope, $window,$filter) {
 });
 
 /* Helpers */
-App.factory('Helpers', function($cacheFactory,$http, Flash, $location,$filter, $uibModal, API) {
+App.factory('Helpers', function($cacheFactory,$http, Flash, $location,$filter, $uibModal,$rootScope, API) {
   return {
     /**
-     * Add some red colors on invalid fields
-     * @param boolean validity of form
-     * @return boolean
-     **/
+    * Add some red colors on invalid fields
+    * @param boolean validity of form
+    * @return boolean
+    **/
     isValid: function(validity) {
       if (!validity) {
         $('form').addClass('invalid-form');
@@ -117,12 +117,12 @@ App.factory('Helpers', function($cacheFactory,$http, Flash, $location,$filter, $
     },
 
     /**
-     * Prepare path of template
-     * @param string part of path
-     * @return string
-     **/
+    * Prepare path of template
+    * @param string part of path
+    * @return string
+    **/
     getTemp: function(path) {
-        return baseUrl+'/assets/templates/panel/' + path + '.html?v=' + assets_ver;
+      return baseUrl+'/assets/templates/admin/' + path + '.html?v=' + assets_ver;
     },
     /**
     * Cache system to store and retrieve data
@@ -153,15 +153,25 @@ App.factory('Helpers', function($cacheFactory,$http, Flash, $location,$filter, $
     **/
     flashMessage: function(message) {
       var flash_color = (['invalid_fields'].indexOf(message) > -1) ? 'danger' : 'success',
-          flash_msg = '';
+      flash_msg = '';
       switch (message) {
         case 'invalid_fields':
-          flash_msg = $filter('lang')('check_required_fields');
+        flash_msg = $filter('lang')('check_required_fields');
         break;
       }
       if (flash_msg) {
         return Flash.create(flash_color,flash_msg);
       }
+    },
+    /**
+    * Initlize the main lists
+    * @param message
+    * @return Flash
+    **/
+    initMainLists: function() {
+      API.GET('helpers/main-lists',{},true).then(function(d){
+        $rootScope.main_lists = d.data;
+      });
     }
   }
 });
@@ -169,107 +179,106 @@ App.factory('Helpers', function($cacheFactory,$http, Flash, $location,$filter, $
 App.config(['$sceDelegateProvider','$routeProvider', '$locationProvider', '$interpolateProvider', 'uiSelectConfig', function($sceDelegateProvider,$routeProvider, $locationProvide, $interpolateProvider, uiSelectConfig) {
 
   $sceDelegateProvider.resourceUrlWhitelist([
-      // Allow same origin resource loads.
-      'self',
-      // Allow loading from our assets domain. **.
-      baseUrl+'/**'
-    ]);
+    // Allow same origin resource loads.
+    'self',
+    // Allow loading from our assets domain. **.
+    baseUrl+'/**'
+  ]);
 
   uiSelectConfig.theme = 'bootstrap';
   $interpolateProvider.startSymbol('{{');
   $interpolateProvider.endSymbol('}}');
   // Templates path
-  var templates_path = baseUrl+'/assets/templates/panel/';
+  var templates_path = baseUrl+'/assets/templates/admin/';
 
 
-      $routeProvider
-      .when('/home', {
-        templateUrl: templates_path+'pages/home.html?v='+assets_ver,
-        controller: 'HomeCtrl'
-      })
-      .when('/surveys', {
-        templateUrl: templates_path+'pages/surveys.html?v='+assets_ver
-      })
-      .when('/presentations', {
-        templateUrl: templates_path+'pages/presentations.html?v='+assets_ver
-      })
-      // .when('/gallery', {
-      //   templateUrl: templates_path+'pages/gallery.html?v='+assets_ver
-      // })
+  $routeProvider
+  .when('/admin/dashboard', {
+    templateUrl: templates_path+'pages/home.html?v='+assets_ver,
+    controller: 'DashboardCtrl'
+  })
+  .when('/admin/surveys', {
+    templateUrl: templates_path+'pages/surveys.html?v='+assets_ver,
+    controller: 'DatatableCtrl'
+  })
+  .when('/admin/users', {
+    templateUrl: templates_path+'pages/users.html?v='+assets_ver,
+    controller: 'DatatableCtrl'
+  })
+  .when('/admin/presentations', {
+    templateUrl: templates_path+'pages/presentations.html?v='+assets_ver,
+    controller: 'DatatableCtrl'
+  })
+  .when('/admin/gallery', {
+    templateUrl: templates_path+'pages/gallery.html?v='+assets_ver,
+    controller: 'DatatableCtrl'
+  })
 
-    $routeProvider.otherwise('/home');
+  $routeProvider.otherwise('/admin/surveys');
+  // $routeProvider.otherwise('/admin/dashboard');
 
 }]);
 
 /* Start Run */
-App.run(function($rootScope,$location) {
-  $rootScope.$watch(function() {
-    return $location.path();
-  },
-  function(a){
-    if ($location.$$url == '/home') {
-      $rootScope.isHomePage = true;
-    }else {
-      $rootScope.isHomePage = false;
-    }
-  });
+App.run(function($rootScope,$location,Helpers) {
+  Helpers.initMainLists();
 });
 
 /* Add highlight on current active tab */
 App.directive('findactivetab', ['$location',
-  function($location) {
-    return {
-      link: function postLink(scope, element, attrs) {
-        scope.$on("$routeChangeSuccess", function(event, current, previous) {
-          var pathToCheck = $location.path().split('/')[attrs.findactivetab] || "current $location.path doesn't reach this level";
-          angular.forEach(element.children().not('.' + element.attr('expect-class')), function(item) {
-            var a = $(item).children('li > a'),
-              parent = (typeof a.attr('href') !== undefined) ? a.attr('href') : a.attr('data-href');
-            if (parent != undefined && pathToCheck == parent.split('/')[attrs.findactivetab]) {
-              $(item).addClass('active');
-            } else {
-              $(item).removeClass('active');
-            }
-          });
+function($location) {
+  return {
+    link: function postLink(scope, element, attrs) {
+      scope.$on("$routeChangeSuccess", function(event, current, previous) {
+        var pathToCheck = $location.path().split('/')[attrs.findactivetab] || "current $location.path doesn't reach this level";
+        angular.forEach(element.children().not('.' + element.attr('expect-class')), function(item) {
+          var a = $(item).children('li > a'),
+          parent = (typeof a.attr('href') !== undefined) ? a.attr('href') : a.attr('data-href');
+          if (parent != undefined && pathToCheck == parent.split('/')[attrs.findactivetab]) {
+            $(item).addClass('active');
+          } else {
+            $(item).removeClass('active');
+          }
         });
-      }
-    };
-  }
+      });
+    }
+  };
+}
 ]);
 
 /* Some jQuery Codes */
 $(function() {
-    /* Navbar Toggle */
-    var toggleNavbar = false;
-    $(document).mouseup(function(e) {
-        setTimeout(function() {
-            if ($('.ui-select-choices').is(':visible') && $('.ui-select-choices').has('.active')) {
-                $('.ui-select-choices-row').hover(function() {
-                    var p = $(this).closest('.ui-select-choices');
-                    if (!p.find('active').is($(this))) {
-                        p.find('.active').removeClass('active');
-                    }
-                });
-            }
-        }, 1);
+  /* Navbar Toggle */
+  var toggleNavbar = false;
+  $(document).mouseup(function(e) {
+    setTimeout(function() {
+      if ($('.ui-select-choices').is(':visible') && $('.ui-select-choices').has('.active')) {
+        $('.ui-select-choices-row').hover(function() {
+          var p = $(this).closest('.ui-select-choices');
+          if (!p.find('active').is($(this))) {
+            p.find('.active').removeClass('active');
+          }
+        });
+      }
+    }, 1);
 
+    if ($('body').hasClass('sidebar-toggled')) {
+      var container = $(".navbar-left");
+      if (!container.is(e.target) && container.has(e.target).length === 0) {
+        $('body').removeClass('sidebar-toggled');
+      }
+    } else {
+      if ($('.sidebar-toggle').is(e.target) || $('.sidebar-toggle i').is(e.target)) {
         if ($('body').hasClass('sidebar-toggled')) {
-            var container = $(".navbar-left");
-            if (!container.is(e.target) && container.has(e.target).length === 0) {
-                $('body').removeClass('sidebar-toggled');
-            }
+          $('body').removeClass('sidebar-toggled');
         } else {
-            if ($('.sidebar-toggle').is(e.target) || $('.sidebar-toggle i').is(e.target)) {
-                if ($('body').hasClass('sidebar-toggled')) {
-                    $('body').removeClass('sidebar-toggled');
-                } else {
-                    $('body').addClass('sidebar-toggled');
-                }
-                toggleNavbar = !toggleNavbar;
-            }
+          $('body').addClass('sidebar-toggled');
         }
+        toggleNavbar = !toggleNavbar;
+      }
+    }
 
-    });
+  });
 
 
 });
@@ -291,14 +300,14 @@ App.controller('MainCtrl', function($http,$compile,$rootScope,$scope,$location, 
 });
 
 /**
- * Delay any function for specific time to reduce the number of requests to the API
- * @param function callback
- * @param integer ms timeout
- **/
+* Delay any function for specific time to reduce the number of requests to the API
+* @param function callback
+* @param integer ms timeout
+**/
 var delay = (function() {
-    var timer = 0;
-    return function(callback, ms) {
-        clearTimeout(timer);
-        timer = setTimeout(callback, ms);
-    };
+  var timer = 0;
+  return function(callback, ms) {
+    clearTimeout(timer);
+    timer = setTimeout(callback, ms);
+  };
 })();

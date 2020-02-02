@@ -8,6 +8,7 @@ Summernote Editor
 dropzone
 Cropper
 slick
+ui.sortable
 */
 /* Datatable */
 .table-main tbody td {
@@ -35,25 +36,24 @@ slick
 table.dataTable {
     width: 100% !important;
     margin: 0 auto;
-    /* height: 100%; */
     clear: both;
     border-collapse: separate;
     border-spacing: 0;
 }
 
 table.dataTable thead th, table.dataTable tfoot th {
-    font-weight: 700;
-    font-size: 13px;
     position: relative;
 }
 
 table.dataTable thead th:focus {
-    background-color: #eaf0f340;
+    background-color: rgba(234, 240, 243, 0.25);
 }
 
 table.dataTable thead th, table.dataTable thead td {
     padding: 10px 15px;
     border-bottom: 1px solid #d6dbe2;
+    color: var(--gray-lighter);
+    outline: none !important;
 }
 
 table.dataTable thead th:active, table.dataTable thead td:active {
@@ -70,9 +70,6 @@ table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTa
     padding-right: 15px;
 }
 
-table.dataTable thead th.text-right {
-    /* padding-right: 12px; */
-}
 
 table.dataTable thead th.text-right:after {
     float: left;
@@ -88,6 +85,10 @@ table.dataTable tbody tr.selected {
 
 table.dataTable tbody th, table.dataTable tbody td {
     padding: 7px 15px;
+}
+
+table.dataTable tbody tr:not(:last-child) td {
+    border-bottom: 1px solid #d6dbe2;
 }
 
 table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
@@ -325,10 +326,9 @@ table.dataTable, table.dataTable th, table.dataTable td {
 }
 
 .dataTables_paginate {
-    float: right;
-    text-align: right;
     padding-top: 12px;
-    margin-right: 12px;
+    display: flex;
+    justify-content: center;
 }
 
 .dataTables_paginate .paginate_button {
@@ -482,7 +482,7 @@ table.dataTable, table.dataTable th, table.dataTable td {
 
 .sorting_desc:after,.sorting_asc:after,.sorting_desc:before,.sorting_asc:before,.dataTable th.sorting:after {
     position: absolute;
-    font-family: 'wadi';
+    font-family: 'hajjcountries';
     color: var(--primary);
     font-weight: normal;
     font-size: 11px;
@@ -494,7 +494,7 @@ table.dataTable, table.dataTable th, table.dataTable td {
 .dataTable th.sorting:not(.sorting_desc):hover:after,.dataTable th.sorting:not(.sorting_asc):hover:after {
     content: "\e910";
     color: var(--gray-lighter) !important;
-    top: 20px !important;
+    top: 21px !important;
 }
 
 .sorting_desc:not(.text-right):after {
@@ -515,7 +515,8 @@ table.dataTable, table.dataTable th, table.dataTable td {
     left: 12px;
 }
 
-.table-img img {
+
+.datatable-img img {
     max-width: 60px;
     width: 60px;
     height: 53px;
@@ -523,12 +524,12 @@ table.dataTable, table.dataTable th, table.dataTable td {
     display: block;
 }
 
-.table-img,.table-img img {
+.datatable-img,.datatable-img img {
     margin: auto;
     max-height: 35px;
 }
 
-.table-img {
+.datatable-img {
     max-width: 50px;
     width: 50px;
     position: relative;
@@ -536,16 +537,15 @@ table.dataTable, table.dataTable th, table.dataTable td {
     display: flex;
 }
 
-.table-img.gallery-img {
-    width: 200px;
-    height: auto;
-}
-
-.table-img img {
+.datatable-img img {
     display: block;
     max-width: 100%;
     width: auto;
     height: auto;
+}
+
+.datatable-clickable tr {
+    cursor: pointer;
 }
 
 /* Loading Bar */
@@ -3122,4 +3122,14 @@ flash-message .alert {
 .timepicker-dropdown {
     width: 100%;
     margin-bottom: 20px;
+}
+
+/* ui.sortable */
+.ui-sortable-placeholder {
+    background-color: rgba(234, 240, 243, 0.47) !important;
+    visibility: visible !important;
+}
+
+.ui-sortable-placeholder:before {
+    display: none;
 }

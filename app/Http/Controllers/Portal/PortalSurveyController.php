@@ -30,7 +30,7 @@ class PortalSurveyController extends Controller
 			$Surveys = $Surveys->having('questions_count', $count_mark, 'completed_questions_count');
 		}
 
-		$Surveys = $Surveys->get();
+		$Surveys = $Surveys->authorized()->orderBy('created_at','DESC')->get();
 		return response()->json($Surveys);
 	}
 
@@ -47,13 +47,13 @@ class PortalSurveyController extends Controller
 	{
 		$Survey = Survey::where('id',$id)->select('id',DB::raw('title_'.app()->getLocale().' as title'),'created_at')->with(['MainSections' => function($Section){
 			return $Section->select('id','survey_id','is_required','is_apply_percentage',DB::raw('title_'.app()->getLocale().' as title'))->orderBy('ordering');
-		}])->calculateCompletion(user()->id)->first();
+		}])->calculateCompletion(user()->id)->authorized()->first();
 		if (!$Survey) {
 			return response()->json(['message' => 'survey_not_found'],404);
 		}
 
 		$this->requiredQuestions = collect([]);
-		$this->prepareRequiredQuestionsIds(0,0);
+		$this->prepareRequiredQuestionsIds($id,0,0);
 
 		return response()->json(['survey' => $Survey,'required_questions' => $this->requiredQuestions]);
 	}
@@ -68,9 +68,9 @@ class PortalSurveyController extends Controller
 	*
 	* @return array
 	*/
-	public function prepareRequiredQuestionsIds($main_section_id,$parent_id,$is_first_child = true)
+	public function prepareRequiredQuestionsIds($survey_id,$main_section_id,$parent_id,$is_first_child = true)
 	{
-		$getSubSections = SurveySection::where('parent_id',$parent_id)->select('id')->with(['Questions' => function($Question) use($main_section_id){
+		$getSubSections = SurveySection::where('parent_id',$parent_id)->where('survey_id',$survey_id)->select('id')->with(['Questions' => function($Question) use($main_section_id){
 			return $Question->select('id',DB::raw('('.(($main_section_id == 0) ? 'survey_section_id' : '"'.$main_section_id.'"').') as main_section_id'),'survey_section_id');
 		}]);
 		$getSubSections = $getSubSections->where('is_required',1);
@@ -81,7 +81,7 @@ class PortalSurveyController extends Controller
 			foreach($getSubSections as $subSection){
 				$this->requiredQuestions = $this->requiredQuestions->merge($subSection->Questions);
 				$main_section_id = ($parent_id == 0) ? $subSection->id : $main_section_id;
-				$this->prepareRequiredQuestionsIds($main_section_id,$subSection->id);
+				$this->prepareRequiredQuestionsIds($survey_id,$main_section_id,$subSection->id);
 			}
 		}
 
@@ -149,7 +149,7 @@ class PortalSurveyController extends Controller
 			return response()->json(['message' => 'invalid_fields', 'errors' => $validator->messages()]);
 		}
 
-		$Survey = Survey::where('id',$id)->select('id')->first();
+		$Survey = Survey::where('id',$id)->select('id')->authorized()->first();
 		if (!$Survey) {
 			return response()->json(['message' => 'survey_not_found'],404);
 		}

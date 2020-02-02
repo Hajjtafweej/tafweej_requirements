@@ -1,0 +1,22 @@
+<div class="widget">
+  <div class="widget-heading">
+    <div class="row align-items-center">
+      <div class="col">
+        <h3 class="widget-title">{{ 'gallery' | lang }}</h3>
+      </div>
+      <div class="col-auto mr-auto">
+        <ul class="widget-tabs d-flex">
+          <li ng-click="survey.setFilter('tab','all')"  ng-class="{'active': survey.current_tab == 'all'}">{{ 'all' | lang }}</li>
+          <li ng-click="survey.setFilter('tab','completed')" ng-class="{'active': survey.current_tab == 'completed'}">{{ 'completed' | lang }}</li>
+          <li ng-click="survey.setFilter('tab','incompleted')" ng-class="{'active': survey.current_tab == 'incompleted'}">{{ 'incompleted' | lang }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="widget-table">
+
+  </div>
+</div>
+<div class="mt-3 d-flex justify-content-end" ng-if="view == 'summary'">
+  <a href="#/gallery" class="btn btn-light rounded btn-more">{{ 'view_all' | lang }}<i class="ic-arrow-left mr-2"></i></a>
+</div>

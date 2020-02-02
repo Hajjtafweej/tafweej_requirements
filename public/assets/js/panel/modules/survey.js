@@ -251,7 +251,11 @@ App.directive('surveyList', function(Helpers,API,$uibModal,$filter) {
         */
         getCompletionRate: function(survey,is_integer){
           var completion_rate_val = (survey.completed_questions_count/survey.questions_count)*100;
-          return (is_integer) ? parseInt(completion_rate_val) : ($filter('number')(completion_rate_val.toString(),1)+'').replace('٫','.');
+          if (completion_rate_val == 100) {
+            return 100;
+          }else {
+            return (is_integer) ? parseInt(completion_rate_val) : ($filter('number')(completion_rate_val.toString(),1)+'').replace('٫','.');
+          }
         },
         /*
         * Init the survey object
