@@ -353,7 +353,7 @@ class AdminSurveyController extends Controller
 		foreach($Survey->MainSections as $Section){
 			$pushHeading = [
 				'details' => $Section,
-				'sections' => $this->prepareSubSections($Section->id,77)
+				'sections' => $this->prepareSubSections($Section->id,'export',77)
 			];
 			$Heading[] = $pushHeading;
 		}
@@ -363,7 +363,7 @@ class AdminSurveyController extends Controller
 			foreach($Survey->MainSections as $Section){
 				$pushAnswer = [
 					'details' => $Section,
-					'sections' => $this->prepareSubSections($Section->id,77)
+					'sections' => $this->prepareSubSections($Section->id,'export',77)
 				];
 				$Answer[] = $pushAnswer;
 			}

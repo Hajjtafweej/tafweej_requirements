@@ -33,19 +33,23 @@ class SurveyAnswersExport implements FromView,ShouldAutoSize
         $HeadingItem = $this->prepareItems($HeadingItem);
         $this->Heading[] = $HeadingItem;
       }
+      \Log::info($this->Heading);
   }
 
-  private function prepareItems($Item,$Title){
+  private function prepareItems($Item,$Title = ''){
+    if ($Title) {
+      $Title .= ' - '.$pushTitle;
+    }else {
+      $Title = $pushTitle;
+    }
+
+    foreach($Item->Sections as $ItemSection){
+      $Title = $this->prepareItems($ItemSection);
+    }
+    return $Title;
+
     // $Result = [];
-    // if ($Title) {
-    //   $Title .= ' - '.$Item->details->title;
-    // }else {
-    //   $Title = $Item->details->title;
-    // }
-    // foreach($Item->Sections as $ItemSection){
-    //   $Title = $this->prepareItems($ItemSection);
-    // }
-    // return $Title;
+    return $Title;
   }
 
   public function view() : View
