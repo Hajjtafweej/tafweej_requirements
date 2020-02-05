@@ -9,7 +9,7 @@
   @endif
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}" />
-  <title>{{ (url()->current() == url('/')) ? $__env->yieldContent('title') : (trim($__env->yieldContent('title')) ? $__env->yieldContent('title') : 'بوابة التنسيق والتواصل للمنظومة الشاملة للتفويج') }}</title>
+  <title>{!! (url()->current() == url('/')) ? $__env->yieldContent('title') : (trim($__env->yieldContent('title')) ? $__env->yieldContent('title') : 'بوابة التنسيق والتواصل للمنظومة الشاملة للتفويج') !!}</title>
   @if (trim($__env->yieldContent('meta_description')))
   <meta name="description" content="@yield('meta_description')" />
   @endif
