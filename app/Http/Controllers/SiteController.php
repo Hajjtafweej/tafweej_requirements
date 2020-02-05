@@ -21,4 +21,27 @@ class SiteController extends Controller
     return response()->download(public_path('uploads/'.$folder.'/'.$file));
   }
 
+  /**
+  * Get external page
+  *
+  * @param string $slug
+  * @return view
+  */
+  public function getExternalPage($slug)
+  {
+    if ($slug == 'home') {
+      return redirect('/');
+    }
+
+    switch ($slug) {
+      case 'apply-to-portal':
+        $ListOfCountries = \App\ListOfCountry::all();
+        return view('site.external-pages.apply-to-portal',['ListOfCountries' => $ListOfCountries]);
+      break;
+      default:
+        abort(404);
+      break;
+    }
+  }
+
 }

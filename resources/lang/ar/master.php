@@ -43,6 +43,13 @@ return [
     'save' => 'حفظ الاستبيان',
     'saved_successfully' => 'تم حفظ الاستبانة بنجاح'
   ],
+  'form' => [
+    'choose_country' => 'أختر الدولة',
+    'name' => 'الأسم',
+    'delegate_name' => 'أسم المفوض',
+    'email' => 'البريد الألكتروني',
+    'country' => 'الدولة'
+  ],
   'other' => 'أخرى',
   'all_times' => 'جميع الأوقات',
   'hour' => 'الساعة',

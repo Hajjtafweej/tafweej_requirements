@@ -2451,6 +2451,7 @@ select.form-control-lg:not([size]):not([multiple]),.input-group-lg>select.form-c
     padding-right: 12px !important;
 }
 
+
 .form-group-lined .form-control:focus {
     border-color: var(--primary);
 }
@@ -2473,8 +2474,16 @@ select.form-control-lg:not([size]):not([multiple]),.input-group-lg>select.form-c
     padding-right: 28px;
 }
 
-.form-group-lined.form-group-lg .input-icon input,.form-group-lined.form-group-lg input-icon .dropdown-toggle {
+.form-group-lined.form-group-lg .input-icon input,.form-group-lg input-icon .dropdown-toggle {
     padding-right: 35px;
+}
+
+.form-group-lg .input-icon select {
+    padding-right: 30px;
+}
+
+[dir="ltr"] .form-group-lg .input-icon select {
+    padding-left: 30px !important;
 }
 
 /* Form group light */
@@ -2484,6 +2493,21 @@ select.form-control-lg:not([size]):not([multiple]),.input-group-lg>select.form-c
 }
 .form-group-light .form-control:hover,.form-group-light .form-control:focus {
     background-color: var(--light-bg);
+}
+
+.form-group-lined .iti__selected-flag {
+    padding: 0;
+    background: none !important;
+    outline: none !important;
+}
+
+.form-group-lined .iti--allow-dropdown input,.form-group-lined .iti--allow-dropdown input[type=text],.form-group-lined .iti--allow-dropdown input[type=tel],.form-group-lined .iti--separate-dial-code input,.form-group-lined .iti--separate-dial-code input[type=text],.form-group-lined .iti--separate-dial-code input[type=tel] {
+    padding-right: 40px;
+}
+
+[dir="ltr"] .form-group-lined .iti--allow-dropdown input,[dir="ltr"] .form-group-lined .iti--allow-dropdown input[type=text],[dir="ltr"] .form-group-lined .iti--allow-dropdown input[type=tel],[dir="ltr"] .form-group-lined .iti--separate-dial-code input,[dir="ltr"] .form-group-lined .iti--separate-dial-code input[type=text],[dir="ltr"] .form-group-lined .iti--separate-dial-code input[type=tel] {
+    padding-left: 40px;
+    text-align: left;
 }
 
 /* End Form Lined */

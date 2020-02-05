@@ -2,16 +2,20 @@
   <div class="container">
     <div class="row align-items-center">
       <div class="col">
-        <h3 class="widget-title">ادارة المستخدمين</h3>
+        <h3 class="widget-title" ng-show="!sub_path">ادارة المستخدمين</h3>
+        <h3 class="widget-title" ng-show="sub_path == 'roles'">ادارة أنواع المستخدمين</h3>
       </div>
       <div class="col col-sm-auto d-flex justify-content-end align-items-center">
         <div class="form-group form-group-light mb-0 ml-2">
           <div class="input-icon">
             <i class="ic-search"></i>
-            <input type="text" class="form-control default-font" placeholder="أبحث في المستخدمين" id="datatable_search" ng-model="datatable_search">
+            <input type="text" class="form-control default-font" placeholder="أبحث في {{ (sub_path == 'roles') ? 'الأنواع' : 'المستخدمين' }}" id="datatable_search" ng-model="datatable_search">
           </div>
         </div>
-        <a class="btn btn-primary rounded" ng-click="user.add()">أضف مستخدم جديد</a>
+        <a class="btn btn-light-dark ml-2 rounded" ng-show="!sub_path" href="#/admin/users/roles">ادارة الأنواع</a>
+        <a class="btn btn-light-dark ml-2 rounded" ng-show="sub_path == 'roles'" href="#/admin/users">ادارة المستخدمين</a>
+        <a class="btn btn-primary rounded" ng-show="!sub_path" ng-click="user.add()">أضف مستخدم جديد</a>
+        <a class="btn btn-primary rounded" ng-show="sub_path == 'roles'" ng-click="userRole.add()">أضف نوع جديد</a>
       </div>
     </div>
   </div>

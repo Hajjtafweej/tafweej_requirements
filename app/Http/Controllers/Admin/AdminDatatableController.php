@@ -79,7 +79,15 @@ class AdminDatatableController extends Controller
 				if(!user()->can('admin_manage_users')){
 					abort(403);
 				}
-				return $this->Users($q);
+				if ($this->subModule) {
+					switch ($this->subModule) {
+						case 'roles':
+							return $this->usersRoles($q);
+							break;
+					}
+				}else {
+					return $this->Users($q);
+				}
 			break;
 			default:
 			abort(403);
@@ -183,6 +191,36 @@ class AdminDatatableController extends Controller
 			->filterColumn('user_role_name', function($query, $keyword) use($q) {
 				$query->whereRaw('user_role.name like ?', ["%{$keyword}%"]);
 			})
+			->addColumn('DT_RowId','{{ strtolower($id) }}')->make(true);
+		}
+
+	}
+
+	/**
+	* Users Roles
+	*/
+	public function usersRoles($q)
+	{
+
+		$start_date = ($q->start_date) ? $q->start_date : false;
+		$end_date = ($q->end_date) ? $q->end_date : false;
+
+		$getResults = \App\UserRole::selectRaw('user_roles.id,user_roles.name,(SELECT COUNT(id) FROM users WHERE user_role_id = user_roles.id LIMIT 1) as users_count,user_roles.created_at');
+		// Status filter
+		$date_field = 'created_at';
+		// Date filter
+		if($start_date){
+			$getResults = $getResults->whereDate(DB::raw($date_field),'>=',$start_date);
+		}
+		if($end_date){
+			$getResults = $getResults->whereDate(DB::raw($date_field),'<=',$end_date);
+		}
+		$getResults = $getResults->groupBy('user_roles.id');
+
+		if($this->is_export){
+			return $this->exportToExcel($getResults);
+		}else {
+			return datatables()->of($getResults)
 			->addColumn('DT_RowId','{{ strtolower($id) }}')->make(true);
 		}
 

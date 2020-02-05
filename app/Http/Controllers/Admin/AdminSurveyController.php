@@ -128,11 +128,32 @@ class AdminSurveyController extends Controller
 	* Prepare sub sections of parent section
 	*
 	*/
-	public function prepareSubSections($parent_id)
+	public function prepareSubSections($parent_id,$view = 'show',$with_user_answer = false)
 	{
-		$getSubSections = SurveySection::where('parent_id',$parent_id)->with(['Questions' => function($Question){
-			return $Question->with('Options');
-		}])->get();
+		$getSubSections = SurveySection::where('parent_id',$parent_id);
+		if ($view == 'export') {
+			$getSubSections = $getSubSections->select('id','parent_id',DB::raw('title_ar as title'));
+		}
+		$getSubSections = $getSubSections->with(['Questions' => function($Question) use($view,$with_user_answer){
+			if ($view == 'export') {
+				$Question = $Question->select('id','survey_section_id','type','is_has_notes',DB::raw('title_ar as title'));
+			}
+			$Question = $Question->with(['Options' => function($Options) use ($view){
+				if ($view == 'export') {
+					return $Options->select('id','survey_question_id',DB::raw('title_ar as title'));
+				}
+				return $Options;
+			}]);
+			if ($with_user_answer) {
+				$Question = $Question->with(['LastAnswerValue' => function($LastAnswerValue) use($with_user_answer){
+					return $LastAnswerValue->where('user_id',$with_user_answer);
+				}]);
+			}
+			return $Question;
+		}]);
+
+
+		$getSubSections = $getSubSections->get();
 
 		if(!$getSubSections->count()){
 			return [];
@@ -299,6 +320,60 @@ class AdminSurveyController extends Controller
 		SurveyQuestion::where('id',$id)->delete();
 		SurveyQuestionOption::where('survey_question_id',$id)->delete();
 		return response()->json(['message' => 'success']);
+	}
+
+	/**
+	* Export survey answers
+	*
+	* @param integer $id survey id
+	* @param object $q
+	*
+	* @return array
+	*/
+	public function exportSurveyAnswers($id,Request $q)
+	{
+
+		$getUsers = \App\User::whereHas('SurveyAnswer',function($SurveyAnswer) use($id){
+			return $SurveyAnswer->where('survey_id',$id);
+		})->select('id','username','name')->get();
+
+
+
+		$Survey = Survey::where('id',$id)->select('id',DB::raw('title_ar as title'))->with(['MainSections' => function($MainSection){
+			return $MainSection->select('id','survey_id','parent_id',DB::raw('title_ar as title'))->orderBy('ordering');
+		}])->first();
+
+		if (!$Survey) {
+			return response()->json(['message' => 'survey_not_found'],404);
+		}
+
+		$Heading = [];
+		$Answers = [];
+
+		foreach($Survey->MainSections as $Section){
+			$pushHeading = [
+				'details' => $Section,
+				'sections' => $this->prepareSubSections($Section->id,77)
+			];
+			$Heading[] = $pushHeading;
+		}
+
+		foreach($getUsers as $User){
+			$Answer = [];
+			foreach($Survey->MainSections as $Section){
+				$pushAnswer = [
+					'details' => $Section,
+					'sections' => $this->prepareSubSections($Section->id,77)
+				];
+				$Answer[] = $pushAnswer;
+			}
+			$pushUser = $User;
+			$pushUser->Answer = $Answer;
+			$Answers[] = $pushUser;
+		}
+
+		return response()->json($Answers);
+		// return \Excel::download(new \App\Exports\SurveyAnswersExport($Survey,$Heading,$Answers), $Survey->title.'.xlsx');
 	}
 
 

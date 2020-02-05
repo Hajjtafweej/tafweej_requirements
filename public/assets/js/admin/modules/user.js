@@ -99,7 +99,88 @@ App.factory('userFactory', function(Flash,$filter, $uibModal, API,Helpers) {
           $scope.user_modal.init();
         }
       });
-    }
+    },
+    /**
+    * User role modal
+    * @param string method (add|edit)
+    * @param mixed id of user
+    * @param object options, we use it to pass any additional data to this function
+    * @return string
+    **/
+    roleModal: function(method,id,options) {
+      $uibModal.open({
+        backdrop: 'static',
+        templateUrl: Helpers.getTemp('user/user-role-modal'),
+        size: 'sm',
+        controller: function($uibModalInstance,$location,$scope,$http,$timeout,Flash,Helpers,$route,$filter,$window){
+          $scope.user_role_modal = {
+            method: method,
+            data: {
+              general_user_role: 0
+            },
+            cancel: function() {
+              $uibModalInstance.close();
+            },
+            getUserRole: function(){
+              $scope.user_role_modal.isLoading = true;
+              API.GET('user/role/show/'+id).then(function(d){
+                $scope.user_role_modal.isLoading = false;
+                $scope.user_role_modal.data = d.data;
+
+                if (d.data.is_supervisor) {
+                  $scope.user_role_modal.data.general_user_role = 2;
+                }else if (d.data.is_admin) {
+                  $scope.user_role_modal.data.general_user_role = 1;
+                }else {
+                  $scope.user_role_modal.data.general_user_role = 0;
+                }
+              });
+            },
+            onSave: function(Form) {
+              $scope.user_role_modal.isSendClicked = true;
+              if (!Helpers.isValid(Form.$valid)) {
+                Flash.create('danger',$filter('lang')('check_required_fields'));
+                return false;
+              }
+              $scope.user_role_modal.isSending = true;
+              var saveUserCall = (method == 'add') ? API.POST('user/role/add',$scope.user_role_modal.data) : API.PUT('user/role/update/'+$scope.user_role_modal.data.id,$scope.user_role_modal.data);
+              saveUserCall.then(function(d){
+                $scope.user_role_modal.isSending = false;
+                if (options && options.view == 'datatable') {
+                  options.dtInstance.reloadData();
+                }
+                $scope.user_role_modal.cancel();
+              });
+            },
+            init: function(){
+              if ($scope.user_role_modal.method == 'edit') {
+                $scope.user_role_modal.getUserRole();
+              }
+
+
+            }
+          };
+          $scope.user_role_modal.init();
+        }
+      });
+    },
+    /**
+    * Delete user role
+    * @param integer id of user role
+    * @return
+    **/
+    deleteRole: function(id,options) {
+      if (Helpers.confirmDelete()) {
+        API.DELETE('user/role/delete/'+id).then(function(){
+          Flash.create('success','تم حذف نوع المستخدم بنجاح');
+          switch (options.view) {
+            case 'datatable':
+              options.dtInstance.reloadData();
+            break;
+          }
+        })
+      }
+    },
   };
   return userFactory;
 });

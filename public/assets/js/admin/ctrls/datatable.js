@@ -203,48 +203,94 @@ App.controller('DatatableCtrl', function($http,$httpParamSerializer,$filter,$roo
 
 			break;
 		case 'users':
-		ordering_column = 4;
-		$scope.user = {
-			add: function(){
-				return userFactory.modal('add',null,{view: 'datatable',dtInstance: $scope.dtInstance});
-			},
-			delete: function(id){
-				return userFactory.delete(id,{view: 'datatable',dtInstance: $scope.dtInstance});
-			},
-			edit: function(id){
-				return userFactory.modal('edit',id,{view: 'datatable',dtInstance: $scope.dtInstance});
-			}
-		};
+		/* Users Roles List */
+		if ($scope.sub_path && $scope.sub_path == 'roles') {
+			ordering_column = 4;
+			$scope.userRole = {
+				add: function(){
+					return userFactory.roleModal('add',null,{view: 'datatable',dtInstance: $scope.dtInstance});
+				},
+				delete: function(id){
+					return userFactory.deleteRole(id,{view: 'datatable',dtInstance: $scope.dtInstance});
+				},
+				edit: function(id){
+					return userFactory.roleModal('edit',id,{view: 'datatable',dtInstance: $scope.dtInstance});
+				}
+			};
 
-		$scope.rowClickHandler = function(f){
-			$scope.user.edit(f.id);
-		};
+			$scope.rowClickHandler = function(f){
+				$scope.userRole.edit(f.id);
+			};
 
-		ordering_column = 2;
+			ordering_column = 2;
 
-		/**
-		* Prints datatable columns
-		*/
-		var columns_list = [
-			DTColumnBuilder.newColumn('username').withTitle('اسم المستخدم').renderWith(function(d,t,f){
-				return '<div class="widget-table-item-title">'+d+'</div>';
-			}),
-			DTColumnBuilder.newColumn('email').withTitle('البريد الألكتروني').renderWith(function(d,t,f){
-				return d;
-			}),
-			DTColumnBuilder.newColumn('user_role_name').withTitle('نوع المستخدم').renderWith(function(d,t,f){
-				return d;
-			}),
-			DTColumnBuilder.newColumn('created_at').withTitle('تاريخ الإضافة').renderWith(function(d,t,f){
-				return $filter('dateF')(d,'yyyy/MM/dd HH:mm');
-			}).withOption('searchable', false),
-			DTColumnBuilder.newColumn('actions').withClass('text-left').renderWith(function(d,t,f){
-					var editBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="user.edit('+f.id+')"><i class="ic-edit"></i></a>',
-					deleteBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="user.delete('+f.id+')"><i class="ic-delete"></i></a>';
-					return editBtn+deleteBtn;
-			}).withOption('searchable', false).notSortable()
-		];
-		$scope.Columns = columns_list;
+			/**
+			* Prints datatable columns
+			*/
+			var columns_list = [
+				DTColumnBuilder.newColumn('name').withTitle('النوع').renderWith(function(d,t,f){
+					return '<div class="widget-table-item-title">'+d+'</div>';
+				}),
+				DTColumnBuilder.newColumn('users_count').withTitle('عدد المستخدمين').renderWith(function(d,t,f){
+					return d;
+				}).withOption('searchable', false),
+				DTColumnBuilder.newColumn('created_at').withTitle('تاريخ الإضافة').renderWith(function(d,t,f){
+					return $filter('dateF')(d,'yyyy/MM/dd HH:mm');
+				}).withOption('searchable', false),
+				DTColumnBuilder.newColumn('actions').withClass('text-left').renderWith(function(d,t,f){
+						var editBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="userRole.edit('+f.id+')"><i class="ic-edit"></i></a>',
+						deleteBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="userRole.delete('+f.id+')"><i class="ic-delete"></i></a>';
+						return editBtn+deleteBtn;
+				}).withOption('searchable', false).notSortable()
+			];
+			$scope.Columns = columns_list;
+
+		}else {
+			/* Users List */
+			ordering_column = 4;
+			$scope.user = {
+				add: function(){
+					return userFactory.modal('add',null,{view: 'datatable',dtInstance: $scope.dtInstance});
+				},
+				delete: function(id){
+					return userFactory.delete(id,{view: 'datatable',dtInstance: $scope.dtInstance});
+				},
+				edit: function(id){
+					return userFactory.modal('edit',id,{view: 'datatable',dtInstance: $scope.dtInstance});
+				}
+			};
+
+			$scope.rowClickHandler = function(f){
+				$scope.user.edit(f.id);
+			};
+
+			ordering_column = 2;
+
+			/**
+			* Prints datatable columns
+			*/
+			var columns_list = [
+				DTColumnBuilder.newColumn('username').withTitle('اسم المستخدم').renderWith(function(d,t,f){
+					return '<div class="widget-table-item-title">'+d+'</div>';
+				}),
+				DTColumnBuilder.newColumn('email').withTitle('البريد الألكتروني').renderWith(function(d,t,f){
+					return d;
+				}),
+				DTColumnBuilder.newColumn('user_role_name').withTitle('نوع المستخدم').renderWith(function(d,t,f){
+					return d;
+				}),
+				DTColumnBuilder.newColumn('created_at').withTitle('تاريخ الإضافة').renderWith(function(d,t,f){
+					return $filter('dateF')(d,'yyyy/MM/dd HH:mm');
+				}).withOption('searchable', false),
+				DTColumnBuilder.newColumn('actions').withClass('text-left').renderWith(function(d,t,f){
+						var editBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="user.edit('+f.id+')"><i class="ic-edit"></i></a>',
+						deleteBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="user.delete('+f.id+')"><i class="ic-delete"></i></a>';
+						return editBtn+deleteBtn;
+				}).withOption('searchable', false).notSortable()
+			];
+			$scope.Columns = columns_list;
+
+		}
 
 
 			break;

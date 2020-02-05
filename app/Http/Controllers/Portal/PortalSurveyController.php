@@ -111,7 +111,9 @@ class PortalSurveyController extends Controller
 		$getSubSections = SurveySection::where('parent_id',$parent_id)->select('id','survey_id','is_required','is_apply_percentage',DB::raw('title_'.app()->getLocale().' as title'))->with(['Questions' => function($Question){
 			return $Question->select('id','survey_id','type','type_options','survey_section_id',DB::raw('title_'.app()->getLocale().' as title'),'is_has_notes')->with(['Options' => function($Section){
 				return $Section->select('id','survey_question_id',DB::raw('title_'.app()->getLocale().' as title'));
-			}])->with('LastAnswerValue');
+			}])->with(['LastAnswerValue' => function($LastAnswerValue){
+				return $LastAnswerValue->where('user_id',user()->id);
+			}]);
 		}])->get();
 
 		if(!$getSubSections->count()){

@@ -37,6 +37,8 @@
 <body>
   <flash-message duration="6000" show-close="true" on-dismiss="myCallback(flash)"></flash-message>
   @yield('layout_content')
+  @yield('scripts')
+  <script src="{{ asset('assets/js/site/intlTellInput/utils.js') }}"></script>
   @if(domain() != 'localhost')
   <script src="{{ asset('assets/js/site/vendor.js?v='.config('app.asset_ver')) }}" type="text/javascript"></script>
   <script src="{{ asset('assets/js/site/app.js?v='.config('app.asset_ver')) }}" type="text/javascript"></script>

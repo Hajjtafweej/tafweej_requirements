@@ -43,6 +43,13 @@ return [
     'save' => 'ُEnregistrer le questionnaire',
     'saved_successfully' => 'The questionnaire was saved successfully'
   ],
+  'form' => [
+    'choose_country' => 'Choisissez un pays',
+    'name' => 'Nom',
+    'delegate_name' => 'Nom du délégué',
+    'email' => 'Email',
+    'country' => 'Pays'
+  ],
   'other' => 'Other',
   'all_times' => 'All times',
   'hour' => 'Heure',

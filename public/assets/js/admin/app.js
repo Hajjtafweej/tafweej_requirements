@@ -205,6 +205,10 @@ App.config(['$sceDelegateProvider','$routeProvider', '$locationProvider', '$inte
     templateUrl: templates_path+'pages/users.html?v='+assets_ver,
     controller: 'DatatableCtrl'
   })
+  .when('/admin/users/roles', {
+    templateUrl: templates_path+'pages/users.html?v='+assets_ver,
+    controller: 'DatatableCtrl'
+  })
   .when('/admin/presentations', {
     templateUrl: templates_path+'pages/presentations.html?v='+assets_ver,
     controller: 'DatatableCtrl'

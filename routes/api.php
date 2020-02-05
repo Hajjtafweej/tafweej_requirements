@@ -10,6 +10,9 @@ Route::group(
     'middleware' => [ 'api-localization' ]
   ],
   function(){
+
+
+
     $auth_middleware = (request()->header('is_mobile')) ? 'jwt.auth' : 'auth';
     Route::group(['middleware' => $auth_middleware],function(){
 
@@ -47,6 +50,7 @@ Route::group(
           Route::get('/main-section/{id}','AdminSurveyController@getMainSectionDetails');
           Route::delete('/delete/{id}','AdminSurveyController@deleteSurvey');
           Route::put('/activation/{id}','AdminSurveyController@Activation');
+          Route::get('/export/{id}','AdminSurveyController@exportSurveyAnswers');
 
           Route::group(['prefix' => 'section'],function(){
             Route::post('/add','AdminSurveyController@saveSection');
@@ -67,6 +71,13 @@ Route::group(
           Route::post('/add','AdminUserController@Save');
           Route::put('/update/{id}','AdminUserController@Save');
           Route::delete('/delete/{id}','AdminUserController@Delete');
+
+          Route::group(['prefix' => 'role'],function(){
+            Route::get('/show/{id}','AdminUserController@getShowRole');
+            Route::post('/add','AdminUserController@SaveRole');
+            Route::put('/update/{id}','AdminUserController@SaveRole');
+            Route::delete('/delete/{id}','AdminUserController@DeleteRole');
+          });
         });
 
         Route::group(['prefix' => 'helpers'],function(){

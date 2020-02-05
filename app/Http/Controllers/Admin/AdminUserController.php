@@ -6,7 +6,7 @@
 	use App\Http\Controllers\Controller;
 	use Illuminate\Support\Facades\Validator;
 	use Illuminate\Validation\Rule;
-	use App\User;
+	use App\User,App\UserRole;
 	use DB;
 
 	class AdminUserController extends Controller
@@ -100,6 +100,67 @@
 			User::where('id',$id)->delete();
 		}
 
+
+		/**
+	  * Show user role details
+	  *
+	  * @param integer $id
+	  * @param Request $q
+	  * @return \Illuminate\Http\JsonResponse
+	  */
+		public function getShowRole($id,Request $q)
+		{
+			$UserRole = UserRole::where('id',$id)->firstOrFail();
+			return response()->json($UserRole);
+		}
+
+		/**
+	  * Save user role
+	  *
+	  * @param mixed $id
+	  * @param Request $q
+	  * @return \Illuminate\Http\JsonResponse
+	  */
+		public function SaveRole($id = null,Request $q)
+		{
+
+			$validation = [
+				'name' => 'required'
+			];
+			$validator = Validator::make($q->all(), $validation);
+
+			if($validator->fails()) {
+				return response()->json(['message' => 'invalid_fields', 'errors' => $validator->messages()]);
+			}
+
+			if ($id) {
+				$UserRole = UserRole::where('id',$id)->firstOrFail();
+			}else {
+				$UserRole = new UserRole;
+			}
+
+			$UserRole->name = $q->name;
+			$UserRole->is_allow_survey = ($q->is_allow_survey) ? $q->is_allow_survey : 0;
+			$UserRole->is_allow_gallery = ($q->is_allow_gallery) ? $q->is_allow_gallery : 0;
+			$UserRole->is_allow_presentations = ($q->is_allow_presentations) ? $q->is_allow_presentations : 0;
+			$UserRole->is_allow_tafweej_plans = ($q->is_allow_tafweej_plans) ? $q->is_allow_tafweej_plans : 0;
+			$UserRole->is_allow_tafweej_tables = ($q->is_allow_tafweej_tables) ? $q->is_allow_tafweej_tables : 0;
+			$UserRole->save();
+
+			return response()->json($UserRole->id);
+		}
+
+		/**
+	  * Delete user role
+	  *
+	  * @param integer $id
+	  * @param Request $q
+	  * @return \Illuminate\Http\JsonResponse
+	  */
+		public function DeleteRole($id,Request $q)
+		{
+			UserRole::where('id',$id)->delete();
+		}
 
 
 	}

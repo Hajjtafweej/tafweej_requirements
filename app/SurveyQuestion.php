@@ -43,7 +43,7 @@ class SurveyQuestion extends Model
   * used in country survey page to get the last version of answer for each question
   */
   public function LastAnswerValue(){
-    return $this->hasOne('App\SurveyAnswerValue')->where('user_id',user()->id)->orderBy('id','DESC');
+    return $this->hasOne('App\SurveyAnswerValue')->orderBy('id','DESC');
   }
 
 
