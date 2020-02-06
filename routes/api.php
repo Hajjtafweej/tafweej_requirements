@@ -2,8 +2,9 @@
 
 use Illuminate\Http\Request;
 
-Route::group(['namespace' => 'API'],function(){
+Route::group(['prefix' => 'auth'],function(){
   Route::post('login', 'AuthController@postLogin');
+  Route::post('logout', 'AuthController@postLogout');
 });
 Route::group(
   [
@@ -11,10 +12,12 @@ Route::group(
   ],
   function(){
 
-
-
     $auth_middleware = (request()->header('is_mobile')) ? 'jwt.auth' : 'auth';
     Route::group(['middleware' => $auth_middleware],function(){
+
+      Route::group(['prefix' => 'auth'],function(){
+        Route::get('me', 'AuthController@getMe');
+      });
 
       Route::group(['prefix' => 'portal','namespace' => 'Portal'],function(){
         Route::group(['prefix' => 'survey'],function(){
