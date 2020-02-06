@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use DB,Auth,Validator;
 use JWTAuth;
-use \GeniusTS\HijriDate\Hijri as Hijri;
+
 class AuthController extends Controller
 {
 

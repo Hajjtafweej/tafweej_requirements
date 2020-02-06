@@ -12,7 +12,7 @@ Route::group(
   ],
   function(){
 
-    $auth_middleware = (request()->header('is_mobile')) ? 'jwt.auth' : 'auth';
+    $auth_middleware = (request()->header('is_jwt')) ? 'jwt.auth' : 'auth';
     Route::group(['middleware' => $auth_middleware],function(){
 
       Route::group(['prefix' => 'auth'],function(){
