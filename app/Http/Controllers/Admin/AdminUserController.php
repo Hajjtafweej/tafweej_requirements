@@ -159,8 +159,14 @@
 	  */
 		public function DeleteRole($id,Request $q)
 		{
-			UserRole::where('id',$id)->delete();
+			$checkUsersBelongs = User::where('user_role_id',$id)->count();
+			if ($checkUsersBelongs) {
+				return response()->json(['message' => 'there_are_users_exist']);
+			}else {
+				UserRole::where('id',$id)->delete();
+				\App\Survey::where('user_role_id',$id)->update(['user_role_id' => 0]);
+				return response()->json(['message' => 'success']);
+			}
 		}
-
 
 	}

@@ -42,7 +42,7 @@ Route::group(
 
       Route::group(['prefix' => 'admin','namespace' => 'Admin','middleware' => 'admin'],function(){
 
-        Route::group(['prefix' => 'dashboard','middleware' => 'can:dashboard'],function(){
+        Route::group(['prefix' => 'dashboard','middleware' => 'can:admin_dashboard'],function(){
           Route::get('/statistics','AdminDashboardController@getStatistics');
         });
 

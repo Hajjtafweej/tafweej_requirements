@@ -1,12 +1,24 @@
-App.factory('surveyFactory', function(Flash,$filter, $uibModal, API,Helpers) {
+App.factory('surveyFactory', function(Flash,$filter, $uibModal,$window, API,Helpers) {
   var surveyFactory = {
+    /**
+    * Export survey answers
+    * @param integer id of survey
+    * @param mixed onAnswersLoaded 
+    * @return
+    **/
+    exportAnswers: function(id,onAnswersLoaded) {
+      API.GET('survey/export/'+id).then(function(d){
+        onAnswersLoaded();
+        $window.open(d.data.file);
+      });
+    },
     /**
     * Activate/deactivate survey
     * @param integer id of survey
     * @param integer status the value of activation 0 for deactivate and 1 for activate
     * @return
     **/
-    activation: function(id,status,options) {
+    activation: function(id,status) {
       API.PUT('survey/activation/'+id,{status: status}).then(function(){
         if (status == 1) {
           Flash.create('success','تم تفعيل الأستبانة بنجاح');

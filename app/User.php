@@ -85,7 +85,7 @@ class User extends Authenticatable implements JWTSubject
   *
   */
   public function Role(){
-    return $this->belongsTo('App\UserRole');
+    return $this->belongsTo('App\UserRole','user_role_id','id');
   }
 
   /**
@@ -94,6 +94,14 @@ class User extends Authenticatable implements JWTSubject
   */
   public function SurveyAnswer(){
     return $this->hasOne('App\SurveyAnswer');
+  }
+
+  /**
+  * Survey Logs
+  *
+  */
+  public function SurveyLogs(){
+    return $this->hasMany('App\SurveyLog');
   }
 
 

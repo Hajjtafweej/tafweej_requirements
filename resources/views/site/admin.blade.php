@@ -65,7 +65,7 @@
             <div class="row justify-content-center">
               <div class="col-xl-9">
                 <ul findactivetab="2">
-                  <!-- <li><a href="#/admin/dashboard"><i class="ic-bar-chart"></i>الأحصائيات</a></li>-->
+                  <!-- <li><a href="#/admin/dashboard"><i class="ic-bar-chart"></i>الأحصائيات</a></li> -->
                   <!-- <li><a href="#/admin/presentations"><i class="ic-presentation"></i>العروض المرئية</a></li>
                   <li><a href="#/admin/gallery"><i class="ic-photo-gallery"></i>الصور والفيديو</a></li> -->
                   <li><a href="#/admin/surveys"><i class="ic-checklist"></i>الأستبانات</a></li>

@@ -24,7 +24,7 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         Gate::before(function($user, $ability) {
-          $abilities = ['admin_manage_surveys','admin_manage_users','admin_manage_users','admin_manage_gallery','admin_manage_presentations'];
+          $abilities = ['admin_dashboard','admin_manage_surveys','admin_manage_users','admin_manage_users','admin_manage_gallery','admin_manage_presentations'];
             // Is supervisor
             if ($user->is_supervisor == 1) {
               return true;

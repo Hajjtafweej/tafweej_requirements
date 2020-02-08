@@ -162,7 +162,7 @@ class AdminSurveyController extends Controller
 			foreach($getSubSections as $subSection){
 				$sectionDetails = [
 					'details' => $subSection,
-					'sections' => $this->prepareSubSections($subSection->id)
+					'sections' => $this->prepareSubSections($subSection->id,$view,$with_user_answer)
 				];
 				$allSubSections[] = $sectionDetails;
 			}
@@ -372,8 +372,11 @@ class AdminSurveyController extends Controller
 			$Answers[] = $pushUser;
 		}
 
-		return response()->json($Answers);
-		// return \Excel::download(new \App\Exports\SurveyAnswersExport($Survey,$Heading,$Answers), $Survey->title.'.xlsx');
+		// return response()->json($Answers);
+		$fileName = $Survey->id.'-'.$Survey->title.'.xlsx';
+		\Excel::store(new \App\Exports\SurveyAnswersExport($Survey,$Heading,$Answers),$fileName,'public-uploads-files');
+		return response()->json(['file' => \Storage::disk('public-uploads-files')->url($fileName)]);
+		// return \Excel::download(new \App\Exports\SurveyAnswersExport($Survey,$Heading,$Answers), $Survey->id.'-'.$Survey->title.'.xlsx');
 	}
 
 

@@ -85,19 +85,30 @@
               <div class="col-xl-{{ (LaravelLocalization::getCurrentLocale() == 'fr') ? '12' : '9' }}">
                 <ul findactivetab="1">
                   <li><a href="#/home"><i class="ic-home"></i>@lang('master.home_page')</a></li>
+                  @if(!user()->Role || user()->Role->is_allow_presentations)
                   <li><a href="#/presentations"><i class="ic-presentation"></i>@lang('master.presentations')</a></li>
+                  @endif
+                  @if(!user()->Role || user()->Role->is_allow_gallery)
                   <li uib-tooltip="@lang('master.soon')"><a href="#/gallery"><i class="ic-photo-gallery"></i>@lang('master.gallery.title')</a></li>
+                  @endif
+                  @if(!user()->Role || user()->Role->is_allow_survey)
                   <li><a href="#/surveys"><i class="ic-checklist"></i>@lang('master.surveys')</a></li>
+                  @endif
+                  @if(!user()->Role || user()->Role->is_allow_tafweej_plans)
                   <li uib-tooltip="@lang('master.soon')"><a href="#/tafweej-plans"><i class="ic-plan"></i>@lang('master.tafweej_plans')</a></li>
+                  @endif
+                  @if(!user()->Role || user()->Role->is_allow_tafweej_tables)
                   <li uib-tooltip="@lang('master.soon')"><a href="#/tafweej-tables"><i class="ic-table"></i>@lang('master.tafweej_tables')</a></li>
+                  @endif
                 </ul>
               </div>
             </div>
           </div>
         </div>
         <!-- Header Gallery -->
+        @if(!user()->Role || user()->Role->is_allow_gallery)
         <home-gallery ng-if="isHomePage"></home-gallery>
-
+        @endif
         <!-- End Header Gallery -->
       </div>
       <div class="page-content page-container">

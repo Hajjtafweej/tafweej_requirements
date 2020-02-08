@@ -165,6 +165,14 @@ App.controller('DatatableCtrl', function($http,$httpParamSerializer,$filter,$roo
 				$scope.surveys[id].is_active = surveyActivationStatus+'';
 				return surveyFactory.activation(id,surveyActivationStatus);
 			},
+			exportAnswers: function(id){
+				if (!$scope.surveys[id].isExportAnswersLoading) {					
+					$scope.surveys[id].isExportAnswersLoading = true;
+					return surveyFactory.exportAnswers(id,function(){
+						$scope.surveys[id].isExportAnswersLoading = false;
+					});
+				}
+			},
 			edit: function(id){
 				return surveyFactory.editModal(id,{view: 'datatable',dtInstance: $scope.dtInstance});
 			}
@@ -193,9 +201,10 @@ App.controller('DatatableCtrl', function($http,$httpParamSerializer,$filter,$roo
 			DTColumnBuilder.newColumn('actions').withClass('text-left').renderWith(function(d,t,f){
 					$scope.surveys[f.id] = {is_active: f.is_active};
 					var editBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="survey.edit('+f.id+')"><i class="ic-edit"></i></a>',
+					exportBtn = '<a class="btn mr-1 btn-icon btn-sm" ng-class="(surveys['+f.id+'].isExportAnswersLoading) ? \'btn-light\' : \'btn-primary\'" ng-click="survey.exportAnswers('+f.id+')" ng-loading="surveys['+f.id+'].isExportAnswersLoading" tooltip-popup-delay="300" uib-tooltip="تصدير الأجوبة"><i class="ic-download"></i></a>',
 					activationBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" tooltip-popup-delay="300" uib-tooltip="{{ (surveys['+f.id+'].is_active == \'0\') ? \'تفعيل الأستبانة للإجابة عليها\' : \'إلغاء تفعيل الأستبانة\' }}" ng-click="survey.activation('+f.id+')"><i ng-class="(surveys['+f.id+'].is_active == \'0\') ? \'ic-eye-hide\' : \'ic-eye\'"></i></a>',
 					deleteBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="survey.delete('+f.id+')"><i class="ic-delete"></i></a>';
-					return activationBtn+editBtn+deleteBtn;
+					return exportBtn+activationBtn+editBtn+deleteBtn;
 			}).withOption('searchable', false).notSortable()
 		];
 		$scope.Columns = columns_list;

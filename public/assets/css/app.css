@@ -566,6 +566,16 @@
     padding: 30px 0 50px;
 }
 
+.page-header-filter > .btn-light {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.page-header-filter > .btn-light:not(.input-group)::after {
+    font-size: 10px;
+    margin-right: 10px;
+}
+
 /* Widget */
 .widget {
     background: #fff;

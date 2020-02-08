@@ -147,6 +147,13 @@ App.factory('Helpers', function($cacheFactory,$http, Flash, $location,$filter, $
       return confirm($filter('lang')('confirm_delete_msg'));
     },
     /**
+    * Http errors occurs
+    * @return Flash
+    **/
+    httpErrorOccurs: function() {
+      return Flash.create('danger','لقد حدث خطأ في الإتصال, يرجى إعادة المحاولة');
+    },
+    /**
     * Most used flash messages
     * @param message
     * @return Flash
@@ -194,7 +201,7 @@ App.config(['$sceDelegateProvider','$routeProvider', '$locationProvider', '$inte
 
   $routeProvider
   .when('/admin/dashboard', {
-    templateUrl: templates_path+'pages/home.html?v='+assets_ver,
+    templateUrl: templates_path+'pages/dashboard.html?v='+assets_ver,
     controller: 'DashboardCtrl'
   })
   .when('/admin/surveys', {
@@ -218,8 +225,8 @@ App.config(['$sceDelegateProvider','$routeProvider', '$locationProvider', '$inte
     controller: 'DatatableCtrl'
   })
 
-  $routeProvider.otherwise('/admin/surveys');
   // $routeProvider.otherwise('/admin/dashboard');
+  $routeProvider.otherwise('/admin/surveys');
 
 }]);
 

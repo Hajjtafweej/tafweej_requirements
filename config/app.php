@@ -64,6 +64,7 @@ return [
     */
     'asset_url' => env('ASSET_URL', null),
     'app_settings' => [
+      'primary_color' => '0DA2B1',
       'default_password' => 11223344
     ],
     'app_asset_ver' => 124, // this version related with /app extension

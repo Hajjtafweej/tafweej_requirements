@@ -735,7 +735,7 @@ table.dataTable, table.dataTable th, table.dataTable td {
 }
 
 .uib-datepicker-popup .btn.active {
-    background: var(--secondary);
+    background: var(--primary);
     color: #fff;
 }
 

@@ -171,14 +171,20 @@ App.factory('userFactory', function(Flash,$filter, $uibModal, API,Helpers) {
     **/
     deleteRole: function(id,options) {
       if (Helpers.confirmDelete()) {
-        API.DELETE('user/role/delete/'+id).then(function(){
-          Flash.create('success','تم حذف نوع المستخدم بنجاح');
-          switch (options.view) {
-            case 'datatable':
+        API.DELETE('user/role/delete/'+id).then(function(d){
+          if (d.data.message == 'success') {
+            Flash.create('success','تم حذف نوع المستخدم بنجاح');
+            switch (options.view) {
+              case 'datatable':
               options.dtInstance.reloadData();
-            break;
+              break;
+            }
+          }else if (d.data.message == 'there_are_users_exist') {
+            Flash.create('danger','لا يمنك الحذف لإن هنالك مستخدمين تحت هذا النوع');
+          }else {
+            Helpers.httpErrorOccurs();
           }
-        })
+        });
       }
     },
   };

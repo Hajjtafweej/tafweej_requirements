@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use DB,Validator;
 use Illuminate\Validation\Rule;
 use \GeniusTS\HijriDate\Hijri as Hijri;
-use App\Survey,App\SurveyAnswer,App\SurveyAnswerValue,App\SurveySection,App\SurveyQuestion,App\SurveyQuestionOption;
+use App\Survey,App\SurveyLog,App\SurveyAnswer,App\SurveyAnswerValue,App\SurveySection,App\SurveyQuestion,App\SurveyQuestionOption;
 class PortalSurveyController extends Controller
 {
 
@@ -43,8 +43,9 @@ class PortalSurveyController extends Controller
 	*
 	* @return array
 	*/
-	public function getShow($id = null,Request $q)
+	public function getShow($id,Request $q)
 	{
+
 		$Survey = Survey::where('id',$id)->select('id',DB::raw('title_'.app()->getLocale().' as title'),'created_at')->with(['MainSections' => function($Section){
 			return $Section->select('id','survey_id','is_required','is_apply_percentage',DB::raw('title_'.app()->getLocale().' as title'))->orderBy('ordering');
 		}])->calculateCompletion(user()->id)->authorized()->first();
@@ -52,6 +53,10 @@ class PortalSurveyController extends Controller
 			return response()->json(['message' => 'survey_not_found'],404);
 		}
 
+		/* Log survey view */
+		SurveyLog::Log($id,'view');
+
+		/* Prepare required questions */
 		$this->requiredQuestions = collect([]);
 		$this->prepareRequiredQuestionsIds($id,0,0);
 
@@ -250,6 +255,9 @@ class PortalSurveyController extends Controller
 					}
 				}
 			}
+			/* Start update is_completed of whole survey */
+			SurveyLog::Log($id,'answer');
+			/* End update is_completed of whole survey */
 		}
 
 
