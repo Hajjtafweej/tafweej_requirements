@@ -121,7 +121,7 @@
 	  * @param Request $q
 	  * @return \Illuminate\Http\JsonResponse
 	  */
-		public function SaveRole($id = null,Request $q)
+		public function saveRole($id = null,Request $q)
 		{
 
 			$validation = [
@@ -157,7 +157,7 @@
 	  * @param Request $q
 	  * @return \Illuminate\Http\JsonResponse
 	  */
-		public function DeleteRole($id,Request $q)
+		public function deleteRole($id,Request $q)
 		{
 			$checkUsersBelongs = User::where('user_role_id',$id)->count();
 			if ($checkUsersBelongs) {
@@ -167,6 +167,18 @@
 				\App\Survey::where('user_role_id',$id)->update(['user_role_id' => 0]);
 				return response()->json(['message' => 'success']);
 			}
+		}
+
+		/**
+		* Delete registration request
+		*
+		* @param integer $id
+		* @param Request $q
+		* @return \Illuminate\Http\JsonResponse
+		*/
+		public function deleteRegistration($id,Request $q)
+		{
+			\App\ServiceApplyToPortal::where('id',$id)->delete();
 		}
 
 	}

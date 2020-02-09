@@ -84,6 +84,9 @@ class AdminDatatableController extends Controller
 						case 'roles':
 							return $this->usersRoles($q);
 							break;
+							case 'registrations':
+								return $this->usersRegistrations($q);
+								break;
 					}
 				}else {
 					return $this->Users($q);
@@ -109,10 +112,15 @@ class AdminDatatableController extends Controller
 		$Columns = explode(',',$q->columns);
 		if (count($Columns)) {
 			switch ($this->currentModule) {
-				case 'cards':
+				case 'users':
 					$Model = $Model->get();
-					$filename = ($q->status == 0) ? 'Interviews-Candidates.xlsx' : 'Interviews.xlsx';
-					return Excel::download(new \App\Exports\InterviewsExport($Model,$q->status), $filename);
+					$filename = 'المستخدمين.xlsx';
+					return Excel::download(new \App\Exports\UsersExport($Model), $filename);
+				break;
+				case 'registrations':
+					$Model = $Model->get();
+					$filename = 'طلبات-التسجيل.xlsx';
+					return Excel::download(new \App\Exports\UserRegistrationsExport($Model), $filename);
 				break;
 			}
 		}
@@ -226,4 +234,37 @@ class AdminDatatableController extends Controller
 
 	}
 
+	/**
+	* Users Registrations
+	*/
+	public function usersRegistrations($q)
+	{
+
+		$start_date = ($q->start_date) ? $q->start_date : false;
+		$end_date = ($q->end_date) ? $q->end_date : false;
+
+		$getResults = \App\ServiceApplyToPortal::selectRaw('service_apply_to_portal.id,country.name as country_name,service_apply_to_portal.delegation_name,service_apply_to_portal.phone,service_apply_to_portal.email,service_apply_to_portal.created_at');
+		$getResults = $getResults->leftJoin('list_of_countries as country','service_apply_to_portal.country_id','=','country.id');
+		// Status filter
+		$date_field = 'service_apply_to_portal.created_at';
+		// Date filter
+		if($start_date){
+			$getResults = $getResults->whereDate(DB::raw($date_field),'>=',$start_date);
+		}
+		if($end_date){
+			$getResults = $getResults->whereDate(DB::raw($date_field),'<=',$end_date);
+		}
+		$getResults = $getResults->groupBy('service_apply_to_portal.id');
+
+		if($this->is_export){
+			return $this->exportToExcel($getResults);
+		}else {
+			return datatables()->of($getResults)
+			->filterColumn('country_name', function($query, $keyword) use($q) {
+				$query->whereRaw('country.name like ?', ["%{$keyword}%"]);
+			})
+			->addColumn('DT_RowId','{{ strtolower($id) }}')->make(true);
+		}
+
+	}
 }

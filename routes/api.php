@@ -77,9 +77,13 @@ Route::group(
 
           Route::group(['prefix' => 'role'],function(){
             Route::get('/show/{id}','AdminUserController@getShowRole');
-            Route::post('/add','AdminUserController@SaveRole');
-            Route::put('/update/{id}','AdminUserController@SaveRole');
-            Route::delete('/delete/{id}','AdminUserController@DeleteRole');
+            Route::post('/add','AdminUserController@saveRole');
+            Route::put('/update/{id}','AdminUserController@saveRole');
+            Route::delete('/delete/{id}','AdminUserController@deleteRole');
+          });
+
+          Route::group(['prefix' => 'registration'],function(){
+            Route::delete('/delete/{id}','AdminUserController@deleteRegistration');
           });
         });
 

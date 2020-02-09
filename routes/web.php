@@ -30,12 +30,14 @@ Route::group(
         Route::post('/dt/{module}/{sub_module}','AdminDatatableController@getModule');
         Route::post('/dt/{module}/{sub_module}/{module_id}','AdminDatatableController@getModule');
         Route::post('/dt/{module}/{sub_module}/{module_id}/{sub_module_id}','AdminDatatableController@getModule');
+        Route::get('/export/{module}','AdminDatatableController@getModule')->name('export');
+        Route::get('/export/{module}/{sub_module}','AdminDatatableController@getModule')->name('export');
       });
 
       Route::group(['namespace' => 'Portal'],function(){
         Route::post('apply-to-portal', 'PortalHelpersController@postApplyToPortal');
       });
-      
+
       Route::group(['prefix' => 'auth'],function(){
         Route::post('login', 'AuthController@postLogin');
       });

@@ -29,7 +29,16 @@ App.controller('DatatableCtrl', function($http,$httpParamSerializer,$filter,$roo
 		value: 'أمس'
 	}];
 
-
+	$scope.page = {
+		sub_pages_list: [],
+		setSubPage: function(page){
+			$location.url('admin/'+$scope.parent_path+'/'+page);
+		},
+		init: function(){
+			$scope.page.currentSubPage = $scope.sub_path;
+		}
+	};
+	$scope.page.init();
 
 	$timeout(function(){
 		if ($scope.dtInstance.DataTable && $scope.dtInstance.DataTable.page.info().recordsTotal >= 0) {
@@ -41,9 +50,25 @@ App.controller('DatatableCtrl', function($http,$httpParamSerializer,$filter,$roo
 
 
 	/* 2: Main Helpers */
+	/* 2-1: Export data modal */
+	$scope.Export = function(module,without_columns,export_sub_type_data){
+		console.log(1);
+		// 2-1-1: Prepare export sub module data usually used in export data of row in datatable
+		if (export_sub_type_data) {
+			$scope.filter_data = angular.extend($scope.filter_data,export_sub_type_data);
+		}
 
+		var filter_export = angular.copy($scope.filter_data);
+		filter_export = $httpParamSerializer(filter_export);
+		var export_path = (module) ? module : $scope.parent_path+(($scope.sub_path) ? '/'+$scope.sub_path : '');
+		window.location.href = baseUrl+'/api/web/admin/export/'+export_path+((filter_export) ? '?'+filter_export : '');
+		if (!without_columns) {
+			$scope.export_modal.cancel();
+		}
 
-	/* 2-1: Import data modal */
+	};
+
+	/* 2-2: Import data modal */
 	$scope.Import = function(type,id){
 		var import_title = 'استيراد بيانات',
 				sample_link = '';
@@ -166,7 +191,7 @@ App.controller('DatatableCtrl', function($http,$httpParamSerializer,$filter,$roo
 				return surveyFactory.activation(id,surveyActivationStatus);
 			},
 			exportAnswers: function(id){
-				if (!$scope.surveys[id].isExportAnswersLoading) {					
+				if (!$scope.surveys[id].isExportAnswersLoading) {
 					$scope.surveys[id].isExportAnswersLoading = true;
 					return surveyFactory.exportAnswers(id,function(){
 						$scope.surveys[id].isExportAnswersLoading = false;
@@ -212,6 +237,11 @@ App.controller('DatatableCtrl', function($http,$httpParamSerializer,$filter,$roo
 
 			break;
 		case 'users':
+		$scope.page.subPagesList = [
+			{key: '',name: 'ادارة المستخدمين',special_name: 'المستخدمين'},
+			{key: 'roles',name: 'ادارة أنواع المستخدمين',special_name: 'أنواع المستخدمين'},
+			{key: 'registrations',name: 'استعراض طلبات التسجيل',special_name: 'طلبات التسجيل'},
+		];
 		/* Users Roles List */
 		if ($scope.sub_path && $scope.sub_path == 'roles') {
 			ordering_column = 4;
@@ -250,6 +280,46 @@ App.controller('DatatableCtrl', function($http,$httpParamSerializer,$filter,$roo
 						var editBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="userRole.edit('+f.id+')"><i class="ic-edit"></i></a>',
 						deleteBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="userRole.delete('+f.id+')"><i class="ic-delete"></i></a>';
 						return editBtn+deleteBtn;
+				}).withOption('searchable', false).notSortable()
+			];
+			$scope.Columns = columns_list;
+
+		}else if ($scope.sub_path && $scope.sub_path == 'registrations') {
+
+			$scope.rowClickHandler = function(f){
+
+			};
+
+			$scope.userRegistration = {
+				delete: function(id){
+					return userFactory.deleteRegistration(id,{view: 'datatable',dtInstance: $scope.dtInstance});
+				}
+			};
+
+			ordering_column = 2;
+
+			/**
+			* Prints datatable columns
+			*/
+			var columns_list = [
+				DTColumnBuilder.newColumn('delegation_name').withTitle('اسم المفوج').renderWith(function(d,t,f){
+					return '<div class="widget-table-item-title">'+d+'</div>';
+				}),
+				DTColumnBuilder.newColumn('email').withTitle('البريد الألكتروني').renderWith(function(d,t,f){
+					return d;
+				}),
+				DTColumnBuilder.newColumn('phone').withClass('ltr').withTitle('رقم الجوال').renderWith(function(d,t,f){
+					return d;
+				}),
+				DTColumnBuilder.newColumn('country_name').withTitle('الدولة').renderWith(function(d,t,f){
+					return d;
+				}),
+				DTColumnBuilder.newColumn('created_at').withTitle('تاريخ الطلب').renderWith(function(d,t,f){
+					return $filter('dateF')(d,'yyyy/MM/dd HH:mm');
+				}).withOption('searchable', false),
+				DTColumnBuilder.newColumn('actions').withClass('text-left').renderWith(function(d,t,f){
+						var deleteBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="userRegistration.delete('+f.id+')"><i class="ic-delete"></i></a>';
+						return deleteBtn;
 				}).withOption('searchable', false).notSortable()
 			];
 			$scope.Columns = columns_list;

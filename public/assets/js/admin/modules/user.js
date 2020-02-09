@@ -1,6 +1,23 @@
 App.factory('userFactory', function(Flash,$filter, $uibModal, API,Helpers) {
   var userFactory = {
     /**
+    * Delete registration
+    * @param integer id of registration
+    * @return
+    **/
+    deleteRegistration: function(id,options) {
+      if (Helpers.confirmDelete()) {
+        API.DELETE('user/registration/delete/'+id).then(function(){
+          Flash.create('success','تم حذف طلب التسجيل بنجاح');
+          switch (options.view) {
+            case 'datatable':
+              options.dtInstance.reloadData();
+            break;
+          }
+        })
+      }
+    },
+    /**
     * Delete user
     * @param integer id of user
     * @return

@@ -9,7 +9,7 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\BeforeExport;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class UsersExport implements FromView,ShouldAutoSize,WithEvents
+class UserRegistrationsExport implements FromView,ShouldAutoSize,WithEvents
 {
 
   /**
@@ -25,8 +25,8 @@ class UsersExport implements FromView,ShouldAutoSize,WithEvents
 
   public function view() : View
   {
-    return view('app.exports.users', [
-      'Users' => $this->Model
+    return view('app.exports.user-registrations', [
+      'UserRegistrations' => $this->Model
     ]);
   }
 
