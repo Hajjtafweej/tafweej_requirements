@@ -97,11 +97,11 @@ class User extends Authenticatable implements JWTSubject
   }
 
   /**
-  * Survey Logs
+  * Survey Log
   *
   */
-  public function SurveyLogs(){
-    return $this->hasMany('App\SurveyLog');
+  public function SurveyLog(){
+    return $this->hasOne('App\SurveyLog');
   }
 
 

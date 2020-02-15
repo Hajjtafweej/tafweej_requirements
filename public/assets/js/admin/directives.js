@@ -11,7 +11,7 @@ usersRolesList
 /* Echarts */
 echarts.registerTheme('App',{
   color: [
-    '#395465','#ddbc5d','#45B39D','#AED6F1'
+    '#0DA2B1', '#11adbd', '#16b7c7', '#1dc3d4', '#42e6ba', '#42e6ba', '#67e6c4'
   ],
   valueAxis: {
     axisLine: {

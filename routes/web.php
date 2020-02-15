@@ -19,6 +19,10 @@ Route::group(
       Route::get('file/{folder}/{file}','SiteController@getDownloadFile');
       Route::get('presentation/{id}','Portal\PortalPresentationController@getDownload');
     });
+    /* Start Printable assets */
+    Route::group(['prefix' => 'print','middleware' => 'auth'],function(){
+      Route::get('participant/{id}','Admin\AdminParticipantController@getPrint');
+    });
     /* Start External Pages */
     Route::get('page/{slug}','SiteController@getExternalPage');
   });

@@ -1,0 +1,98 @@
+<form name="requirementForm" id="requirementForm" role="form">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="requirement_modal.cancel()" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">
+            {{ (requirement_modal.method == 'add') ? 'أضف متطلب جديد' : 'تعديل المتطلب' }}</h4>
+    </div>
+    <!-- Loading -->
+    <div class="modal-body" ng-show="requirement_modal.isLoading || requirement_modal.isListsLoading">
+        <div class="circle-loader" style="margin: 70px auto 70px;"></div>
+    </div>
+    <!-- After Loading -->
+    <div class="modal-body" ng-hide="requirement_modal.isLoading || requirement_modal.isListsLoading">
+        <div class="row">
+            <div class="col-12 col-md-6 col-12 col-md-6 col-lg-3">
+                <div class="form-group">
+                    <label for="holy_place">المرحلة</label>
+                    <ui-select required append-to-body="true" ng-model="requirement_modal.data.holy_place_id">
+                        <ui-select-match placeholder="أبحث">{{ $select.selected.name }}
+                        </ui-select-match>
+                        <ui-select-choices repeat="tab.id as tab in $root.main_lists.holy_places | filter: $select.search">
+                            <div class="d-flex">
+                                <div ng-bind-html="tab.name | highlight: $select.search"></div>
+                            </div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="form-group">
+                    <label for="element">العنصر</label>
+                    <input type="text" class="form-control" ng-focus="true" id="element"
+                        ng-model="requirement_modal.data.element">
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="form-group">
+                    <label for="field">المجال</label>
+                    <input type="text" class="form-control" id="field" ng-model="requirement_modal.data.field">
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="form-group">
+                    <label for="sub_field">المجال الفرعي</label>
+                    <input type="text" class="form-control" id="sub_field" ng-model="requirement_modal.data.sub_field">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="scope_of_work">نطاق الأعمال</label>
+                    <input type="text" class="form-control" id="scope_of_work"
+                        ng-model="requirement_modal.data.scope_of_work">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="requirements">المتطلبات من الجهات</label>
+                    <input type="text" class="form-control" id="requirements" ng-model="requirement_modal.data.requirements">
+                </div>
+            </div>
+        </div>
+        <div class="form-group mt-1">
+            <label class="mb-3">أختر الجهات المشاركة</label>
+            <div class="alert border py-4">
+                <div class="mb-2">
+                    <button type="button" ng-click="requirement_modal.selectAll(true)"
+                        ng-hide="requirement_modal.isSelelectedAll()" class="btn btn-light-dark btn-sm">تحديد
+                        الكل</button>
+                    <button type="button" ng-click="requirement_modal.selectAll(false)"
+                        ng-show="requirement_modal.isSelelectedAll()" class="btn btn-light-dark btn-sm">الغاء تحديد
+                        الكل</button>
+                </div>
+                <div class="row mt-3">
+                    <div ng-repeat="participant in $root.main_lists.participants" class="col-md-4 col-sm-6 col-12">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="participant_{{ participant.id }}"
+                                ng-model="requirement_modal.selected_participants[participant.id]">
+                            <label class="custom-control-label"
+                                for="participant_{{ participant.id }}">{{ participant.name }}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-hide="requirement_modal.isLoading || requirement_modal.isListsLoading" class="modal-footer text-center"
+        >
+        <button type="submit" ng-loading="requirement_modal.isSending"
+            ng-disabled="requirement_modal.isSending || !requirementForm.$dirty" class="btn rounded"
+            ng-class="(requirementForm.$dirty) ? 'btn-primary' : 'btn-light'"
+            ng-click="requirement_modal.onSave(requirementForm)">حفظ</button>
+            		<button type="submit" ng-show="requirement_modal.method == 'add'" ng-loading="requirement_modal.isSending"
+            		    ng-disabled="requirement_modal.isSending || !requirementForm.$dirty" class="btn rounded"
+            		    ng-class="(requirementForm.$dirty) ? 'btn-light-dark' : 'btn-light'"
+            		    ng-click="requirement_modal.onSave(requirementForm,true)">حفظ واضافة جديدة</button>
+    </div>
+</form>

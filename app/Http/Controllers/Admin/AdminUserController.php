@@ -42,7 +42,7 @@
 				'is_supervisor' => 'integer',
 				'is_admin' => 'integer',
 				'user_role_id' => 'integer',
-	      'email' => 'required|email|max:255'
+	      		'email' => 'required|email|max:255'
 			];
 			$validator = Validator::make($q->all(), $validation);
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\User;
 use DB;
 
@@ -15,6 +16,14 @@ class AdminDashboardController extends Controller
 	*/
 	public function getStatistics(Request $q)
 	{
+		$validation = [
+			'user_role_id' => 'required|integer'
+		];
+		$validator = Validator::make($q->all(), $validation);
+
+		if($validator->fails()) {
+			return response()->json(['message' => 'invalid_fields', 'errors' => $validator->messages()]);
+		}
 
 		DB::statement(DB::raw('SET SESSION group_concat_max_len = 10000000;'));
 		$Statistics = [];
@@ -24,41 +33,50 @@ class AdminDashboardController extends Controller
 		$whereS = ($this->basicFilters()) ? 'WHERE ' : '';
 
 		// Statistics by default
-		$countSurveys = DB::raw('(SELECT COUNT(id) FROM surveys '.$whereS.$this->basicFilters().' LIMIT 1) as count_surveys');
-		$countCompletedSurveys = DB::raw('(SELECT COUNT(surveys.id) FROM surveys WHERE surveys.id IN(SELECT survey_logs.survey_id FROM survey_logs WHERE survey_logs.survey_id = surveys.id AND survey_logs.completed_at IS NOT NULL GROUP BY survey_logs.survey_id)) as count_completed_surveys');
-		$countStartedSurveys = DB::raw('(SELECT COUNT(surveys.id) FROM surveys WHERE surveys.id IN(SELECT survey_logs.survey_id FROM survey_logs WHERE survey_logs.survey_id = surveys.id AND survey_logs.started_at IS NOT NULL GROUP BY survey_logs.user_id)) as count_started_surveys');
-		$countViewedSurveys = DB::raw('(SELECT COUNT(surveys.id) FROM surveys WHERE surveys.id IN(SELECT survey_logs.survey_id FROM survey_logs WHERE survey_logs.survey_id = surveys.id GROUP BY survey_logs.user_id)) as count_viewed_surveys');
+		$countAllUsers = DB::raw('(SELECT COUNT(id) FROM users '.$whereS.$this->basicFilters(false).' LIMIT 1) as count_all_users');
+		$countCompletedSurveys = DB::raw('(SELECT COUNT(surveys.id) FROM surveys WHERE surveys.id IN(SELECT survey_logs.survey_id FROM survey_logs WHERE survey_logs.survey_id = surveys.id AND survey_logs.completed_at IS NOT NULL AND survey_logs.user_id IN(SELECT users_of_role.id FROM users as users_of_role WHERE users_of_role.user_role_id = '.$q->user_role_id.') GROUP BY survey_logs.survey_id)) as count_completed_surveys');
+		$countStartedSurveys = DB::raw('(SELECT COUNT(surveys.id) FROM surveys WHERE surveys.id IN(SELECT survey_logs.survey_id FROM survey_logs WHERE survey_logs.survey_id = surveys.id AND survey_logs.started_at IS NOT NULL AND survey_logs.user_id IN(SELECT users_of_role.id FROM users as users_of_role WHERE users_of_role.user_role_id = '.$q->user_role_id.') GROUP BY survey_logs.user_id)) as count_started_surveys');
+		$countViewedSurveys = DB::raw('(SELECT COUNT(surveys.id) FROM surveys WHERE surveys.id IN(SELECT survey_logs.survey_id FROM survey_logs WHERE survey_logs.survey_id = surveys.id AND survey_logs.user_id IN(SELECT users_of_role.id FROM users as users_of_role WHERE users_of_role.user_role_id = '.$q->user_role_id.') GROUP BY survey_logs.user_id)) as count_viewed_surveys');
 
-		$Statistics = DB::table('surveys')->select($countSurveys,$countCompletedSurveys,$countStartedSurveys,$countViewedSurveys)->first();
+		$Statistics = DB::table('surveys')->select($countAllUsers,$countCompletedSurveys,$countStartedSurveys,$countViewedSurveys)->first();
 
 		// Prepare json
-		$count_surveys = (int) $Statistics->count_surveys;
+		$count_all_users = (int) $Statistics->count_all_users;
 		$count_completed_surveys = (int) $Statistics->count_completed_surveys;
 		$count_started_surveys = (int) $Statistics->count_started_surveys;
 		$count_not_started_surveys = (int) $Statistics->count_completed_surveys;
 		$count_viewed_surveys = (int) $Statistics->count_viewed_surveys;
 
 		$TopUsersInSurveyCompletion = User::whereRaw('users.user_role_id = ?',[$q->user_role_id])->selectRaw('users.id,users.name,users.username,users.email,completion_rate');
-		$TopUsersInSurveyCompletion = $TopUsersInSurveyCompletion->leftJoin(DB::raw('(SELECT id,AVG(completion_rate) as completion_rate,user_id FROM survey_logs GROUP BY user_id) as users_survey_logs'),'users_survey_logs.user_id','=','users.id');
-		$TopUsersInSurveyCompletion = $TopUsersInSurveyCompletion->whereRaw('users_survey_logs.id IS NOT NULL')->where(DB::raw('users_survey_logs.completion_rate'),'>',0)->orderBy('completion_rate','DESC')->with(['SurveyLogs' => function($SurveyLogs){
-			return $SurveyLogs->with(['Survey' => function($Survey){
+		$TopUsersInSurveyCompletion = $TopUsersInSurveyCompletion->leftJoin(DB::raw('(SELECT id,ROUND(AVG(completion_rate),2) as completion_rate,user_id FROM survey_logs GROUP BY user_id) as users_survey_logs'),'users_survey_logs.user_id','=','users.id');
+		$TopUsersInSurveyCompletion = $TopUsersInSurveyCompletion->whereRaw('users_survey_logs.id IS NOT NULL')->where(DB::raw('users_survey_logs.completion_rate'),'>',0)->orderBy('completion_rate','DESC')->with(['SurveyLog' => function($SurveyLog){
+			return $SurveyLog->with(['Survey' => function($Survey){
 				return $Survey->select('id',DB::raw('title_ar as title'));
-			}])->take(3);
-		}])->take(5)->get();
+			}]);
+		}])->take(7)->get();
+
+		$LastAnswers = \App\SurveyLog::take(5)->with(['User' => function($User){
+			return $User->select('id','username','name');
+		},'Survey' => function($Survey){
+			return $Survey->select('id',DB::raw('title_ar as title'));
+		}])->whereHas('User',function($User){
+			return $User->where('user_role_id',request()->user_role_id);
+		})->orderBy(DB::raw('last_answer_at'),'DESC')->onlyStarted()->get();
 
 		$Stats = [
-			'surveys_count' => [
-				'all' => $count_surveys,
+			'users_count' => [
+				'all' => $count_all_users,
 				'completed' => $count_completed_surveys,
-				'completed_rate' => round(($count_completed_surveys/$count_surveys) * 100,2),
+				'completed_rate' => (($count_completed_surveys) ? round(($count_completed_surveys/$count_all_users) * 100,2) : 0),
 				'started' => $count_started_surveys,
-				'started_rate' => round(($count_started_surveys/$count_surveys) * 100,2),
-				'not_started' => ($count_surveys-$count_started_surveys),
-				'not_started_rate' => round((($count_surveys-$count_started_surveys)/$count_surveys) * 100,2),
+				'started_rate' => (($count_completed_surveys) ? round(($count_started_surveys/$count_all_users) * 100,2) : 0),
+				'not_started' => ($count_all_users-$count_started_surveys),
+				'not_started_rate' => (($count_completed_surveys) ? round((($count_all_users-$count_started_surveys)/$count_all_users) * 100,2) : 0),
 				'viewed' => $count_viewed_surveys,
-				'viewed_rate' => round(($count_viewed_surveys/$count_surveys) * 100,2),
+				'viewed_rate' => (($count_completed_surveys) ?  round(($count_viewed_surveys/$count_all_users) * 100,2) : 0),
 			],
-			'top_users_survey_completion' => $TopUsersInSurveyCompletion
+			'top_users_survey_completion' => $TopUsersInSurveyCompletion,
+			'last_answers' => $LastAnswers
 		];
 
 		return response()->json($Stats);
@@ -68,8 +86,11 @@ class AdminDashboardController extends Controller
 	* Function to set filters to query
 	* @return string
 	**/
-	private function basicFilters($has_first_and = false,$date_col = 'created_at'){
+	private function basicFilters($has_first_and = false,$user_role_col = 'user_role_id',$date_col = 'created_at'){
 		$r = '';
+		if (request()->user_role_id) {
+			$r .= ' AND '.$user_role_col.' = '.request()->user_role_id;
+		}
 		if (request()->start_date) {
 			$r .= ' AND DATE('.$date_col.') >= "'.request()->start_date.'"';
 		}

@@ -23,6 +23,7 @@
   <script src="{{ asset('assets/js/admin/directives.js?v='.config('app.app_asset_ver')) }}"></script>
   <script src="{{ asset('assets/js/admin/modules/survey.js?v='.config('app.app_asset_ver')) }}"></script>
   <script src="{{ asset('assets/js/admin/modules/user.js?v='.config('app.app_asset_ver')) }}"></script>
+  <script src="{{ asset('assets/js/admin/modules/participant.js?v='.config('app.app_asset_ver')) }}"></script>
   <script src="{{ asset('assets/js/admin/ctrls/dashboard.js?v='.config('app.app_asset_ver')) }}"></script>
   <script src="{{ asset('assets/js/admin/ctrls/datatable.js?v='.config('app.app_asset_ver')) }}"></script>
   <script>
@@ -60,6 +61,7 @@
             </div>
           </div>
         </div>
+        
         <div class="links pb-3">
           <div class="container">
             <div class="row justify-content-center">
@@ -69,6 +71,7 @@
                   <!-- <li><a href="#/admin/presentations"><i class="ic-presentation"></i>العروض المرئية</a></li>
                   <li><a href="#/admin/gallery"><i class="ic-photo-gallery"></i>الصور والفيديو</a></li> -->
                   <li><a href="#/admin/surveys"><i class="ic-checklist"></i>الأستبانات</a></li>
+                  <li><a href="#/admin/participants"><i class="ic-file"></i>الجهات المشاركة</a></li>
                   <li><a href="#/admin/users"><i class="ic-user-2"></i>المستخدمين</a></li>
                 </ul>
               </div>

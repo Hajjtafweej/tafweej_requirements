@@ -26,15 +26,15 @@ class AdminHelpersController extends Controller
 	* @return string
 	**/
 	public function getList($type,Request $q){
-		if (in_array($type,['town-lists'])) {
+		if (in_array($type,['requirement-lists'])) {
 			$List = [];
 			switch ($type) {
-				case 'town-lists':
+				case 'requirement-lists':
 					$List = [
-						'villages' => \App\Village::where('town_id',$q->town_id)->select('id','name')->orderBy('name')->get(),
-						'buildings' => \App\Building::where('town_id',$q->town_id)->select('id','code')->orderBy('name')->get()
+						'participants' => \App\Participant::get(),
+						'holy_places' => \App\ListOfHolyPlace::get()
 					];
-					break;
+				break;
 			}
 			return response()->json($List);
 		}else {

@@ -1,26 +1,104 @@
 <div class="page-header">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col">
-        <h3 class="widget-title">الأحصائيات</h3>
-      </div>
-      <div class="col col-sm-auto d-flex justify-content-end align-items-center">
-        <!-- Filter By User Role -->
-        <div class="page-header-filter" uib-dropdown>
-          <a uib-dropdown-toggle class="btn btn-light">{{ (filter_data.user_role_id) ? (('dashboard_types' | filter_lists) | filter:filter_data.dashboard_type)[0].label : 'جميع أنواع المستخدمين'  }}</a>
-          <div class="dropdown-menu dropdown-menu-right text-right md-size" uib-dropdown-menu>
-            <a ng-repeat="item in $root.main_lists.users_roles" class="dropdown-item" ng-click="filterResults('user_role_id',item.id)">{{ item.name }}</a>
-          </div>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col">
+                <div uib-dropdown class="widget-title-dropdown">
+                  <h3 class="widget-title" uib-dropdown-toggle>أحصائيات {{ currentUserRole.name }}</h3>
+                  <div class="dropdown-menu dropdown-menu-right text-right md-size" uib-dropdown-menu>
+                    <a ng-repeat="item in $root.main_lists.users_roles" class="dropdown-item" ng-click="filterResults('user_role_id',item.id)">أحصائيات {{ item.name }}</a>
+                  </div>
+                </div>
+            </div>
+            <div class="col col-sm-auto d-flex justify-content-end align-items-center">
+                <div class="page-header-filter">
+                  <a class="btn btn-light btn-icon" ng-click="getData()"><i class="ic-refresh"></i></a>
+                </div>
+            </div>
         </div>
-        <!-- Filter By User -->
-        <div class="page-header-filter" uib-dropdown auto-close="outsideClick">
-          <a uib-dropdown-toggle class="btn btn-light">{{ (filter_data.user_role_id) ? (('dashboard_types' | filter_lists) | filter:filter_data.dashboard_type)[0].label : 'جميع المستخدمين'  }}</a>
-          <div class="dropdown-menu dropdown-menu-right text-right md-size" uib-dropdown-menu>
-            
-          </div>
-        </div>
-
-      </div>
     </div>
-  </div>
+</div>
+<div class="page-header-container">
+    <div class="container">
+        <div class="widget">
+            <div class="widget-heading">
+                <h3 class="widget-title d-flex align-items-center">أحصائيات {{ currentUserRole.name }} على الأستبانة<span class="help-info mr-2" uib-tooltip="عدد {{ currentUserRole.name }} الكلي حسب الأستبانات من حيث مشاهدة الأستبانة, البدأ بها, إكمالها أو {{ currentUserRole.name }} التي لم تبدأ الإجابة بعد">!</span></h3>
+            </div>
+            <div class="widget-body d-flex justify-content-center align-items-center" style="min-height: 150px;" ng-show="isLoading">
+              <div class="dot-loader"></div>
+            </div>
+            <div class="widget-body dashboard-summary-counts" style="min-height: 150px;" ng-hide="isLoading">
+                <div class="row mb-2">
+                    <div class="col-md-3 col-6 d-flex justify-content-center pb-5 pb-md-0" ng-repeat="item in [{key: 'viewed',label: 'شاهدوا الأستبانة'},{key: 'started',label: 'بدؤوا الإجابة'},{key: 'completed',label: 'أكملوا الأستبانة'},{key: 'not_started',label: 'لم يبدؤوا الإجابة بعد'}]">
+                        <a class="dashboard-count-item" ng-click="surveyUsersCount.onClick(item)">
+                          <span class="h1 font-weight-bold">{{ statistics.users_count[item.key] }}</span>
+                          <span class="rate">({{ statistics.users_count[item.key+'_rate'] }}%)</span>
+                          <span class="h4 d-block text-muted font-weight-bold">{{ item.label }}<i class="ic-arrow-left"></i></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5 pt-1">
+          <div class="col-lg-6 pl-lg-3 pb-5 pb-l-g0">
+            <div class="widget" >
+              <div class="widget-heading">
+                <h3 class="widget-title">أفضل {{ currentUserRole.name }} في إكمال الأستبانة<span class="help-info mr-2" uib-tooltip="ترتيب {{ currentUserRole.name }} من حيث نسبة إكمال الأستبانة">!</span></h3>
+              </div>
+              <div class="widget-body d-flex justify-content-center align-items-center" style="min-height: 290px;" ng-show="isLoading">
+                <div class="dot-loader"></div>
+              </div>
+              <div class="widget-body d-flex justify-content-center align-items-center" style="min-height: 290px;" ng-show="!isLoading && !statistics.top_users_survey_completion.length">
+                <div class="text-muted">
+                  لم يتم الإجابة على الأستبانة من قبل {{ currentUserRole.name }} بعد
+                </div>
+              </div>
+              <div class="widget-body" ng-hide="isLoading || !statistics.top_users_survey_completion.length">
+                <div echarts init-loader="true" style="width: 100%; height: 260px;" options="charts.top_users_survey_completion.options" events="charts.top_users_survey_completion.events"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 pr-lg-3">
+            <div class="widget">
+              <div class="widget-heading">
+                <h3 class="widget-title">آخر الإجابات على الأستبانة<span class="help-info mr-2" uib-tooltip="آخر الإجابات من قبل {{ currentUserRole.name }} حسب المستخدم">!</span></h3>
+              </div>
+              <div class="widget-body d-flex justify-content-center align-items-center" style="width: 100%; min-height: 290px;" ng-show="isLoading">
+                <div class="dot-loader"></div>
+              </div>
+              <div class="widget-body d-flex justify-content-center align-items-center" style="min-height: 290px;" ng-show="!isLoading && !statistics.top_users_survey_completion.length">
+                <div class="text-muted">
+                  لم يتم الإجابة على الأستبانة من قبل {{ currentUserRole.name }} بعد
+                </div>
+              </div>
+              <div style="width: 100%; min-height: 290px;" ng-hide="isLoading || !statistics.top_users_survey_completion.length">
+                <div class="widget-body-table">
+                  <div class="row widget-table-heading mx-0 d-flex">
+                    <div class="col-4">المستخدم</div>
+                    <div class="col-4">تاريخ الإجابة</div>
+                    <div class="col-4">معدل الأكمال</div>
+                  </div>
+                </div>
+                <div class="widget-table-body">
+                  <div ng-repeat="answer in statistics.last_answers" ng-click="lastAnswer.export(answer)" class="widget-table-item widget-table-item-sm cursor-pointer">
+                    <div class="row mx-0 align-items-center">
+                      <div class="col-4 pb-3 pb-md-0">
+                        <a class="widget-table-item-title text-truncate d-block">{{ answer.user.name }}</a>
+                      </div>
+                      <div class="col-4">
+                        <div class="text-muted font-weight-normal">{{ answer.last_answer_at | dateF: 'yyyy/MM/dd HH:mm' }}</div>
+                      </div>
+                      <div class="col-4">
+                        <div class="progress" uib-tooltip="معدل الإكمال: {{ answer.completion_rate }}%">
+                          <div class="progress-bar" style="width: {{ answer.completion_rate }}%"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
 </div>

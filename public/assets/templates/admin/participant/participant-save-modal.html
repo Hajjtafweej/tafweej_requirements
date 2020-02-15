@@ -1,0 +1,33 @@
+<form name="participantSaveForm" id="participantSaveForm" role="form">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="participant_save_modal.cancel()"
+            data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">
+            {{ (participant_save_modal.method == 'add') ? 'أضف جهة مشاركة جديدة' : 'تعديل الجهة المشاركة' }}</h4>
+    </div>
+    <!-- Loading -->
+    <div class="modal-body" ng-show="participant_save_modal.isLoading">
+        <div class="circle-loader" style="margin: 70px auto 70px;"></div>
+    </div>
+    <!-- After Loading -->
+    <div class="modal-body" ng-hide="participant_save_modal.isLoading">
+        <div class="form-group">
+            <label class="h4 mb-1" for="name">اسم الجهة المشتركة</label>
+            <input type="text" class="form-control form-control-lg"
+                ng-focus="!participant_save_modal.isLoading" required
+                id="name"
+                ng-model="participant_save_modal.data.name">
+        </div>
+        <div class="alert alert-light mb-0" ng-if="participant_save_modal.data.id">
+            <p class="mb-0">
+                لتعديل المتطلبات الخاص بالجهة المشاركة أذهب الى <a href="#/admin/participants/requirements">صفحة المتطلبات</a> بعدها أضف متطلب أو أختر متطلب
+                موجود مسبقاً ثم حدد الجهة المشاركة هذه بداخلها.</p>
+        </div>
+    </div>
+    <div class="modal-footer text-center" ng-hide="participant_save_modal.isLoading">
+        <button type="submit" ng-loading="participant_save_modal.isSending"
+            ng-disabled="participant_save_modal.isSending || !participantSaveForm.$dirty" class="btn btn-lg rounded"
+            ng-class="(participantSaveForm.$dirty) ? 'btn-primary' : 'btn-light'"
+            ng-click="participant_save_modal.onSave(participantSaveForm)">حفظ</button>
+    </div>
+</form>

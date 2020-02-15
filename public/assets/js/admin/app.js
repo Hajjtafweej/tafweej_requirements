@@ -58,7 +58,9 @@ App.factory('API', function($http, $location, $rootScope, $window,$filter) {
     },
     // API PUT Method
     PUT: function(path, data, ignore_bar) {
-      var json = this.JSON('PUT', path);
+
+      // NOTE: here we just replaced the JSON Method from PUT to POST temporary to be suitable with the backend
+      var json = this.JSON('POST', path);
       if (data) {
         json.data = data;
       }else {
@@ -77,7 +79,9 @@ App.factory('API', function($http, $location, $rootScope, $window,$filter) {
     },
     // API DELETE Method
     DELETE: function(path, data, ignore_bar) {
-      var json = this.JSON('DELETE', path);
+
+      // NOTE: here we just replaced the JSON Method from DELETE to POST temporary to be suitable with the backend
+      var json = this.JSON('POST', path);
       if (data) {
         json.data = data;
       }else {
@@ -147,6 +151,28 @@ App.factory('Helpers', function($cacheFactory,$http, Flash, $location,$filter, $
       return confirm($filter('lang')('confirm_delete_msg'));
     },
     /**
+    * Page Wrap Laoding
+    * @return
+    **/
+    pageWrapLoading: function(isShow,title) {
+      var loadingTitle = (title) ? title : 'جاري التحميل';
+      if(!$('#page_wrap_loading').length){
+        $('body').append('<div id="page_wrap_loading"><div class="page-wrap-loading d-flex justify-content-center align-items-center" style="display: none;"><div><div class="circle-loader"></div><div class="page-wrap-loading-title">'+loadingTitle+'</div></div></div></div>');
+        if (isShow) {
+          $('#page_wrap_loading').fadeIn();
+        }else {
+          $('#page_wrap_loading').fadeOut();
+        }
+      }else {
+        $('.page-wrap-loading-title').text(loadingTitle);
+        if (isShow) {
+          $('#page_wrap_loading').fadeIn();
+        }else {
+          $('#page_wrap_loading').fadeOut();
+        }
+      }
+    },
+    /**
     * Http errors occurs
     * @return Flash
     **/
@@ -198,13 +224,16 @@ App.config(['$sceDelegateProvider','$routeProvider', '$locationProvider', '$inte
   // Templates path
   var templates_path = baseUrl+'/assets/templates/admin/';
 
-
   $routeProvider
   .when('/admin/dashboard', {
     templateUrl: templates_path+'pages/dashboard.html?v='+assets_ver,
     controller: 'DashboardCtrl'
   })
   .when('/admin/surveys', {
+    templateUrl: templates_path+'pages/surveys.html?v='+assets_ver,
+    controller: 'DatatableCtrl'
+  })
+  .when('/admin/surveys/answers', {
     templateUrl: templates_path+'pages/surveys.html?v='+assets_ver,
     controller: 'DatatableCtrl'
   })
@@ -228,7 +257,14 @@ App.config(['$sceDelegateProvider','$routeProvider', '$locationProvider', '$inte
     templateUrl: templates_path+'pages/gallery.html?v='+assets_ver,
     controller: 'DatatableCtrl'
   })
-
+  .when('/admin/participants', {
+    templateUrl: templates_path + 'pages/participants.html?v=' + assets_ver,
+    controller: 'DatatableCtrl'
+  })
+  .when('/admin/participants/requirements', {
+      templateUrl: templates_path + 'pages/participants.html?v=' + assets_ver,
+      controller: 'DatatableCtrl'
+  })
   // $routeProvider.otherwise('/admin/dashboard');
   $routeProvider.otherwise('/admin/surveys');
 

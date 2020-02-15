@@ -3,11 +3,12 @@ App.factory('surveyFactory', function(Flash,$filter, $uibModal,$window, API,Help
     /**
     * Export survey answers
     * @param integer id of survey
-    * @param mixed onAnswersLoaded 
+    * @param mixed onAnswersLoaded
     * @return
     **/
-    exportAnswers: function(id,onAnswersLoaded) {
-      API.GET('survey/export/'+id).then(function(d){
+    exportAnswers: function(id,onAnswersLoaded,user_id) {
+      var sendData = (user_id) ? {user_id: user_id} : {};
+      API.GET('survey/export/'+id,sendData).then(function(d){
         onAnswersLoaded();
         $window.open(d.data.file);
       });

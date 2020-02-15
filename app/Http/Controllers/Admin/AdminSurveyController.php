@@ -332,12 +332,22 @@ class AdminSurveyController extends Controller
 	*/
 	public function exportSurveyAnswers($id,Request $q)
 	{
+		$validator = Validator::make($q->all(), [
+			'user_id' => 'integer'
+		]);
 
+		if($validator->fails()) {
+			return response()->json(['message' => 'invalid_fields', 'errors' => $validator->messages()],403);
+		}
 		$getUsers = \App\User::whereHas('SurveyAnswer',function($SurveyAnswer) use($id){
 			return $SurveyAnswer->where('survey_id',$id);
-		})->select('id','username','name')->get();
+		})->select('id','username','name');
 
+		if ($q->user_id) {
+			$getUsers = $getUsers->where('id',$q->user_id);
+		}
 
+		$getUsers = $getUsers->get();
 
 		$Survey = Survey::where('id',$id)->select('id',DB::raw('title_ar as title'))->with(['MainSections' => function($MainSection){
 			return $MainSection->select('id','survey_id','parent_id',DB::raw('title_ar as title'))->orderBy('ordering');
@@ -374,6 +384,12 @@ class AdminSurveyController extends Controller
 
 		// return response()->json($Answers);
 		$fileName = $Survey->id.'-'.$Survey->title.'.xlsx';
+
+		// If the current export related with specific user so we have to make a unique file name for this user
+		if ($q->user_id) {
+			$fileName = 'user-'.$q->user_id.'-'.$fileName;
+		}
+
 		\Excel::store(new \App\Exports\SurveyAnswersExport($Survey,$Heading,$Answers),$fileName,'public-uploads-files');
 		return response()->json(['file' => \Storage::disk('public-uploads-files')->url($fileName)]);
 		// return \Excel::download(new \App\Exports\SurveyAnswersExport($Survey,$Heading,$Answers), $Survey->id.'-'.$Survey->title.'.xlsx');

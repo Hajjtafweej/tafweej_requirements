@@ -58,7 +58,7 @@ App.factory('API', function($http, $location, $rootScope, $window,$filter) {
     },
     // API PUT Method
     PUT: function(path, data, ignore_bar) {
-      var json = this.JSON('PUT', path);
+      var json = this.JSON('POST', path);
       if (data) {
         json.data = data;
       }else {
@@ -77,7 +77,7 @@ App.factory('API', function($http, $location, $rootScope, $window,$filter) {
     },
     // API DELETE Method
     DELETE: function(path, data, ignore_bar) {
-      var json = this.JSON('DELETE', path);
+      var json = this.JSON('POST', path);
       if (data) {
         json.data = data;
       }else {

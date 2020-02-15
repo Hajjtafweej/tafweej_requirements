@@ -3,9 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
 class SurveyLog extends Model
 {
+  protected $table = 'survey_logs';
   protected $guarded = ['id'];
 
   /**
@@ -24,6 +24,27 @@ class SurveyLog extends Model
     return $this->belongsTo('App\User');
   }
 
+  /**
+  * Get only completed surveys
+  *
+  * @param Eloquent $query
+  * @return Eloquent
+  */
+  public function scopeOnlyCompleted($query)
+  {
+    return $query->whereRaw($this->table.'.completed_at IS NOT NULL');
+  }
+
+  /**
+  * Get only logs which belongs to users already started answer not just view it
+  *
+  * @param Eloquent $query
+  * @return Eloquent
+  */
+  public function scopeOnlyStarted($query)
+  {
+    return $query->whereRaw($this->table.'.started_at IS NOT NULL');
+  }
 
   /**
   * Log a date of actions on the survey by user himself such as when the survey has been started etc.

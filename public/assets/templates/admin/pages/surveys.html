@@ -2,16 +2,21 @@
   <div class="container">
     <div class="row align-items-center">
       <div class="col">
-        <h3 class="widget-title">ادارة الأستبانات</h3>
+        <div uib-dropdown class="widget-title-dropdown">
+          <h3 class="widget-title" uib-dropdown-toggle>{{ (page.subPagesList | filter: {key: page.currentSubPage})[0].name }}</h3>
+          <div class="dropdown-menu dropdown-menu-right text-right md-size" uib-dropdown-menu>
+            <a ng-repeat="item in page.subPagesList" class="dropdown-item" ng-click="page.setSubPage(item.key)">{{ item.name }}</a>
+          </div>
+        </div>
       </div>
       <div class="col col-sm-auto d-flex justify-content-end align-items-center">
         <div class="form-group form-group-light mb-0 ml-2">
           <div class="input-icon">
             <i class="ic-search"></i>
-            <input type="text" class="form-control default-font" placeholder="أبحث في الأستبانات" id="datatable_search" ng-model="datatable_search">
+            <input type="text" class="form-control default-font" placeholder="أبحث في {{ (page.subPagesList | filter: {key: page.currentSubPage})[0].special_name }}" id="datatable_search" ng-model="datatable_search">
           </div>
         </div>
-        <a class="btn btn-primary rounded" ng-click="survey.add()">أضف أستبانة جديدة</a>
+        <a class="btn btn-primary rounded" ng-click="survey.add()" ng-show="sub_path != 'answers'">أضف أستبانة جديدة</a>
       </div>
     </div>
   </div>
@@ -20,7 +25,7 @@
   <div class="container">
     <div class="widget">
       <div class="widget-datatable" ng-class="{'loading': isDatatableLoading}">
-        <table ng-hide="isDatatableLoading" datatable dt-options="Options" dt-columns="Columns" dt-instance="dtInstance" class="datatable-clickable table-hover"></table>
+        <table ng-hide="isDatatableLoading" datatable dt-options="Options" dt-columns="Columns" dt-instance="dtInstance" class="table-hover" ng-class="{'datatable-clickable': sub_path != 'answers'}"></table>
         <div class="widget-table-body" ng-show="isDatatableLoading">
           <div class="dot-loader"></div>
         </div>
