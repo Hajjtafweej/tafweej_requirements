@@ -58,6 +58,14 @@ class Survey extends Model
   }
 
   /**
+  * Survey Log
+  *
+  */
+  public function SurveyLog(){
+    return $this->hasOne('App\SurveyLog');
+  }
+
+  /**
   * Only active surveys
   *
   */

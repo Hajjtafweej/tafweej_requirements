@@ -4610,8 +4610,8 @@ body>.dropdown-menu {
 
 .alert-info {
     color: #0c5460;
-    background-color: #d1ecf1;
-    border-color: #bee5eb
+    background-color: #fff;
+    border-color: #fff
 }
 
 .alert-info hr {

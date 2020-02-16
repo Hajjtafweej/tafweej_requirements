@@ -15,7 +15,7 @@ App.controller('DashboardCtrl', function(surveyFactory,$rootScope,$http,$filter,
 
 	$scope.filter_data = {
 		survey_id: 1,
-		user_role_id: $scope.currentUserRole.id,
+		user_role_id: ($scope.currentUserRole) ? $scope.currentUserRole.id : 0,
 		date: 'all',
 		start_date: '',
 		end_date: ''

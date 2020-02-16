@@ -30,7 +30,9 @@
         <div class="row mx-0 align-items-center">
           <div class="col-md-5 pb-3 pb-md-0">
             <div class="d-flex align-items-center">
-              <div class="progress-circle clickable" data-progress="{{ survey.getCompletionRate(item,true) }}" data-string="{{ (!item.last_answer) ? 0 : survey.getCompletionRate(item) }}" ng-click="survey.onAnswer(item)"></div>
+              <div class="progress-circle clickable" data-progress="{{ survey.getCompletionRate(item,true) }}"
+                  data-string="{{ (!item.survey_log) ? 0 : survey.getCompletionRate(item) }}"
+                  ng-click="survey.onAnswer(item)"></div>
               <a class="widget-table-item-title m{{ $root.langProp.short_side }}-5" ng-click="survey.onAnswer(item)">{{ item.title }}</a>
             </div>
           </div>
@@ -40,8 +42,9 @@
           </div>
           <div class="col">
             <div class="text-muted mb-2 d-md-none">{{ 'survey.last_answer_date' | lang }}</div>
-            <div class="text-muted" ng-hide="item.last_answer">{{ 'survey.no_answer_yet' | lang }}</div>
-            <div ng-show="item.last_answer">{{ item.last_answer.created_at | dateF: 'yyyy/MM/dd HH:mm' }}</div>
+            <div class="text-muted" ng-hide="item.survey_log">{{ 'survey.no_answer_yet' | lang }}</div>
+            <div ng-show="item.survey_log">
+                {{ item.survey_log.last_answer_at | dateF: 'yyyy/MM/dd HH:mm' }}</div>
           </div>
           <div class="col-md-2 col-12 pt-5 pt-md-0 d-flex justify-content-center justify-content-md-end">
             <button type="button" ng-click="survey.onAnswer(item)" class="btn btn-outline-primary rounded">

@@ -265,8 +265,7 @@ App.config(['$sceDelegateProvider','$routeProvider', '$locationProvider', '$inte
       templateUrl: templates_path + 'pages/participants.html?v=' + assets_ver,
       controller: 'DatatableCtrl'
   })
-  // $routeProvider.otherwise('/admin/dashboard');
-  $routeProvider.otherwise('/admin/surveys');
+  $routeProvider.otherwise('/admin/dashboard');
 
 }]);
 

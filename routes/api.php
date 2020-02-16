@@ -48,7 +48,6 @@ Route::group(
         });
 
         Route::group(['prefix' => 'survey'],function(){
-          Route::get('/test','AdminSurveyController@getTestFillSurveyLogs');
           Route::post('/add','AdminSurveyController@saveInfo');
           Route::post('/update-info/{id}','AdminSurveyController@saveInfo');
           Route::get('/show/{id}','AdminSurveyController@getShow');

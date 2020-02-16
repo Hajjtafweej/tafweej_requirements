@@ -343,11 +343,15 @@ class AdminSurveyController extends Controller
 			return $SurveyAnswer->where('survey_id',$id);
 		})->select('id','username','name');
 
-		if ($q->user_id) {
-			$getUsers = $getUsers->where('id',$q->user_id);
+		$user_id = ($q->user_id) ? $q->user_id : null;
+
+		if ($user_id) {
+			$getUsers = $getUsers->where('id',$user_id);
 		}
 
 		$getUsers = $getUsers->get();
+
+
 
 		$Survey = Survey::where('id',$id)->select('id',DB::raw('title_ar as title'))->with(['MainSections' => function($MainSection){
 			return $MainSection->select('id','survey_id','parent_id',DB::raw('title_ar as title'))->orderBy('ordering');
@@ -363,7 +367,7 @@ class AdminSurveyController extends Controller
 		foreach($Survey->MainSections as $Section){
 			$pushHeading = [
 				'details' => $Section,
-				'sections' => $this->prepareSubSections($Section->id,'export',77)
+				'sections' => $this->prepareSubSections($Section->id,'export',$user_id)
 			];
 			$Heading[] = $pushHeading;
 		}
@@ -373,7 +377,7 @@ class AdminSurveyController extends Controller
 			foreach($Survey->MainSections as $Section){
 				$pushAnswer = [
 					'details' => $Section,
-					'sections' => $this->prepareSubSections($Section->id,'export',77)
+					'sections' => $this->prepareSubSections($Section->id,'export',$user_id)
 				];
 				$Answer[] = $pushAnswer;
 			}
@@ -382,12 +386,13 @@ class AdminSurveyController extends Controller
 			$Answers[] = $pushUser;
 		}
 
+
 		// return response()->json($Answers);
 		$fileName = $Survey->id.'-'.$Survey->title.'.xlsx';
 
 		// If the current export related with specific user so we have to make a unique file name for this user
-		if ($q->user_id) {
-			$fileName = 'user-'.$q->user_id.'-'.$fileName;
+		if ($user_id) {
+			$fileName = 'user-'.$user_id.'-'.$fileName;
 		}
 
 		\Excel::store(new \App\Exports\SurveyAnswersExport($Survey,$Heading,$Answers),$fileName,'public-uploads-files');
@@ -396,23 +401,6 @@ class AdminSurveyController extends Controller
 	}
 
 
-	/**
-	* Test fill survey_logs
-	*
-	* @param object $q
-	*
-	* @return array
-	*/
-	public function getTestFillSurveyLogs(Request $q)
-	{
-		$getAnswers = \App\SurveyLog::get();
-		foreach($getAnswers as $Log){
-			$Survey = Survey::where('id',$Log->survey_id)->calculateCompletion($Log->user_id)->first();
-			$calculation_rate = round(($Survey->completed_questions_count/$Survey->questions_count)*100,2);
-			$calculation_rate = ($calculation_rate == 100) ? 100 : $calculation_rate; 
-			$updateSurveyLog = \App\SurveyLog::where('id',$Log->id)->update(['completion_rate' => $calculation_rate]);
-		}
-	}
 
 
 

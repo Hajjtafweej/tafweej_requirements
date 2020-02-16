@@ -250,7 +250,7 @@ App.directive('surveyList', function(Helpers,API,$uibModal,$filter) {
         * 1-4: Get completion rate
         */
         getCompletionRate: function(survey,is_integer){
-          var completion_rate_val = (survey.completed_questions_count/survey.questions_count)*100;
+          var completion_rate_val = (survey.survey_log) ? survey.survey_log.completion_rate : 0;
           if (completion_rate_val == 100) {
             return 100;
           }else {

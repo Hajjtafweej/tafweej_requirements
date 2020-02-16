@@ -22,7 +22,9 @@ class PortalSurveyController extends Controller
 	*/
 	public function getList($id = null,Request $q)
 	{
-		$Surveys = Survey::onlyActive()->select('id',DB::raw('title_'.app()->getLocale().' as title'),'created_at')->with('LastAnswer')->calculateCompletion(user()->id);
+		$Surveys = Survey::onlyActive()->select('id',DB::raw('title_'.app()->getLocale().' as title'),'created_at')->with(['SurveyLog' => function($SurveyLog){
+			return $SurveyLog->where('user_id',user()->id);
+		}]);
 
 		/* Check if completed */
 		if ($q->completion && $q->completion != 'all') {

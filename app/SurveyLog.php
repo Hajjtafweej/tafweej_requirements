@@ -73,7 +73,7 @@ class SurveyLog extends Model
           $query->completion_rate = 100;
           $query->completed_at = $logDatetime;
         }else {
-          $query->completion_rate = ($surveyCompletion->completed_questions_count/$surveyCompletion->questions_count)*100;
+          $query->completion_rate = round((($surveyCompletion->completed_questions_count/$surveyCompletion->questions_count)*100),2);
         }
         $query->save();
       }

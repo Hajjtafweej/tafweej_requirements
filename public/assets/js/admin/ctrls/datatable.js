@@ -234,7 +234,7 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
 
                 var columns_list = [
                     DTColumnBuilder.newColumn('name').withTitle('المستخدم').renderWith(function (d, t, f) {
-                        return '<div class="widget-table-item-title" ng-click="survey.exportAnswers(' + f.id + ',' + f.survey_id + ',' + f.id + ')">' + d + '</div>';
+                        return '<div class="widget-table-item-title" ng-click="survey.exportAnswers(' + f.id + ',' + f.survey_id + ',' + f.user_id + ')">' + d + '</div>';
                     }),
                     DTColumnBuilder.newColumn('survey_title').withTitle('الأستبانة').renderWith(function (d, t, f) {
                         return '<div class="text-truncate">' + d + '</div>';
@@ -247,7 +247,7 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
                     }).withOption('searchable', false),
                     DTColumnBuilder.newColumn('actions').withClass('text-left').renderWith(function (d, t, f) {
                         $scope.surveys[f.id] = {};
-                        var exportBtn = '<a class="btn mr-1 btn-icon btn-sm" ng-class="(surveys[' + f.id + '].isExportAnswersLoading) ? \'btn-light\' : \'btn-primary\'" ng-click="survey.exportAnswers(' + f.id + ',' + f.survey_id + ',' + f.id + ')" ng-loading="surveys[' + f.id + '].isExportAnswersLoading" tooltip-popup-delay="300" uib-tooltip="تصدير الأجابة"><i class="ic-download"></i></a>';
+                        var exportBtn = '<a class="btn mr-1 btn-icon btn-sm" ng-class="(surveys[' + f.id + '].isExportAnswersLoading) ? \'btn-light\' : \'btn-primary\'" ng-click="survey.exportAnswers(' + f.id + ',' + f.survey_id + ',' + f.user_id + ')" ng-loading="surveys[' + f.id + '].isExportAnswersLoading" tooltip-popup-delay="300" uib-tooltip="تصدير الأجابة"><i class="ic-download"></i></a>';
                         return exportBtn;
                     }).withOption('searchable', false).notSortable()
                 ];
@@ -291,12 +291,12 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
         case 'users':
             $scope.page.subPagesList = [{
                     key: '',
-                    name: 'ادارة المستخدمين',
+                    name: 'المستخدمين',
                     special_name: 'المستخدمين'
                 },
                 {
                     key: 'roles',
-                    name: 'ادارة أنواع المستخدمين',
+                    name: 'أنواع المستخدمين',
                     special_name: 'أنواع المستخدمين'
                 },
                 {
@@ -620,9 +620,11 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
                     $scope.isDatatableLoading = false;
 
                 }).withOption('drawCallback', function (settings) {
+                    
                     if (settings.json.additional_data) {
                         $scope.additional_data = settings.json.additional_data;
                     }
+                    $scope.totalRecords = settings._iRecordsTotal;
                     var tbr = '.table-responsive',
                         dtp = '.dataTables_paginate',
                         nop = 'no-pagination';
@@ -677,6 +679,9 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
         }
         if ($routeParams.survey_id) {
             $scope.filter_data['survey_id'] = $routeParams.survey_id;
+        }
+        if ($routeParams.survey_answers_status) {
+            $scope.filter_data['survey_answers_status'] = $routeParams.survey_answers_status;
         }
         if ($routeParams.search) {
             $scope.datatable_search = $routeParams.search;
@@ -733,9 +738,21 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
                 $scope.filter_data['survey_id'] = val;
                 $location.search('survey_id', val);
                 break;
+            case 'survey_answers_status':
+                $scope.filter_data['survey_answers_status'] = val;
+                $location.search('survey_answers_status', val);
+                break;
             case 'user_role_id':
                 $scope.filter_data['user_role_id'] = val;
                 $location.search('user_role_id', val);
+                break;
+            case 'cancel_survey_filter':
+                $scope.filter_data['survey_answers_status'] = null;
+                $location.search('survey_answers_status', null);
+                $scope.filter_data['user_role_id'] = null;
+                $location.search('user_role_id', null);
+                $scope.filter_data['survey_id'] = null;
+                $location.search('survey_id', null);
                 break;
             case 'date':
 

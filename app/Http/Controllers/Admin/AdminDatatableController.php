@@ -325,9 +325,15 @@ class AdminDatatableController extends Controller
 		$getResults = $getResults->leftJoin('user_roles as user_role','users.user_role_id','=','user_role.id');
 
 		// Survey filter
-		if($q->survey_id){
-			if ($q->status && $q->status != 'all') {
-
+		if($q->survey_id && $q->survey_answers_status){
+			if ($q->survey_answers_status == 'viewed') {
+				$getResults = $getResults->whereHas('SurveyLog',function($SurveyLog){
+					return $SurveyLog->where('survey_id',request()->survey_id);
+				});
+			}elseif ($q->survey_answers_status == 'not_started') {
+				$getResults = $getResults->whereDoesntHave('SurveyLog',function($SurveyLog){
+					return $SurveyLog->where('survey_id',request()->survey_id);
+				});
 			}
 		}
 
@@ -349,11 +355,24 @@ class AdminDatatableController extends Controller
 		if($this->is_export){
 			return $this->exportToExcel($getResults);
 		}else {
-			return datatables()->of($getResults)
+			$dt = datatables()->of($getResults)
 			->filterColumn('user_role_name', function($query, $keyword) use($q) {
 				$query->whereRaw('user_role.name like ?', ["%{$keyword}%"]);
 			})
-			->addColumn('DT_RowId','{{ strtolower($id) }}')->make(true);
+			->addColumn('DT_RowId','{{ strtolower($id) }}');
+
+			// Add additional data
+			if($q->survey_id && $q->survey_answers_status){
+				$Survey = \App\Survey::where('id',$q->survey_id)->select('id',DB::raw('title_ar as title'))->firstOrFail();
+				$dt = $dt->with([
+					'additional_data' => [
+						'survey' => $Survey
+					]
+				]);
+			}
+
+			$dt = $dt->make(true);
+			return $dt;
 		}
 
 	}
