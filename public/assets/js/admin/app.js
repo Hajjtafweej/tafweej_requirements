@@ -1,6 +1,6 @@
 var App = angular.module('App', ['ngLocale','ngRoute', 'ngCookies', 'ngResource', 'datatables', 'ngFlash', 'ui.bootstrap','ui.sortable', 'flow', 'ui.select', 'ngSanitize', 'angularMoment','thatisuday.dropzone','slickCarousel']);
 /* API */
-App.factory('API', function($http, $location, $rootScope, $window,$filter) {
+App.factory('API', function($http,$timeout, $location, $rootScope, $window,$filter) {
   var api_factory = {
     is_web: false,
     without_api_prefix: ['flow-uploader/start-import'],
@@ -103,7 +103,7 @@ App.factory('API', function($http, $location, $rootScope, $window,$filter) {
 });
 
 /* Helpers */
-App.factory('Helpers', function($cacheFactory,$http, Flash, $location,$filter, $uibModal,$rootScope, API) {
+App.factory('Helpers', function($cacheFactory,$timeout,$http, Flash, $location,$filter, $uibModal,$rootScope, API) {
   return {
     /**
     * Add some red colors on invalid fields
@@ -202,8 +202,12 @@ App.factory('Helpers', function($cacheFactory,$http, Flash, $location,$filter, $
     * @return Flash
     **/
     initMainLists: function() {
+      $rootScope.main_lists = {};
       API.GET('helpers/main-lists',{},true).then(function(d){
-        $rootScope.main_lists = d.data;
+        $timeout(function(){
+
+          $rootScope.main_lists = d.data;
+        },2000);
       });
     }
   }

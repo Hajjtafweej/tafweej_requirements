@@ -3,23 +3,18 @@ App.controller('DashboardCtrl', function(surveyFactory,$rootScope,$http,$filter,
 	$scope.open_start_date = false;
 	$scope.open_end_date = false;
 	/* 1: Prepare main variables */
-
+	$scope.currentUserRole = null;
 	$scope.prepareCurrentUserRole = function(id){
-		if (id) {
-			$scope.currentUserRole = $filter('filter')($rootScope.main_lists.users_roles,{id: parseInt(id)},true)[0];
-		}else {
-			$scope.currentUserRole = $rootScope.main_lists.users_roles[0];
+		if ($rootScope.main_lists.users_roles){
+			if (id) {
+				$scope.currentUserRole = $filter('filter')($rootScope.main_lists.users_roles,{id: parseInt(id)},true)[0];
+			}else {
+				$scope.currentUserRole = $rootScope.main_lists.users_roles[0];
+			}
 		}
 	};
-	$scope.prepareCurrentUserRole((($routeParams.user_role_id) ? $routeParams.user_role_id : 0));
 
-	$scope.filter_data = {
-		survey_id: 1,
-		user_role_id: ($scope.currentUserRole) ? $scope.currentUserRole.id : 0,
-		date: 'all',
-		start_date: '',
-		end_date: ''
-	};
+
 
 	$scope.lastAnswer = {
 		export: function(item){
@@ -214,9 +209,23 @@ App.controller('DashboardCtrl', function(surveyFactory,$rootScope,$http,$filter,
 				$scope.prepareFilterDate(default_date);
 			}
 		}
-		$scope.getData();
+		if($scope.currentUserRole){
+			$scope.getData();
+		}
 	}
-	$scope.urlFilterParameters();
+			$rootScope.$watch('main_lists', function (n, o) {
+			    if (n) {
+			        $scope.prepareCurrentUserRole((($routeParams.user_role_id) ? $routeParams.user_role_id : 0));
+			        $scope.filter_data = {
+			            survey_id: 1,
+			            user_role_id: ($scope.currentUserRole) ? $scope.currentUserRole.id : 0,
+			            date: 'all',
+			            start_date: '',
+			            end_date: ''
+			        };
+			        $scope.urlFilterParameters();
+			    }
+			});
 	// 4-2: Filter Results
 	$scope.filterResults = function(key, val) {
 		$scope.start_date = '';
