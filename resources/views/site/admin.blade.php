@@ -70,7 +70,7 @@
                   <li><a href="#/admin/dashboard"><i class="ic-bar-chart"></i>الأحصائيات</a></li>
                   <!-- <li><a href="#/admin/presentations"><i class="ic-presentation"></i>العروض المرئية</a></li>
                   <li><a href="#/admin/gallery"><i class="ic-photo-gallery"></i>الصور والفيديو</a></li> -->
-                  <li><a href="#/admin/surveys"><i class="ic-checklist"></i>الأستبانات</a></li>
+                  <li><a href="#/admin/surveys/answers"><i class="ic-checklist"></i>الأستبانات</a></li>
                   <li><a href="#/admin/participants"><i class="ic-file"></i>الجهات المشاركة</a></li>
                   <li><a href="#/admin/users"><i class="ic-user-2"></i>المستخدمين</a></li>
                 </ul>
