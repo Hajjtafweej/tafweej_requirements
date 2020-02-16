@@ -70,11 +70,11 @@ class Survey extends Model
   * Calculate the completion
   *
   */
-  public function scopeCalculateCompletion($query,$user_id)
+  public function scopeCalculateCompletion($query,$user_id = null)
   {
-    return $query->withCount(['Questions','CompletedQuestions' => function($CompletedQuestions){
-			return $CompletedQuestions->whereHas('LastAnswerValue',function($LastAnswerValue){
-				return $LastAnswerValue->where('user_id',user()->id);
+    return $query->withCount(['Questions','CompletedQuestions' => function($CompletedQuestions) use($user_id){
+			return $CompletedQuestions->whereHas('LastAnswerValue',function($LastAnswerValue)  use($user_id){
+				return $LastAnswerValue->where('user_id',($user_id ?? user()->id));
 			});
 		}]);
   }

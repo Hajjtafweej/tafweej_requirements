@@ -396,5 +396,24 @@ class AdminSurveyController extends Controller
 	}
 
 
+	/**
+	* Test fill survey_logs
+	*
+	* @param object $q
+	*
+	* @return array
+	*/
+	public function getTestFillSurveyLogs(Request $q)
+	{
+		$getAnswers = \App\SurveyLog::get();
+		foreach($getAnswers as $Log){
+			$Survey = Survey::where('id',$Log->survey_id)->calculateCompletion($Log->user_id)->first();
+			$calculation_rate = round(($Survey->completed_questions_count/$Survey->questions_count)*100,2);
+			$calculation_rate = ($calculation_rate == 100) ? 100 : $calculation_rate; 
+			$updateSurveyLog = \App\SurveyLog::where('id',$Log->id)->update(['completion_rate' => $calculation_rate]);
+		}
+	}
+
+
 
 }
