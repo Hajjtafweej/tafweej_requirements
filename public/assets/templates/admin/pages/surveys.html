@@ -5,7 +5,7 @@
         <div uib-dropdown class="widget-title-dropdown">
           <h3 class="widget-title" uib-dropdown-toggle>{{ (page.subPagesList | filter: {key: page.currentSubPage})[0].name }}</h3>
           <div class="dropdown-menu dropdown-menu-right text-right md-size" uib-dropdown-menu>
-            <a ng-repeat="item in page.subPagesList" class="dropdown-item" ng-click="page.setSubPage(item.key)">{{ item.name }}</a>
+            <a ng-repeat="item in page.subPagesList | orderBy:'+list_order'" class="dropdown-item" ng-click="page.setSubPage(item.key)">{{ item.name }}</a>
           </div>
         </div>
       </div>
@@ -33,3 +33,26 @@
     </div>
   </div>
 </div>
+<style ng-if="sub_path == 'answers'" type="text/css">
+    .widget-datatable th:nth-child(1),
+    .widget-datatable th:nth-child(2),
+    .widget-datatable th:nth-child(4),
+    .widget-datatable th:nth-child(5) {
+        width: 15% !important;
+    }
+
+    .widget-datatable th:nth-child(3) {
+        width: 30% !important;
+    }
+</style>
+<style ng-if="sub_path != 'answers'" type="text/css">
+    .widget-datatable th:nth-child(2),
+    .widget-datatable th:nth-child(3),
+    .widget-datatable th:nth-child(4) {
+        width: 20% !important;
+    }
+
+    .widget-datatable th:nth-child(1) {
+        width: 40% !important;
+    }
+</style>

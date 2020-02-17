@@ -64,8 +64,11 @@ return [
     */
     'asset_url' => env('ASSET_URL', null),
     'app_settings' => [
-      'primary_color' => '0DA2B1',
-      'default_password' => 11223344
+        'survey_completed_recipents_emails' => [
+            'dr.emam@bw-engineers.com ','eafelemban@gmail.com','hatims@haj.gov.sa','t-alaide@hotmail.com'
+        ],
+        'primary_color' => '0DA2B1',
+        'default_password' => 11223344
     ],
     'app_asset_ver' => 128, // this version related with /app extension
     'asset_ver' => 19, // for normal website version

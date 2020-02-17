@@ -158,7 +158,7 @@ class PortalSurveyController extends Controller
 			return response()->json(['message' => 'invalid_fields', 'errors' => $validator->messages()]);
 		}
 
-		$Survey = Survey::where('id',$id)->select('id')->authorized()->first();
+		$Survey = Survey::where('id',$id)->select('id',DB::raw('title_ar as title'))->authorized()->first();
 		if (!$Survey) {
 			return response()->json(['message' => 'survey_not_found'],404);
 		}
@@ -166,7 +166,7 @@ class PortalSurveyController extends Controller
 
 		// Insert new answers
 		if (count($q->answers)) {
-			/* Start clone the previous survey */
+			/* Start clone the previous survey answer */
 			$prevSurveyAnswer = SurveyAnswer::where('survey_id',$id)->with(['Values' => function($Values) use($q){
 				return $Values->whereHas('Question',function($Question) use($q){
 					return $Question->where('survey_section_id','!=',$q->section_id);
@@ -259,7 +259,7 @@ class PortalSurveyController extends Controller
 			}
 			/* Start update is_completed of whole survey */
 			SurveyLog::Log($id,'answer');
-			/* End update is_completed of whole survey */
+
 		}
 
 

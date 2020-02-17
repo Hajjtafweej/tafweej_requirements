@@ -266,8 +266,9 @@ class AdminDatatableController extends Controller
 		$start_date = ($q->start_date) ? $q->start_date : false;
 		$end_date = ($q->end_date) ? $q->end_date : false;
 
-		$getResults = \App\SurveyLog::selectRaw('survey_logs.id,survey_logs.survey_id,survey_logs.started_at,survey_logs.viewed_at,survey_logs.last_answer_at,survey_logs.completion_rate,survey_logs.completed_at,user.name,user.id as user_id,surveys.title_ar as survey_title');
+		$getResults = \App\SurveyLog::selectRaw('survey_logs.id,survey_logs.survey_id,survey_logs.started_at,survey_logs.viewed_at,survey_logs.last_answer_at,survey_logs.completion_rate,survey_logs.completed_at,user.name,user_role.name as user_role_name,user.id as user_id,surveys.title_ar as survey_title');
 		$getResults = $getResults->leftJoin('users as user','survey_logs.user_id','=','user.id');
+		$getResults = $getResults->leftJoin('user_roles as user_role','user.user_role_id','=','user_role.id');
 		$getResults = $getResults->leftJoin('surveys','survey_logs.survey_id','=','surveys.id');
 
 		// Status filter
@@ -305,6 +306,9 @@ class AdminDatatableController extends Controller
 				$query->whereRaw('surveys.title_ar like ?', ["%{$keyword}%"]);
 			})->filterColumn('name', function($query, $keyword) use($q) {
 				$query->whereRaw('user.name like ?', ["%{$keyword}%"]);
+			})
+			->filterColumn('user_role_name', function($query, $keyword) use($q) {
+				$query->whereRaw('user_role.name like ?', ["%{$keyword}%"]);
 			})
 			->addColumn('DT_RowId','{{ strtolower($id) }}')->make(true);
 		}

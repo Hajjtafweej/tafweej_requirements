@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'crowd@mrda.gov.sa'),
-        'name' => env('MAIL_FROM_NAME', 'Mrda Crowd'),
+        'address' => env('MAIL_FROM_ADDRESS', 'noreply@basitcrm.com'),
+        'name' => env('MAIL_FROM_NAME', 'Hajj Tafweej'),
     ],
 
     /*

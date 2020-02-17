@@ -76,6 +76,11 @@ class SurveyLog extends Model
           $query->completion_rate = round((($surveyCompletion->completed_questions_count/$surveyCompletion->questions_count)*100),2);
         }
         $query->save();
+
+        /* Start send email to executives when the user complete all questions of survey */
+        if($query->completion_rate == 100){
+          \Mail::to(config('app.app_settings.survey_completed_recipents_emails'))->send(new \App\Mail\SurveyCompleted($surveyCompletion,user()));
+        }
       }
       return $query;
     }

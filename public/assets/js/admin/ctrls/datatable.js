@@ -215,12 +215,15 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
                     });
                 }
             };
-            $scope.page.subPagesList = [{
+            $scope.page.subPagesList = [
+                {
+                    list_order: 1,
                     key: '',
                     name: 'ادارة الأستبانات',
                     special_name: 'الأستبانات'
                 },
                 {
+                    list_order: 0,
                     key: 'answers',
                     name: 'الأجابات على الأستبانات',
                     special_name: 'الأجابات'
@@ -228,13 +231,16 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
             ];
             /* Users Roles List */
             if ($scope.sub_path && $scope.sub_path == 'answers') {
-                ordering_column = 2;
+                ordering_column = 3;
 
                 $scope.surveys = {};
 
                 var columns_list = [
                     DTColumnBuilder.newColumn('name').withTitle('المستخدم').renderWith(function (d, t, f) {
                         return '<div class="widget-table-item-title" ng-click="survey.exportAnswers(' + f.id + ',' + f.survey_id + ',' + f.user_id + ')">' + d + '</div>';
+                    }),
+                    DTColumnBuilder.newColumn('user_role_name').withTitle('نوع المستخدمين').renderWith(function (d, t, f) {
+                        return d;
                     }),
                     DTColumnBuilder.newColumn('survey_title').withTitle('الأستبانة').renderWith(function (d, t, f) {
                         return '<div class="text-truncate">' + d + '</div>';
