@@ -39,8 +39,8 @@ class SiteController extends Controller
         return view('site.external-pages.apply-to-portal',['ListOfCountries' => $ListOfCountries]);
       break;
       case 'test-email':
-        $surveyCompletion = Survey::where('id',1)->first();
-        $User = User::where('username','tafweej_idn')->first();
+        $surveyCompletion = \App\Survey::where('id',1)->first();
+        $User = \App\User::where('username','tafweej_idn')->first();
           \Mail::to('alehosaini@gmail.com')->queue(new \App\Mail\SurveyCompleted($surveyCompletion,$User));
       break;
       default:
