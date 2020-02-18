@@ -28,8 +28,10 @@ class PortalSurveyController extends Controller
 
 		/* Check if completed */
 		if ($q->completion && $q->completion != 'all') {
-			$count_mark = ($q->completion == 'completed') ? '==' : '!=';
-			$Surveys = $Surveys->having('questions_count', $count_mark, 'completed_questions_count');
+			$count_mark = ($q->completion == 'completed') ? '=' : '!=';
+			$Surveys = $Surveys->whereHas('SurveyLog',function($SurveyLog) use($count_mark){
+				return $SurveyLog->where('user_id',user()->id)->where('completion_rate',$count_mark,100);
+			});
 		}
 
 		$Surveys = $Surveys->authorized()->orderBy('created_at','DESC')->get();
@@ -167,7 +169,7 @@ class PortalSurveyController extends Controller
 		// Insert new answers
 		if (count($q->answers)) {
 			/* Start clone the previous survey answer */
-			$prevSurveyAnswer = SurveyAnswer::where('survey_id',$id)->with(['Values' => function($Values) use($q){
+			$prevSurveyAnswer = SurveyAnswer::where('survey_id',$id)->where('user_id',user()->id)->with(['Values' => function($Values) use($q){
 				return $Values->whereHas('Question',function($Question) use($q){
 					return $Question->where('survey_section_id','!=',$q->section_id);
 				});
