@@ -10,6 +10,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class SurveyCompleted extends Mailable
 {
     use Queueable, SerializesModels;
+    public $User;
+    public $Survey;
 
     /**
      * Create a new message instance.

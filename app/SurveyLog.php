@@ -79,7 +79,7 @@ class SurveyLog extends Model
 
         /* Start send email to executives when the user complete all questions of survey */
         if($query->completion_rate == 100){
-          \Mail::to(config('app.app_settings.survey_completed_recipents_emails'))->send(new \App\Mail\SurveyCompleted($surveyCompletion,user()));
+          \Mail::to(config('app.app_settings.survey_completed_recipents_emails'))->queue(new \App\Mail\SurveyCompleted($surveyCompletion,user()));
         }
       }
       return $query;
