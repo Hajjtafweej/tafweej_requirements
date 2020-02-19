@@ -64,6 +64,7 @@ return [
     */
     'asset_url' => env('ASSET_URL', null),
     'app_settings' => [
+        'is_maintenance_mode' => true,
         'survey_completed_recipents_emails' => [
             'dr.emam@bw-engineers.com ','eafelemban@gmail.com','hatims@haj.gov.sa','t-alaide@hotmail.com'
         ],

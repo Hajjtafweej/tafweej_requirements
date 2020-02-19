@@ -2,5 +2,6 @@
 
 return [
   'apply_to_portal_title' => 'Register',
-  'apply_success' => 'Your information has been sent successfully'
+  'apply_success' => 'Your information has been sent successfully',
+  'under_maintenance_title' => 'The portal under maintenance'
 ];
