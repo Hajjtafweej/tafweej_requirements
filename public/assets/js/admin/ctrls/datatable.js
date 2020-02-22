@@ -52,7 +52,6 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
     /* 2: Main Helpers */
     /* 2-1: Export data modal */
     $scope.Export = function (module, without_columns, export_sub_type_data) {
-        console.log(1);
         // 2-1-1: Prepare export sub module data usually used in export data of row in datatable
         if (export_sub_type_data) {
             $scope.filter_data = angular.extend($scope.filter_data, export_sub_type_data);
@@ -200,13 +199,33 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
                     $scope.surveys[id].is_active = surveyActivationStatus + '';
                     return surveyFactory.activation(id, surveyActivationStatus);
                 },
-                exportAnswers: function (row_id, survey_id, user_id) {
-                    if (!$scope.surveys[row_id].isExportAnswersLoading) {
+                /**
+                 * Here there are two ways to export, first one when click export all answers related with current filter conditions
+                 * the second one from the answer it self
+                 * @param row_id
+                 * @param survey_id if exist we use it directly rather than we can use the filter survey_id
+                 * @param user_id
+                 * @param is_export_all if we choosed the first way for export from page header
+                */
+                exportAnswers: function (row_id, survey_id, user_id,is_export_all) {
+                    survey_id = (!survey_id) ? $scope.filter_data.survey_id : survey_id;
+
+                    if (is_export_all) {
+                        var is_export_all_options = {};
+                        if ($scope.filter_data.survey_answers_status) {
+                            is_export_all_options.survey_answers_status = $scope.filter_data.survey_answers_status;
+                        }
+                        $scope.survey.isExportAllLoading = true;
+                    } else {
                         $scope.surveys[row_id].isExportAnswersLoading = true;
-                        return surveyFactory.exportAnswers(survey_id, function () {
-                            $scope.surveys[row_id].isExportAnswersLoading = false;
-                        }, user_id);
                     }
+                    return surveyFactory.exportAnswers(survey_id, function () {
+                        if (is_export_all) {
+                            $scope.survey.isExportAllLoading = false;
+                        } else {
+                            $scope.surveys[row_id].isExportAnswersLoading = false;
+                        }
+                    }, user_id, is_export_all_options);
                 },
                 edit: function (id) {
                     return surveyFactory.editModal(id, {
@@ -215,8 +234,7 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
                     });
                 }
             };
-            $scope.page.subPagesList = [
-                {
+            $scope.page.subPagesList = [{
                     list_order: 1,
                     key: '',
                     name: 'ادارة الأستبانات',
@@ -225,7 +243,7 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
                 {
                     list_order: 0,
                     key: 'answers',
-                    name: 'الأجابات على الأستبانات',
+                    name: 'الأجابات',
                     special_name: 'الأجابات'
                 }
             ];
@@ -490,7 +508,7 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
                     });
                 },
                 addRequirement: function () {
-                    return participantFactory.saveRequirementModal('add',null, {
+                    return participantFactory.saveRequirementModal('add', null, {
                         view: 'datatable',
                         dtInstance: $scope.dtInstance
                     });
@@ -553,7 +571,7 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
                         return '<div class="widget-table-item-title">' + d + '</div>';
                     }),
                     DTColumnBuilder.newColumn('actions').withClass('text-left').renderWith(function (d, t, f) {
-                        var printBtn = '<a class="btn btn-primary btn-icon btn-sm" target="_blank" uib-tooltip="طباعة المتطلبات" href="' + $rootScope.baseUrl + '/print/participant/' + f.id + '"><i class="ic-printer"></i></a>',
+                        var printBtn = '<a class="btn btn-light-dark btn-icon btn-sm" target="_blank" uib-tooltip="طباعة المتطلبات" href="' + $rootScope.baseUrl + '/print/participant/' + f.id + '"><i class="ic-print-f"></i></a>',
                             editBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="participant.edit(' + f.id + ')"><i class="ic-edit"></i></a>',
                             deleteBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="participant.delete(' + f.id + ')"><i class="ic-delete"></i></a>';
                         return printBtn + editBtn + deleteBtn;
@@ -626,7 +644,7 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
                     $scope.isDatatableLoading = false;
 
                 }).withOption('drawCallback', function (settings) {
-                    
+
                     if (settings.json.additional_data) {
                         $scope.additional_data = settings.json.additional_data;
                     }
@@ -680,8 +698,8 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
         if ($routeParams.user_role_id) {
             $scope.filter_data['user_role_id'] = $routeParams.user_role_id;
         }
-        if ($routeParams.status) {
-            $scope.filter_data['status'] = $routeParams.status;
+        if ($routeParams.is_active) {
+            $scope.filter_data['is_active'] = $routeParams.is_active;
         }
         if ($routeParams.survey_id) {
             $scope.filter_data['survey_id'] = $routeParams.survey_id;
@@ -736,9 +754,9 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
         $scope.start_date = '';
         $scope.end_date = '';
         switch (key) {
-            case 'status':
-                $scope.filter_data['status'] = val;
-                $location.search('status', val);
+            case 'is_active':
+                $scope.filter_data['is_active'] = val;
+                $location.search('is_active', val);
                 break;
             case 'survey_id':
                 $scope.filter_data['survey_id'] = val;

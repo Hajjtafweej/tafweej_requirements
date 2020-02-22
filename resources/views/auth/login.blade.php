@@ -23,7 +23,7 @@
               <a href="{{ route('password.request') }}">@lang('auth.forget')</a>
             </div>
             <div class="pt-3">
-              <button type="submit" ng-disabled="isLoading" ng-click="sendLogin(loginForm.$valid)" class="btn btn-primary btn-lg btn-block rounded">@lang('auth.login')</button>
+              <button type="submit" ng-disabled="isLoading" ng-class="{'btn-loading': isLoading}" ng-click="sendLogin(loginForm.$valid)" class="btn btn-primary btn-lg btn-block rounded">@lang('auth.login')<span class="circle-loader" ng-show="isLoading"></span></button>
             </div>
           </div>
         </div>

@@ -64,6 +64,7 @@ class SurveyLog extends Model
     }else {
       $query = $query->where([['survey_id',$survey_id],['user_id',($user_id ?? user()->id)]])->first();
       if ($query) {
+        $isFirstAnswer = (!$query->last_answer_at) ? true : false;
         $query->last_answer_at = $logDatetime;
         if (!$query->started_at) {
           $query->started_at = $logDatetime;
@@ -78,7 +79,7 @@ class SurveyLog extends Model
         $query->save();
 
         /* Start send email to executives when the user complete all questions of survey */
-        if($query->completion_rate == 100){
+        if($isFirstAnswer){
           \Mail::to(config('app.app_settings.survey_completed_recipents_emails'))->queue(new \App\Mail\SurveyCompleted($surveyCompletion,user()));
         }
       }

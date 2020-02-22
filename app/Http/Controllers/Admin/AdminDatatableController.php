@@ -232,6 +232,16 @@ class AdminDatatableController extends Controller
 		$getResults = $getResults->leftJoin('user_roles as user_role','surveys.user_role_id','=','user_role.id');
 		$getResults = $getResults->leftJoin('users as created_by','surveys.created_by_id','=','created_by.id');
 
+		// Active filter
+		if($q->is_active){
+			$getResults = $getResults->where(DB::raw('surveys.is_active'),(($q->is_active == 'inactive') ? 0 : 1));
+		}
+
+		// User role filter
+		if($q->user_role_id){
+			$getResults = $getResults->where(DB::raw('surveys.user_role_id'),$q->user_role_id);
+		}
+
 		// Date filter
 		$date_field = 'surveys.created_at';
 		if($start_date){

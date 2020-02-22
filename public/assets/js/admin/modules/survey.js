@@ -6,8 +6,12 @@ App.factory('surveyFactory', function(Flash,$filter, $uibModal,$window, API,Help
     * @param mixed onAnswersLoaded
     * @return
     **/
-    exportAnswers: function(id,onAnswersLoaded,user_id) {
-      var sendData = (user_id) ? {user_id: user_id} : {};
+    exportAnswers: function(id,onAnswersLoaded,user_id,is_all_options) {
+      if (is_all_options) {
+        var sendData = is_all_options;
+      }else {
+        var sendData = (user_id) ? {user_id: user_id} : {};
+      }
       API.GET('survey/export/'+id,sendData).then(function(d){
         onAnswersLoaded();
         $window.open(d.data.file);

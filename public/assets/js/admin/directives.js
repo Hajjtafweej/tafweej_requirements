@@ -296,19 +296,24 @@ App.directive('timePicker', function() {
 });
 App.directive('usersRolesList', function($rootScope) {
   return {
-    template: '<ui-select ng-required="required" append-to-body="{{ appendToBody }}" search-enabled="false" ng-model="parent[value]"><ui-select-match placeholder="أختر">{{ $select.selected.name }}</ui-select-match><ui-select-choices repeat="item.id as item in list"><div ng-bind-html="item.name"></div></ui-select-choices></ui-select>',
+    template: '<ui-select ng-required="required" on-select="onChange()" append-to-body="{{ appendToBody }}" search-enabled="false" ng-model="parent[value]"><ui-select-match placeholder="أختر">{{ $select.selected.name }}</ui-select-match><ui-select-choices repeat="item.id as item in list"><div ng-bind-html="item.name"></div></ui-select-choices></ui-select>',
     scope: {
       allOption: '=',
       parent: '=',
       appendToBody: '=',
-      required: '='
+      required: '=',
+      onChange: '&'
     },
     link: function($scope,$e,$a) {
       $scope.value = $a.value;
-      $scope.list = angular.copy($rootScope.main_lists.users_roles);
-      if ($scope.allOption) {
-        $scope.list.unshift({id: 0,name: 'الكل'});
-      }
+      $rootScope.$watch('main_lists',function(n){
+        if(n){
+          $scope.list = angular.copy($rootScope.main_lists.users_roles);
+          if ($scope.allOption) {
+            $scope.list.unshift({id: 0,name: 'الكل'});
+          }
+        }
+      });
     }
   };
 });

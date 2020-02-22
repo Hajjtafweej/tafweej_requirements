@@ -26,7 +26,7 @@ class AdminHelpersController extends Controller
 	* @return string
 	**/
 	public function getList($type,Request $q){
-		if (in_array($type,['requirement-lists'])) {
+		if (in_array($type,['requirement-lists','surveys'])) {
 			$List = [];
 			switch ($type) {
 				case 'requirement-lists':
@@ -34,6 +34,20 @@ class AdminHelpersController extends Controller
 						'participants' => \App\Participant::get(),
 						'holy_places' => \App\ListOfHolyPlace::get()
 					];
+				break;
+				case 'surveys':
+					$q->validate([
+						'user_role_id' => 'integer'
+					]);
+					
+					$List = \App\Survey::select('id',\DB::raw('title_ar as title'));
+					if($q->q){
+						$List = $List->where('title_ar','LIKE','%'.$q->q.'%');
+					}
+					if($q->user_role_id){
+						$List = $List->where('user_role_id',$q->user_role_id);
+					}
+					$List = $List->take(5)->orderBy('created_at','DESC')->get();
 				break;
 			}
 			return response()->json($List);

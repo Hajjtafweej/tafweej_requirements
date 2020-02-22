@@ -25,6 +25,23 @@ class AdminDashboardController extends Controller
 			return response()->json(['message' => 'invalid_fields', 'errors' => $validator->messages()]);
 		}
 
+		$Response = [];
+		
+		/*
+		Because the survey_id filter is an important part in the dashboard
+		so if survey_id not exists in request we need to set default one depends on user_role_id
+		*/
+		$getDefaultSurvey = \App\Survey::select('id',DB::raw('title_ar as title'));
+		if(!$q->survey_id){
+			$getDefaultSurvey = $getDefaultSurvey->where('user_role_id',$q->user_role_id)->orderBy('created_at','DESC')->first();
+			$survey_id = $getDefaultSurvey->id;
+		}else {
+			$getDefaultSurvey = $getDefaultSurvey->where('id',$q->survey_id)->first();
+			$survey_id = $q->survey_id;
+		}
+		$Response['survey'] = $getDefaultSurvey;
+
+
 		DB::statement(DB::raw('SET SESSION group_concat_max_len = 10000000;'));
 		$Statistics = [];
 		// Where
@@ -34,9 +51,9 @@ class AdminDashboardController extends Controller
 
 		// Statistics by default
 		$countAllUsers = DB::raw('(SELECT COUNT(id) FROM users '.$whereS.$this->basicFilters(false).' LIMIT 1) as count_all_users');
-		$countCompletedSurveys = DB::raw('(SELECT COUNT(survey_logs.user_id) FROM survey_logs WHERE survey_logs.survey_id = '.request()->survey_id.' AND survey_logs.completed_at IS NOT NULL AND survey_logs.user_id IN(SELECT users_of_role.id FROM users as users_of_role WHERE users_of_role.user_role_id = '.$q->user_role_id.') GROUP BY survey_logs.survey_id) as count_completed_surveys');
-		$countStartedSurveys = DB::raw('(SELECT COUNT(survey_logs.user_id) FROM survey_logs WHERE survey_logs.survey_id = '.request()->survey_id.' AND survey_logs.started_at IS NOT NULL AND survey_logs.user_id IN(SELECT users_of_role.id FROM users as users_of_role WHERE users_of_role.user_role_id = '.$q->user_role_id.') GROUP BY survey_logs.survey_id) as count_started_surveys');
-		$countViewedSurveys = DB::raw('(SELECT COUNT(survey_logs.user_id) FROM survey_logs WHERE survey_logs.survey_id = '.request()->survey_id.' AND survey_logs.user_id IN(SELECT users_of_role.id FROM users as users_of_role WHERE users_of_role.user_role_id = '.$q->user_role_id.') GROUP BY survey_logs.survey_id) as count_viewed_surveys');
+		$countCompletedSurveys = DB::raw('(SELECT COUNT(survey_logs.user_id) FROM survey_logs WHERE survey_logs.survey_id = '.$survey_id.' AND survey_logs.completed_at IS NOT NULL AND survey_logs.user_id IN(SELECT users_of_role.id FROM users as users_of_role WHERE users_of_role.user_role_id = '.$q->user_role_id.') GROUP BY survey_logs.survey_id) as count_completed_surveys');
+		$countStartedSurveys = DB::raw('(SELECT COUNT(survey_logs.user_id) FROM survey_logs WHERE survey_logs.survey_id = '.$survey_id.' AND survey_logs.started_at IS NOT NULL AND survey_logs.user_id IN(SELECT users_of_role.id FROM users as users_of_role WHERE users_of_role.user_role_id = '.$q->user_role_id.') GROUP BY survey_logs.survey_id) as count_started_surveys');
+		$countViewedSurveys = DB::raw('(SELECT COUNT(survey_logs.user_id) FROM survey_logs WHERE survey_logs.survey_id = '.$survey_id.' AND survey_logs.user_id IN(SELECT users_of_role.id FROM users as users_of_role WHERE users_of_role.user_role_id = '.$q->user_role_id.') GROUP BY survey_logs.survey_id) as count_viewed_surveys');
 
 		$Statistics = DB::table('surveys')->select($countAllUsers,$countCompletedSurveys,$countStartedSurveys,$countViewedSurveys)->first();
 
@@ -48,8 +65,8 @@ class AdminDashboardController extends Controller
 		$count_viewed_surveys = (int) $Statistics->count_viewed_surveys;
 
 		$TopUsersInSurveyCompletion = User::whereRaw('users.user_role_id = ?',[$q->user_role_id])->selectRaw('users.id,users.name,users.username,users.email,completion_rate');
-		$TopUsersInSurveyCompletion = $TopUsersInSurveyCompletion->leftJoin(DB::raw('(SELECT id,ROUND(AVG(completion_rate),2) as completion_rate,user_id,survey_id FROM survey_logs WHERE survey_logs.survey_id = '.$q->survey_id.' GROUP BY user_id) as users_survey_logs'),'users_survey_logs.user_id','=','users.id');
-		$TopUsersInSurveyCompletion = $TopUsersInSurveyCompletion->whereRaw('users_survey_logs.id IS NOT NULL')->where(DB::raw('users_survey_logs.survey_id'),$q->survey_id)->where(DB::raw('users_survey_logs.completion_rate'),'>',0)->orderBy('completion_rate','DESC')->with(['SurveyLog' => function($SurveyLog){
+		$TopUsersInSurveyCompletion = $TopUsersInSurveyCompletion->leftJoin(DB::raw('(SELECT id,ROUND(AVG(completion_rate),2) as completion_rate,user_id,survey_id FROM survey_logs WHERE survey_logs.survey_id = '.$survey_id.' GROUP BY user_id) as users_survey_logs'),'users_survey_logs.user_id','=','users.id');
+		$TopUsersInSurveyCompletion = $TopUsersInSurveyCompletion->whereRaw('users_survey_logs.id IS NOT NULL')->where(DB::raw('users_survey_logs.survey_id'),$survey_id)->where(DB::raw('users_survey_logs.completion_rate'),'>',0)->orderBy('completion_rate','DESC')->with(['SurveyLog' => function($SurveyLog){
 			return $SurveyLog->with(['Survey' => function($Survey){
 				return $Survey->select('id',DB::raw('title_ar as title'));
 			}]);
@@ -61,10 +78,10 @@ class AdminDashboardController extends Controller
 			return $Survey->select('id',DB::raw('title_ar as title'));
 		}])->whereHas('User',function($User){
 			return $User->where('user_role_id',request()->user_role_id);
-		})->where('survey_id',$q->survey_id)->orderBy(DB::raw('last_answer_at'),'DESC')->onlyStarted()->get();
+		})->where('survey_id',$survey_id)->orderBy(DB::raw('last_answer_at'),'DESC')->onlyStarted()->get();
 
 		$count_not_started = $count_all_users-$count_started_surveys;
-		$Stats = [
+		$Response = array_merge($Response,[
 			'users_count' => [
 				'all' => $count_all_users,
 				'completed' => $count_completed_surveys,
@@ -78,9 +95,9 @@ class AdminDashboardController extends Controller
 			],
 			'top_users_survey_completion' => $TopUsersInSurveyCompletion,
 			'last_answers' => $LastAnswers
-		];
+		]);
 
-		return response()->json($Stats);
+		return response()->json($Response);
 	}
 
 	/**

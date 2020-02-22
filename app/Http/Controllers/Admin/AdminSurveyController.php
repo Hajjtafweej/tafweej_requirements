@@ -349,6 +349,14 @@ class AdminSurveyController extends Controller
 			$getUsers = $getUsers->where('id',$user_id);
 		}
 
+		if ($q->survey_answers_status) {
+			$getUsers->whereHas('SurveyLog',function($SurveyLog){
+				if(request()->survey_answers_status == 'completed'){
+					$SurveyLog = $SurveyLog->onlyCompleted();
+				}
+			});
+		}
+
 		$getUsers = $getUsers->get();
 
 
@@ -399,8 +407,6 @@ class AdminSurveyController extends Controller
 		return response()->json(['file' => \Storage::disk('public-uploads-files')->url($fileName)]);
 		// return \Excel::download(new \App\Exports\SurveyAnswersExport($Survey,$Heading,$Answers), $Survey->id.'-'.$Survey->title.'.xlsx');
 	}
-
-
 
 
 

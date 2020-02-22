@@ -1,15 +1,15 @@
 @font-face {
     font-family: 'Janna LT';
-    src: url('../fonts/Janna/JannaLT-Regular.eot');
-    src: url('../fonts/Janna/JannaLT-Regular.eot?#iefix') format('embedded-opentype'), url('../fonts/Janna/JannaLT-Regular.woff2') format('woff2'), url('../fonts/Janna/JannaLT-Regular.woff') format('woff'), url('../fonts/Janna/JannaLT-Regular.ttf') format('truetype');
+    src: url('../fonts/janna/JannaLT-Regular.eot');
+    src: url('../fonts/janna/JannaLT-Regular.eot?#iefix') format('embedded-opentype'), url('../fonts/janna/JannaLT-Regular.woff2') format('woff2'), url('../fonts/janna/JannaLT-Regular.woff') format('woff'), url('../fonts/janna/JannaLT-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Janna LT';
-    src: url('../fonts/Janna/JannaLT-Bold.eot');
-    src: url('../fonts/Janna/JannaLT-Bold.eot?#iefix') format('embedded-opentype'), url('../fonts/Janna/JannaLT-Bold.woff2') format('woff2'), url('../fonts/Janna/JannaLT-Bold.woff') format('woff'), url('../fonts/Janna/JannaLT-Bold.ttf') format('truetype');
+    src: url('../fonts/janna/JannaLT-Bold.eot');
+    src: url('../fonts/janna/JannaLT-Bold.eot?#iefix') format('embedded-opentype'), url('../fonts/janna/JannaLT-Bold.woff2') format('woff2'), url('../fonts/janna/JannaLT-Bold.woff') format('woff'), url('../fonts/janna/JannaLT-Bold.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
 }
@@ -3315,11 +3315,7 @@ tbody.collapse.show {
 .dropdown-toggle:not(.input-group)::after {
     display: inline-block;
     content: "\e90d";
-    font-family: 'hajjcountries';
-}
-
-.dropdown.open .dropdown-toggle::after {
-    content: "\e910";
+    font-family: 'tafweej';
 }
 
 .form-control.dropdown-toggle::after {

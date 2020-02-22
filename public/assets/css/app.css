@@ -610,6 +610,19 @@
     margin-right: 10px;
 }
 
+.page-header-filter-dropdown>.dropdown-toggle:after {
+    display: none;
+}
+
+.page-header-filter-dropdown>.dropdown-menu {
+    width: 500px;
+    padding: 20px 20px 30px;
+}
+
+.page-header-filter-dropdown>.dropdown-menu.md-size {
+    width: 320px;
+}
+
 /* Widget */
 .widget {
     background: #fff;
@@ -1102,7 +1115,7 @@
 }
 
 .survey-section.collapsable>.survey-section-title:after {
-    font-family: 'hajjcountries';
+    font-family: 'tafweej';
     content: "\e90d";
     margin-right: 12px;
     font-size: 12px;
@@ -1480,7 +1493,7 @@
 }
 
 .editable-text:after {
-    font-family: 'hajjcountries';
+    font-family: 'tafweej';
     content: '\e93e';
     margin-left: 10px;
     color: var(--gray-lighter);
