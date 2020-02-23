@@ -26,14 +26,16 @@
                 @endforeach
               </td>
             @elseif($answerItem->LastAnswerValue->survey_question_option_id)
-              <td>{{ collect($answerItem->Options)->where('id',$answerItem->LastAnswerValue->survey_question_option_id)->first()->title }}</td>
+            @php $OptionItem = collect($answerItem->Options)->where('id',$answerItem->LastAnswerValue->survey_question_option_id)->first(); @endphp
+              <td>{{ ($OptionItem) ? $OptionItem->title : '' }}</td>
             @else
               @switch($answerItem->type)
                 @case('select_with_other')
                   @if($answerItem->LastAnswerValue->value == 'other')
                     <td>{{ $answerItem->LastAnswerValue->other_value }}</td>
                   @else
-                    <td>{{ collect($answerItem->Options)->where('id',$answerItem->survey_question_option_id)->first()->title }}</td>
+                    @php $OptionItem2 = collect($answerItem->Options)->where('id',$answerItem->survey_question_option_id)->first(); @endphp
+                    <td>{{ ($OptionItem2) ? $OptionItem2->title : '' }}</td>
                   @endif
                 @break
                 @case('establishments_list')
