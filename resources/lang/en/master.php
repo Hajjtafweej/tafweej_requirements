@@ -75,5 +75,12 @@ return [
   'unexpected_error_happened' => 'An error occurred, please try again',
   'confirm_delete_msg' => 'Are sure of the deleting process?',
   'email' => 'Email',
-  'page_not_found' => 'Page not found'
+  'page_not_found' => 'Page not found',
+  'contact_widget' => [
+    'banner' => 'Welcome to Support Center',
+    'help' => 'Help',
+    'send_message' => 'Send Message',
+    'submit' => 'Send',
+    'confirmation' => 'Thank you for contacting us, We will get back to you soon'
+  ]
 ];

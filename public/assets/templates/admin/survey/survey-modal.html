@@ -8,7 +8,7 @@
 		<ul class="d-flex" ng-model="survey_modal.data.main_sections">
 			<li class="col-auto" ng-repeat="(main_section_index,main_section) in survey_modal.data.main_sections" ng-class="{'active': survey_modal.current_main_section.id == main_section.id,'completed': survey_modal.section.checkIsDone(main_section),'invalid': survey_modal.isSendClicked && !survey_modal.section.checkIsValid(main_section)}">
 				<div class="survey-controls">
-					<a class="btn btn-icon btn-light ml-1" ng-click="survey_modal.section.modal('edit',0,main_section,main_section_index)"><i class="ic-edit"></i></a>
+					<a class="btn btn-icon btn-light ml-1" ng-click="survey_modal.section.modal('edit',0,null,main_section,main_section_index)"><i class="ic-edit"></i></a>
 					<a class="btn btn-icon btn-light" ng-click="survey_modal.section.delete(main_section.id,main_section_index,survey_modal.data.main_sections)"><i class="ic-delete"></i></a>
 				</div>
 				<span class="point" ng-click="steps.setCurrentStep(step.no)"></span>

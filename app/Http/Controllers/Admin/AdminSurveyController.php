@@ -52,6 +52,39 @@ class AdminSurveyController extends Controller
 	}
 
 	/**
+	* Clone survey with a new one
+	* this feature used to save time when we want to copy a survey with questions and sections.
+	* @param mixed $id the survey id that will be cloned
+	* @param object $q
+	*
+	* @return array
+	*/
+	public function cloneSurvey($survey_id,Request $q)
+	{
+		$validator = Validator::make($q->all(), [
+			'title_ar' => 'required',
+			'title_en' => 'required',
+			'title_fr' => 'required',
+			'user_role_id' => 'required'
+		]);
+
+		if($validator->fails()) {
+			return response()->json(['message' => 'invalid_fields', 'errors' => $validator->messages()],403);
+		}
+
+		$newSurvey = new Survey;
+		$newSurvey->user_role_id = $q->user_role_id;
+		$newSurvey->created_by_id = user()->id;
+		$newSurvey->title_ar = $q->title_ar;
+		$newSurvey->title_en = $q->title_en;
+		$newSurvey->title_fr = $q->title_fr;
+		$newSurvey->save();
+ 
+
+		return response()->json(['message' => 'success']);
+	}
+
+	/**
 	* Show survey
 	*
 	* @param integer $id survey id

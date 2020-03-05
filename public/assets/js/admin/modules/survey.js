@@ -213,6 +213,8 @@ App.factory('surveyFactory', function(Flash,$filter, $uibModal,$window, API,Help
                       },
                       init: function(){
                         if ($scope.survey_section_modal.method == 'edit') {
+                          console.log(section_data);
+                          
                           if (parent_id == 0) {
                             $scope.survey_section_modal.data = angular.copy(section_data);
                           }else {

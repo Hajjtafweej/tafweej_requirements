@@ -309,7 +309,7 @@ App.directive('usersRolesList', function($rootScope) {
       $rootScope.$watch('main_lists',function(n){
         if(n){
           $scope.list = angular.copy($rootScope.main_lists.users_roles);
-          if ($scope.allOption) {
+          if ($scope.allOption && $scope.list) {
             $scope.list.unshift({id: 0,name: 'الكل'});
           }
         }

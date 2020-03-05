@@ -55,6 +55,7 @@ Route::group(
           Route::post('/delete/{id}','AdminSurveyController@deleteSurvey');
           Route::post('/activation/{id}','AdminSurveyController@Activation');
           Route::get('/export/{id}','AdminSurveyController@exportSurveyAnswers');
+          Route::post('/clone/{id}','AdminSurveyController@cloneSurvey');
 
           Route::group(['prefix' => 'section'],function(){
             Route::post('/add','AdminSurveyController@saveSection');

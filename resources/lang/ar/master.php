@@ -75,5 +75,12 @@ return [
   'unexpected_error_happened' => 'حدث خطأ, يرجى المحاولة مرة اخرى',
   'confirm_delete_msg' => 'هل انت متأكد من عملية الحذف؟',
   'email' => 'البريد الألكتروني',
-  'page_not_found' => 'الصفحة غير موجودة'
+  'page_not_found' => 'الصفحة غير موجودة',
+  'contact_widget' => [
+    'banner' => 'مرحباً بكم في الدعم الفني',
+    'help' => 'مساعدة',
+    'send_message' => 'إرسال رسالة',
+    'submit' => 'إرسال',
+    'confirmation' => 'شكراً لتواصلكم معنا, سيتم الرد عليكم قريباً'
+  ]
 ];

@@ -130,5 +130,31 @@
         </div>
       </div>
   </div>
+  <!-- Test Embed Code -->
+<script>
+	window.fwSettings={
+	'widget_id':61000000505,
+	'locale': '{{ LaravelLocalization::getCurrentLocale() }}'
+	};
+	
+	!function(){if("function"!=typeof window.FreshworksWidget){var n=function(){n.q.push(arguments)};n.q=[],window.FreshworksWidget=n}}() 
+  FreshworksWidget('identify', 'ticketForm', {
+    custom_fields: {
+      cf_username: "{{ user()->username }}",
+      cf_user_type: "{{ user()->Role->name }}"
+    }
+});
+	FreshworksWidget("setLabels", {
+          '{{ LaravelLocalization::getCurrentLocale() }}': {
+            banner: "@lang('master.contact_widget.banner')",
+            launcher: "@lang('master.contact_widget.help')",
+            contact_form: {
+              title: "@lang('master.contact_widget.send_message')",
+              submit: "@lang('master.contact_widget.submit')",
+              confirmation: "@lang('master.contact_widget.confirmation')"
+            }}});
+</script>
+<script type='text/javascript' src='https://widget.freshworks.com/widgets/61000000505.js' async defer></script>
+  <!-- End Test Embed Code -->
   </body>
   </html>

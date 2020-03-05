@@ -39,6 +39,14 @@ class Survey extends Model
   public function Questions(){
     return $this->hasMany('App\SurveyQuestion');
   }
+  
+  /**
+  * Question Options
+  *
+  */
+  public function QuestionOptions(){
+    return $this->hasMany('App\SurveyQuestionOption');
+  }
 
   /**
   * Completed Questions
