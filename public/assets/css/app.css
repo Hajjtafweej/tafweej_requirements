@@ -1116,7 +1116,7 @@
 
 .survey-section.collapsable>.survey-section-title:after {
     font-family: 'tafweej';
-    content: "\e90d";
+    content: "\e90e";
     margin-right: 12px;
     font-size: 12px;
     margin-top: 2px;
@@ -1494,7 +1494,7 @@
 
 .editable-text:after {
     font-family: 'tafweej';
-    content: '\e93e';
+    content: '\e93f';
     margin-left: 10px;
     color: var(--gray-lighter);
     font-size: 80%;

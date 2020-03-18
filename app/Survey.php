@@ -18,6 +18,14 @@ class Survey extends Model
   }
 
   /**
+  * Users
+  *
+  */
+  public function Users(){
+    return $this->hasMany('App\SurveyUser');
+  }
+
+  /**
   * Main Sections
   *
   */
@@ -113,7 +121,13 @@ class Survey extends Model
   */
   public function scopeAuthorized($query){
     if (!user()->is_admin) {
-      $query = $query->whereIn(\DB::raw($this->table.'.user_role_id'),[0,user()->user_role_id]);
+      $query = $query->where(function($where){
+        return $where->whereHas('Users',function($SurveyUsers){
+          return $SurveyUsers->where('user_id',user()->id);
+        })->orWhere(function($orWhere){
+          return $orWhere->whereDoesntHave('Users')->whereIn(\DB::raw($this->table.'.user_role_id'),[0,user()->user_role_id]);
+        });
+      });
     }
     return $query;
   }

@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use DB,Validator;
 use Illuminate\Validation\Rule;
 use \GeniusTS\HijriDate\Hijri as Hijri;
-use App\Survey,App\SurveyAnswer,App\SurveyAnswerValue,App\SurveySection,App\SurveyQuestion,App\SurveyQuestionOption;
+use App\Survey,App\SurveyAnswer,App\SurveyAnswerValue,App\SurveySection,App\SurveyQuestion,App\SurveyQuestionOption,App\SurveyLog,App\SurveyUser;
 class AdminSurveyController extends Controller
 {
 
@@ -48,13 +48,25 @@ class AdminSurveyController extends Controller
 		$Survey->user_role_id = $q->user_role_id;
 		$Survey->save();
 
+		if($id){
+			$deleteSurveyUsers = SurveyUser::where('survey_id',$Survey->id)->delete();
+		}
+		if($q->users && count($q->users)){
+			foreach($q->users as $UserId){
+				$SurveyUser = new SurveyUser;
+				$SurveyUser->survey_id = $Survey->id;
+				$SurveyUser->user_id = $UserId;
+				$SurveyUser->save();
+			}
+		}
+
 		return response()->json($Survey);
 	}
 
 	/**
 	* Clone survey with a new one
 	* this feature used to save time when we want to copy a survey with questions and sections.
-	* @param mixed $id the survey id that will be cloned
+	* @param mixed $survey_id clonned survey
 	* @param object $q
 	*
 	* @return array
@@ -72,6 +84,11 @@ class AdminSurveyController extends Controller
 			return response()->json(['message' => 'invalid_fields', 'errors' => $validator->messages()],403);
 		}
 
+		$Survey = Survey::where('id',$survey_id)->first();
+		if (!$Survey) {
+			return response()->json(['message' => 'survey_not_found'],404);
+		}
+
 		$newSurvey = new Survey;
 		$newSurvey->user_role_id = $q->user_role_id;
 		$newSurvey->created_by_id = user()->id;
@@ -80,12 +97,75 @@ class AdminSurveyController extends Controller
 		$newSurvey->title_fr = $q->title_fr;
 		$newSurvey->save();
  
+		if($q->users && count($q->users)){
+			foreach($q->users as $UserId){
+				$SurveyUser = new SurveyUser;
+				$SurveyUser->survey_id = $newSurvey->id;
+				$SurveyUser->user_id = $UserId;
+				$SurveyUser->save();
+			}
+		}
 
-		return response()->json(['message' => 'success']);
+		// Clone sections and questions
+		$this->cloneSurveySections($survey_id,$newSurvey->id);
+
+		return response()->json($newSurvey);
 	}
 
 	/**
-	* Show survey
+	* Clone survey sections and questions
+	*
+	* @param integer $survey_id
+	* @param integer $new_survey_id
+	* @param integer $parent_section_id
+	* @param object $q
+	*
+	* @return array
+	*/
+	public function cloneSurveySections($survey_id,$new_survey_id,$parent_section_id = 0,$new_parent_section_id = 0)
+	{
+		$Sections = SurveySection::where([['survey_id',$survey_id],['parent_id',$parent_section_id]])->get();
+		foreach($Sections as $Section){
+			$newSection = $Section->replicate();
+			$newSection->survey_id = $new_survey_id;
+			$newSection->parent_id = $new_parent_section_id;
+			$newSection->save();
+
+			$Questions = SurveyQuestion::where('survey_section_id',$Section->id)->get();
+			foreach($Questions as $Question){
+				$newQuestion = $Question->replicate();
+				$newQuestion->survey_id = $new_survey_id;
+				$newQuestion->survey_section_id = $newSection->id;
+				$newQuestion->save();
+			}
+			$this->cloneSurveySections($survey_id,$new_survey_id,$Section->id,$newSection->id);
+		}
+	}
+
+	
+	/**
+	* Show survey info
+	* used when we want to edit only survey title, targeted users
+	*
+	* @param integer $id
+	* @param object $q
+	*
+	* @return array
+	*/
+	public function getShowInfo($id,Request $q)
+	{
+		$Survey = Survey::where('id',$id)->with(['Users' => function($Users){
+			return $Users->with('User');
+		}])->first();
+		if (!$Survey) {
+			return response()->json(['message' => 'survey_not_found'],404);
+		}
+		return response()->json($Survey);
+	}
+
+
+	/**
+	* Show survey details
 	*
 	* @param integer $id survey id
 	* @param object $q
@@ -116,6 +196,14 @@ class AdminSurveyController extends Controller
 	{
 
 		Survey::where('id',$id)->delete();
+		// Delete related records
+		SurveyAnswer::where('survey_id',$id)->delete();
+		SurveyAnswerValue::where('survey_id',$id)->delete();
+		SurveySection::where('survey_id',$id)->delete();
+		SurveyQuestion::where('survey_id',$id)->delete();
+		SurveyQuestionOption::where('survey_id',$id)->delete();
+		SurveyLog::where('survey_id',$id)->delete();
+		SurveyUser::where('survey_id',$id)->delete();
 
 		return response()->json(['message' => 'success']);
 	}

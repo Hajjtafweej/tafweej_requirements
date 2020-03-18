@@ -97,7 +97,12 @@
 			if (user()->id == $id) {
 				abort(403);
 			}
-			User::where('id',$id)->delete();
+			User::where('id',$id)->deletePermantly();
+			// Delete user related records
+			\App\SurveyLog::where('user_id',$id)->delete();
+			\App\SurveyAnswer::where('user_id',$id)->delete();
+			\App\SurveyAnswerLog::where('user_id',$id)->delete();
+			\App\Gallery::where('user_id',$id)->delete();
 		}
 
 

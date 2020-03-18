@@ -50,6 +50,7 @@ Route::group(
         Route::group(['prefix' => 'survey'],function(){
           Route::post('/add','AdminSurveyController@saveInfo');
           Route::post('/update-info/{id}','AdminSurveyController@saveInfo');
+          Route::get('/show-info/{id}','AdminSurveyController@getShowInfo');
           Route::get('/show/{id}','AdminSurveyController@getShow');
           Route::get('/main-section/{id}','AdminSurveyController@getMainSectionDetails');
           Route::post('/delete/{id}','AdminSurveyController@deleteSurvey');

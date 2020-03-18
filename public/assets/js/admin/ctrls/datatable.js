@@ -232,6 +232,12 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
                         view: 'datatable',
                         dtInstance: $scope.dtInstance
                     });
+                },
+                clone: function (id) {
+                    return surveyFactory.modalInfo('clone',{id: id}, {
+                        view: 'datatable',
+                        dtInstance: $scope.dtInstance
+                    });
                 }
             };
             $scope.page.subPagesList = [{
@@ -300,11 +306,13 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
                         $scope.surveys[f.id] = {
                             is_active: f.is_active
                         };
-                        var editBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="survey.edit(' + f.id + ')"><i class="ic-edit"></i></a>',
-                            exportBtn = '<a class="btn mr-1 btn-icon btn-sm" ng-class="(surveys[' + f.id + '].isExportAnswersLoading) ? \'btn-light\' : \'btn-primary\'" ng-click="survey.exportAnswers(' + f.id + ',' + f.id + ')" ng-loading="surveys[' + f.id + '].isExportAnswersLoading" tooltip-popup-delay="300" uib-tooltip="تصدير الأجوبة"><i class="ic-download"></i></a>',
+                        var exportBtn = '<a class="btn mr-1 btn-icon btn-sm" ng-class="(surveys[' + f.id + '].isExportAnswersLoading) ? \'btn-light\' : \'btn-primary\'" ng-click="survey.exportAnswers(' + f.id + ',' + f.id + ')" ng-loading="surveys[' + f.id + '].isExportAnswersLoading" tooltip-popup-delay="300" uib-tooltip="تصدير الأجوبة"><i class="ic-download"></i></a>',
                             activationBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" tooltip-popup-delay="300" uib-tooltip="{{ (surveys[' + f.id + '].is_active == \'0\') ? \'تفعيل الأستبانة للإجابة عليها\' : \'إلغاء تفعيل الأستبانة\' }}" ng-click="survey.activation(' + f.id + ')"><i ng-class="(surveys[' + f.id + '].is_active == \'0\') ? \'ic-eye-hide\' : \'ic-eye\'"></i></a>',
-                            deleteBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="survey.delete(' + f.id + ')"><i class="ic-delete"></i></a>';
-                        return exportBtn + activationBtn + editBtn + deleteBtn;
+                            cloneBtn = '<a class="dropdown-item iconed" ng-click="survey.clone(' + f.id + ')"><i class="ic-copy ml-2"></i>استنساخ الأستبانة</a>',
+                            editBtn = '<a class="dropdown-item iconed" ng-click="survey.edit(' + f.id + ')"><i class="ic-edit ml-2"></i>تعديل الأستبانة</a>',
+                            deleteBtn = '<a class="dropdown-item iconed" ng-click="survey.delete(' + f.id + ')"><i class="ic-delete ml-2"></i>حذف الأستبانة</a>',
+                            dropdownMenu = '<div uib-dropdown dropdown-append-to-body="true"><a class="btn btn-light mr-1 btn-icon btn-sm no-caret" uib-dropdown-toggle><i class="ic-dots"></i></a><div class="dropdown-menu" uib-dropdown-menu>' + cloneBtn + editBtn + deleteBtn + '</div></div>';
+                        return '<div class="d-flex justify-content-end">'+exportBtn + activationBtn + dropdownMenu+'</div>';
                     }).withOption('searchable', false).notSortable()
                 ];
                 $scope.Columns = columns_list;

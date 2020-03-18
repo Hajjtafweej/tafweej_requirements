@@ -21,6 +21,7 @@
   <script src="{{ asset('assets/js/admin/app.js?v='.config('app.app_asset_ver')) }}"></script>
   <script src="{{ asset('assets/js/admin/filters.js?v='.config('app.app_asset_ver')) }}"></script>
   <script src="{{ asset('assets/js/admin/directives.js?v='.config('app.app_asset_ver')) }}"></script>
+  <script src="{{ asset('assets/js/admin/directive_of_select.js?v='.config('app.app_asset_ver')) }}"></script>
   <script src="{{ asset('assets/js/admin/modules/survey.js?v='.config('app.app_asset_ver')) }}"></script>
   <script src="{{ asset('assets/js/admin/modules/user.js?v='.config('app.app_asset_ver')) }}"></script>
   <script src="{{ asset('assets/js/admin/modules/participant.js?v='.config('app.app_asset_ver')) }}"></script>

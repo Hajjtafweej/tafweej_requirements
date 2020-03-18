@@ -74,10 +74,14 @@ App.factory('surveyFactory', function(Flash,$filter, $uibModal,$window, API,Help
                 return false;
               }
               $scope.survey_modal_info.isSending = true;
-              var saveSurveyInfoCall = (method == 'add') ? API.POST('survey/add',$scope.survey_modal_info.data) : API.PUT('survey/update-info/'+survey.id,$scope.survey_modal_info.data);
+              if(method == 'clone'){
+                var saveSurveyInfoCall = API.POST('survey/clone/'+survey.id, $scope.survey_modal_info.data);
+              }else {
+                var saveSurveyInfoCall = (method == 'add') ? API.POST('survey/add',$scope.survey_modal_info.data) : API.PUT('survey/update-info/'+survey.id,$scope.survey_modal_info.data);
+              }
               saveSurveyInfoCall.then(function(d){
                 $scope.survey_modal_info.isSending = false;
-                if (method == 'add') {
+                if (method != 'edit') {
                   surveyFactory.editModal(d.data.id);
                 }else {
                   survey = angular.extend(survey,d.data);
@@ -89,13 +93,14 @@ App.factory('surveyFactory', function(Flash,$filter, $uibModal,$window, API,Help
               });
             },
             init: function(){
-              if ($scope.survey_modal_info.method == 'edit') {
-                $scope.survey_modal_info.data = {
-                  title_ar: survey.title_ar,
-                  title_en: survey.title_en,
-                  title_fr: survey.title_fr,
-                  user_role_id: survey.user_role_id
-                };
+              if ($scope.survey_modal_info.method != 'add') {
+                  $scope.survey_modal_info.isLoading = true;
+                  API.GET('survey/show-info/' + survey.id).then(function (d) {
+                      $scope.survey_modal_info.data = d.data;
+                      $timeout(function () {
+                          $scope.survey_modal_info.isLoading = false;
+                      }, 200);
+                  });
               }
             }
           };

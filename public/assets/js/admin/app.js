@@ -1,4 +1,4 @@
-var App = angular.module('App', ['ngLocale','ngRoute', 'ngCookies', 'ngResource', 'datatables', 'ngFlash', 'ui.bootstrap','ui.sortable', 'flow', 'ui.select', 'ngSanitize', 'angularMoment','thatisuday.dropzone','slickCarousel']);
+var App = angular.module('App', ['ngLocale', 'ngRoute', 'ngCookies', 'ngResource', 'datatables', 'ngFlash', 'ui.bootstrap', 'ui.sortable', 'flow', 'ui.select', 'ngSanitize', 'angularMoment', 'thatisuday.dropzone', 'slickCarousel', 'selectize']);
 /* API */
 App.factory('API', function($http,$timeout, $location, $rootScope, $window,$filter) {
   var api_factory = {
@@ -365,3 +365,6 @@ var delay = (function() {
     timer = setTimeout(callback, ms);
   };
 })();
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
