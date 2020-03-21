@@ -80,29 +80,5 @@ class User extends Authenticatable implements JWTSubject
     return [];
   }
 
-  /**
-  * Role
-  *
-  */
-  public function Role(){
-    return $this->belongsTo('App\UserRole','user_role_id','id');
-  }
-
-  /**
-  * Survey Answer
-  *
-  */
-  public function SurveyAnswer(){
-    return $this->hasOne('App\SurveyAnswer');
-  }
-
-  /**
-  * Survey Log
-  *
-  */
-  public function SurveyLog(){
-    return $this->hasOne('App\SurveyLog');
-  }
-
 
 }

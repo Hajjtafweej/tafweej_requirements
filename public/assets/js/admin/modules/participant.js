@@ -148,6 +148,9 @@ App.factory('participantFactory', function (Flash, $filter, $uibModal, $window, 
                                 $scope.requirement_modal.prepareSelectedParticipants();
                             });
                         },
+                        participantsOrder: function (participant) {
+                            return $scope.requirement_modal.selected_participants[participant.id];
+                        },
                         selectAll: function (status) {
                             if (!$scope.requirement_modal.selected_participants) {
                                 $scope.requirement_modal.selected_participants = {};
@@ -224,7 +227,6 @@ App.factory('participantFactory', function (Flash, $filter, $uibModal, $window, 
                                 API.GET('helpers/list/requirement-lists').then(function (d) {
                                     $scope.requirement_modal.isListsLoading = false;
                                     $rootScope.main_lists.participants = d.data.participants;
-                                    $rootScope.main_lists.holy_places = d.data.holy_places;
                                 });
                             }
                         },

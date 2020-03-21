@@ -27,33 +27,64 @@
             </div>
             <div class="col-12 col-md-6 col-lg-3">
                 <div class="form-group">
-                    <label for="element">العنصر</label>
-                    <input type="text" class="form-control" ng-focus="true" id="element"
-                        ng-model="requirement_modal.data.element">
+                    <label for="subject">الموضوع</label>
+                    <ui-select append-to-body="true" ng-model="requirement_modal.data.subject_id">
+                        <ui-select-match placeholder="أبحث">{{ $select.selected.name }}
+                        </ui-select-match>
+                        <ui-select-choices repeat="item.id as item in $root.main_lists.subjects">
+                            <div ng-bind-html="item.name"></div>
+                        </ui-select-choices>
+                    </ui-select>
                 </div>
             </div>
             <div class="col-12 col-md-6 col-lg-3">
                 <div class="form-group">
-                    <label for="field">المجال</label>
-                    <input type="text" class="form-control" id="field" ng-model="requirement_modal.data.field">
+                    <label for="sub_subject">الموضوع الفرعي</label>
+                    <ui-select ng-model="requirement_modal.data.sub_subject_id">
+                        <ui-select-match placeholder="أبحث">{{ $select.selected.name }}
+                        </ui-select-match>
+                        <ui-select-choices
+                            repeat="item.id as item in $root.main_lists.sub_subjects">
+                            <div ng-bind-html="item.name"></div>
+                        </ui-select-choices>
+                    </ui-select>
                 </div>
             </div>
             <div class="col-12 col-md-6 col-lg-3">
                 <div class="form-group">
-                    <label for="sub_field">المجال الفرعي</label>
-                    <input type="text" class="form-control" id="sub_field" ng-model="requirement_modal.data.sub_field">
+                    <label for="level">المستوى</label>
+                    <ui-select ng-model="requirement_modal.data.level_id">
+                        <ui-select-match placeholder="أبحث">{{ $select.selected.name }}
+                        </ui-select-match>
+                        <ui-select-choices repeat="item.id as item in $root.main_lists.levels">
+                            <div ng-bind-html="item.name"></div>
+                        </ui-select-choices>
+                    </ui-select>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-4">
                 <div class="form-group">
-                    <label for="scope_of_work">نطاق الأعمال</label>
-                    <input type="text" class="form-control" id="scope_of_work"
-                        ng-model="requirement_modal.data.scope_of_work">
+                    <label for="geographical_scope">النطاق الجغرافي</label>
+                    <ui-select ng-model="requirement_modal.data.geographical_scope_id">
+                        <ui-select-match placeholder="أبحث">{{ $select.selected.name }}
+                        </ui-select-match>
+                        <ui-select-choices
+                            repeat="item.id as item in $root.main_lists.geographical_scopes">
+                            <div ng-bind-html="item.name"></div>
+                        </ui-select-choices>
+                    </ui-select>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="business_scope">مخرجات نطاق الاعمال</label>
+                    <input type="text" class="form-control" id="business_scope"
+                        ng-model="requirement_modal.data.business_scope">
+                </div>
+            </div>
+            <div class="col-lg-4">
                 <div class="form-group">
                     <label for="requirements">المتطلبات من الجهات</label>
                     <input type="text" class="form-control" id="requirements" ng-model="requirement_modal.data.requirements">
@@ -72,7 +103,8 @@
                         الكل</button>
                 </div>
                 <div class="row mt-3">
-                    <div ng-repeat="participant in $root.main_lists.participants" class="col-md-4 col-sm-6 col-12">
+                    <div ng-repeat="participant in $root.main_lists.participants | orderBy: requirement_modal.participantsOrder"
+                        class="col-md-4 col-sm-6 col-12">
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="participant_{{ participant.id }}"
                                 ng-model="requirement_modal.selected_participants[participant.id]">

@@ -1,48 +1,9 @@
 <?php
 
 return [
-  'gate_title' => 'بوابة التنسيق والتواصل للمنظومة الشاملة للتفويج',
-  'gate_subtitle' => 'مكاتب شؤون الحجاج',
+  'gate_title' => 'المنظومة الشاملة للتفويج',
+  'gate_subtitle' => 'بوابة المتطلبات',
   'home_page' => 'الرئيسية',
-  'presentations' => 'العروض المرئية',
-  'surveys' => 'الاستبانات',
-  'tafweej_plans' => 'خطط التفويج',
-  'tafweej_tables' => 'جداول التفويج',
-  'gallery_recent_title' => 'جديد الصور والفيديو',
-  'download' => 'تحميل',
-  'view' => 'مشاهدة',
-  'view_all' => 'مشاهدة الكل',
-  'all' => 'الكل',
-  'completed' => 'المكتملة',
-  'incompleted' => 'غير مكتملة',
-  'title' => 'العنوان',
-  'create_date' => 'تاريخ الإضافة',
-  'answer' => 'الاجابة',
-  'attachments' => 'المرفقات',
-  'download_date' => 'تاريخ التحميل',
-  'downloaded' => 'تم تحميلها',
-  'not_downloaded' => 'غير محملة',
-  'copyright_text' => 'جميع الحقوق محفوظة :year',
-  'soon' => 'قريباً',
-  'not_downloaded_yet' => 'لم يتم التحميل بعد',
-  'presentation' => [
-    'no_presentations_found' => 'لا توجد عروض مرئية ليتم عرضها'
-  ],
-  'gallery' => [
-    'recent_title' => 'جديد الصور والفيديو',
-    'title' => 'الصور والفيديو',
-    'no_photos_videos_found' => 'لا توجد صور أو فيديو ليتم عرضها'
-  ],
-
-  'survey' => [
-    'date' => 'تاريخ الاستبانة',
-    'last_answer_date' => 'تاريخ آخر إجابة',
-    'no_answer_yet' => 'لم يتم الإجابة بعد',
-    'no_surveys_found' => 'لا توجد استبانات ليتم عرضها',
-    'modal_title' => 'الإجابة على الاستبيان',
-    'save' => 'حفظ الاستبيان',
-    'saved_successfully' => 'تم حفظ الاستبانة بنجاح'
-  ],
   'form' => [
     'choose_country' => 'أختر الدولة',
     'name' => 'الأسم',
@@ -76,11 +37,5 @@ return [
   'confirm_delete_msg' => 'هل انت متأكد من عملية الحذف؟',
   'email' => 'البريد الألكتروني',
   'page_not_found' => 'الصفحة غير موجودة',
-  'contact_widget' => [
-    'banner' => 'مرحباً بكم في الدعم الفني',
-    'help' => 'مساعدة',
-    'send_message' => 'إرسال رسالة',
-    'submit' => 'إرسال',
-    'confirmation' => 'شكراً لتواصلكم معنا, سيتم الرد عليكم قريباً'
-  ]
+  'copyright_text' => 'جميع الحقوق محفوظة :year',
 ];

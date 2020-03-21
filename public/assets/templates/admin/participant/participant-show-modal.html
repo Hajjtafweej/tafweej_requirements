@@ -38,20 +38,22 @@
             <div class="table-responsive">
                 <table class="table table-hover table-borderless">
                     <thead>
-                        <th width="12%">العنصر</th>
-                        <th width="12%">المجال</th>
-                        <th width="12%">المجال الفرعي</th>
-                        <th width="33%">نطاق العمل</th>
-                        <th width="33%">المتطلبات</th>
+                        <th width="12.5%">الموضوع</th>
+                        <th width="12.5%">الموضوع الفرعي</th>
+                        <th width="12.5%">المستوى</th>
+                        <th width="12.5%">النطاق الجغرافي</th>
+                        <th width="25%">نطاق العمل</th>
+                        <th width="25%">المتطلبات</th>
                     </thead>
                     <tbody>
                         <tr ng-repeat="requirement in (participant_details_modal.data.requirements | filter:
                             {holy_place_id:
                             participant_details_modal.currentTab.id})">
-                            <td>{{ requirement.element }}</td>
-                            <td>{{ requirement.field }}</td>
-                            <td>{{ requirement.sub_field }}</td>
-                            <td>{{ requirement.scope_of_work }}</td>
+                            <td>{{ requirement.subject.name }}</td>
+                            <td>{{ requirement.sub_subject.name }}</td>
+                            <td>{{ requirement.level.name }}</td>
+                            <td>{{ requirement.geographical_scope.name }}</td>
+                            <td>{{ requirement.business_scope }}</td>
                             <td>{{ requirement.requirements }}</td>
                         </tr>
                     </tbody>

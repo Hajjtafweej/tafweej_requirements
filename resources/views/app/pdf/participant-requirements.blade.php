@@ -56,12 +56,11 @@
     background: #e8e8e8;
   }
   .table {
-    border: 1px solid #c5c5c5;
     margin-bottom: 50px;
   }
   .table td {
     font-weight: bold;
-    font-size: 20px;
+    font-size: 16px;
     line-height: 1.6;
     padding: 15px 20px;
 
@@ -74,12 +73,15 @@
         border-bottom: 1px solid #077e8a;
     color: #fff;
         font-weight: bold;
-    font-size: 19px;
+    font-size: 16px;
     line-height: 1.6;
-    padding: 15px 20px;
+    padding: 10px 20px;
   }
   .table .border-l {
     border-left: 1px solid #c5c5c5;
+  }
+  .table .border-r {
+    border-right: 1px solid #c5c5c5;
   }
   .table-heading .border-l {
     border-left: 1px solid #077e8a;
@@ -118,25 +120,27 @@
           <table cellspacing="0" cellpadding="0">
             <thead class="table-heading">
               <tr>
-                <th colspan="6" style="font-size: 30px;">{{ $HolyPlace->name }}</th>
+                <th colspan="7" style="font-size: 25px;">{{ $HolyPlace->name }}</th>
 </tr>
-  <tr>              <th class="border-l text-center no"  style="padding: 10px 20px;"></th>
-              <th class="border-l" style="width: 120px">العنصر</th>
-              <th class="border-l" style="width: 120px">المجال</th>
-              <th class="border-l" style="width: 120px">المجال الفرعي</th>
-              <th class="border-l" style="width: 300px">نطاق العمل</th>
-              <th style="width: 300px">المتطلبات</th>
+  <tr>              <th class="border-l border-r text-center no"  style="padding: 10px 20px;"></th>
+              <th class="border-l" style="width: 120px">الموضوع</th>
+              <th class="border-l" style="width: 120px">الموضوع الفرعي</th>
+              <th class="border-l" style="width: 120px">المستوى</th>
+              <th class="border-l" style="width: 120px">النطاق الجغرافي</th>
+              <th class="border-l" style="width: 300px">مخرجات نطاق الاعمال</th>
+              <th class="border-l" style="width: 300px">المتطلبات</th>
             </tr>
             </thead>
             @if($HolyPlace->Requirements->count())
             @foreach($HolyPlace->Requirements as $requirementKey => $Requirement)
-            <tr class="table-body-item @if(!$loop->last) border-bottom @endif">
-              <td class="border-l text-center no"  style="widtd: 30px;padding: 10px 0;">{{ $requirementKey+1 }}</td>
-              <td class="border-l" style="widtd: 120px">{{ $Requirement->element }}</td>
-              <td class="border-l" style="widtd: 120px">{{ $Requirement->field }}</td>
-              <td class="border-l" style="widtd: 120px">{{ $Requirement->sub_field }}</td>
-              <td class="border-l" style="widtd: 300px">{{ $Requirement->scope_of_work }}</td>
-              <td style="widtd: 300px">{{ $Requirement->requirements }}</td>
+            <tr class="table-body-item border-bottom">
+              <td class="border-l border-r text-center no"  style="widtd: 30px;padding: 10px 0;">{{ $requirementKey+1 }}</td>
+              <td class="border-l" style="widtd: 120px">{{ ($Requirement->Subject) ? $Requirement->Subject->name : '' }}</td>
+              <td class="border-l" style="widtd: 120px">{{ ($Requirement->SubSubject) ? $Requirement->SubSubject->name : '' }}</td>
+              <td class="border-l" style="widtd: 120px">{{ ($Requirement->Level) ? $Requirement->Level->name : '' }}</td>
+              <td class="border-l" style="widtd: 120px">{{ ($Requirement->GeographicalScope) ? $Requirement->GeographicalScope->name : '' }}</td>
+              <td class="border-l" style="widtd: 300px">{{ $Requirement->business_scope }}</td>
+              <td class="border-l" style="width: 300px">{{ $Requirement->requirements }}</td>
             </tr>
             @endforeach
             @endif

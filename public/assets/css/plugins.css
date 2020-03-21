@@ -5137,7 +5137,8 @@ flash-message .alert {
     color: var(--gray-light);
 }
 
-.selectize-dropdown [data-selectable]:hover {
+.selectize-dropdown [data-selectable]:hover,
+.selectize-dropdown [data-selectable].active {
     background: var(--light-bg);
 }
 
@@ -5148,11 +5149,6 @@ flash-message .alert {
     border-radius: 1px;
 }
 
-.selectize-dropdown [data-selectable].selected .highlight,
-.selectize-dropdown [data-selectable].active .highlight,
-.selectize-dropdown [data-selectable]:hover .highlight {
-    background: #3fbae7;
-}
 
 .selectize-dropdown .option,
 .selectize-dropdown .optgroup-header {

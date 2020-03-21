@@ -42,7 +42,7 @@
 					return $Participants->where('participant_id',$id);
 				});
 			})->get();
-			$Requirements = Requirement::whereHas('Participants',function($Participants) use($id) {
+			$Requirements = Requirement::with('Subject','SubSubject','Level','GeographicalScope')->whereHas('Participants',function($Participants) use($id) {
 				return $Participants->where('participant_id',$id);
 			})->get();
 			return response()->json([
@@ -136,10 +136,11 @@
 			}
 
 			$Requirement->holy_place_id = $q->holy_place_id;
-			$Requirement->element = $q->element;
-			$Requirement->field = $q->field;
-			$Requirement->sub_field = $q->sub_field;
-			$Requirement->scope_of_work = $q->scope_of_work;
+			$Requirement->subject_id = $q->subject_id;
+			$Requirement->sub_subject_id = $q->sub_subject_id;
+			$Requirement->level_id = $q->level_id;
+			$Requirement->geographical_scope_id = $q->geographical_scope_id;
+			$Requirement->business_scope = $q->business_scope;
 			$Requirement->requirements = $q->requirements;
 			$Requirement->save();
 
@@ -189,12 +190,16 @@
 					return $Participants->where('participant_id',$id);
 				});
 			})->with(['Requirements' => function($Requirements) use($id){
-				return $Requirements->whereHas('Participants',function($Participants) use($id){
+				return $Requirements->with('Subject','SubSubject','Level','GeographicalScope')->whereHas('Participants',function($Participants) use($id){
 					return $Participants->where('participant_id',$id);
 				});
 			}])->get();
 	
-			return \PDF::loadView('app.pdf.participant-requirements',['Participant' => $Participant,'HolyPlaces' => $HolyPlaces])->stream();
+			return \PDF::loadView('app.pdf.participant-requirements',['Participant' => $Participant,'HolyPlaces' => $HolyPlaces],[],[ 
+          'title' => 'قائمة متطلبات '.$Participant->name, 
+          'format' => 'A4-L',
+          'orientation' => 'L'
+        ])->stream();
 		}
 		
 

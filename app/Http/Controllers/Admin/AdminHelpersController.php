@@ -16,7 +16,11 @@ class AdminHelpersController extends Controller
 	**/
 	public function getMainLists(Request $q){
 		return response()->json([
-			'users_roles' => \App\UserRole::select('id','name')->get()
+			'holy_places' => \App\ListOfHolyPlace::select('id','name')->get(),
+			'subjects' => \App\ListOfSubject::select('id','name')->get(),
+			'sub_subjects' => \App\ListOfSubSubject::select('id','name')->get(),
+			'levels' => \App\ListOfLevel::select('id','name')->get(),
+			'geographical_scopes' => \App\ListOfGeographicalScope::select('id','name')->get()
 		]);
 	}
 
@@ -26,37 +30,13 @@ class AdminHelpersController extends Controller
 	* @return string
 	**/
 	public function getList($type,Request $q){
-		if (in_array($type,['requirement-lists','surveys','users'])) {
+		if (in_array($type,['requirement-lists'])) {
 			$List = [];
 			switch ($type) {
 				case 'requirement-lists':
 					$List = [
-						'participants' => \App\Participant::get(),
-						'holy_places' => \App\ListOfHolyPlace::get()
+						'participants' => \App\Participant::get()
 					];
-				break;
-				case 'users':
-					if($q->q){
-						$List = \App\User::select('id','name','username');
-							$List = $List->where('name','LIKE','%'.$q->q.'%')->orWhere('username','LIKE','%'.$q->q.'%');
-							$List = $List->take(5)->orderBy('created_at','DESC')->get();
-					}else {
-						$List = [];
-					}
-				break;
-				case 'surveys':
-					$q->validate([
-						'user_role_id' => 'integer'
-					]);
-					
-					$List = \App\Survey::select('id',\DB::raw('title_ar as title'));
-					if($q->q){
-						$List = $List->where('title_ar','LIKE','%'.$q->q.'%');
-					}
-					if($q->user_role_id){
-						$List = $List->where('user_role_id',$q->user_role_id);
-					}
-					$List = $List->take(5)->orderBy('created_at','DESC')->get();
 				break;
 			}
 			return response()->json($List);

@@ -1,5 +1,4 @@
 /*
-all.js requires all angularjs controllers
 DatatableCtrl
 */
 App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, $rootScope, $compile, DTDefaultOptions, DTOptionsBuilder, DTColumnBuilder, $scope, $location, Flash, $uibModal, $routeParams, API, Helpers, $filter, $timeout, $route, surveyFactory, userFactory, participantFactory) {
@@ -67,64 +66,7 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
 
     };
 
-    /* 2-2: Import data modal */
-    $scope.Import = function (type, id) {
-        var import_title = 'استيراد بيانات',
-            sample_link = '';
-        switch (type) {
-            case 'catering':
-                import_title += ' ملف الإعاشة الخاص بالموظفين';
-                import_sample_link = 'catering.xlsx';
-                break;
-        }
-
-        $uibModal.open({
-            backdrop: 'static',
-            templateUrl: Helpers.getTemp('modals/import-modal'),
-            scope: $scope,
-            controller: function ($uibModalInstance, $location, $scope, $http, Flash, $route, $window) {
-                $scope.import_modal = {
-                    type: type,
-                    title: import_title,
-                    sample_link: import_sample_link,
-                    cancel: function () {
-                        $uibModalInstance.close();
-                    },
-                    file: {
-                        name: ''
-                    },
-                    importing: false,
-                    startImport: function () {
-                        var sendJson = {
-                            type: type,
-                            file: $scope.import_modal.file.name
-                        };
-                        if (id) {
-                            sendJson.id = id;
-                        }
-                        // $scope.import_modal.importing = true;
-                        API.POST('flow-uploader/start-import', sendJson).then(function (d) {
-                            if (d.data.is_file) {
-                                $scope.import_modal.cancel();
-                                $window.open(baseUrl + '/' + d.data.file, '_blank');
-                            } else {
-                                $scope.import_modal.importing = false;
-                                Flash.create('success', 'تمت العملية بنجاح');
-                                $scope.import_modal.cancel();
-                                $route.reload();
-                            }
-                        });
-                    }
-                };
-
-            }
-
-        });
-
-
-    };
-
-    /* 2-3: Ready Dropzone Options */
+    /* 2-2: Ready Dropzone Options */
     $scope.prepareDzOptions = function (no_img, path) {
         var r = {
             url: baseUrl + '/api/upload',
@@ -180,402 +122,101 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
 
     /* 3: Prepare datatable columns */
     switch ($scope.parent_path) {
-        case 'surveys':
-            $scope.survey = {
-                add: function () {
-                    return surveyFactory.modalInfo('add', null, {
-                        view: 'datatable',
-                        dtInstance: $scope.dtInstance
-                    });
-                },
-                delete: function (id) {
-                    return surveyFactory.delete(id, {
-                        view: 'datatable',
-                        dtInstance: $scope.dtInstance
-                    });
-                },
-                activation: function (id) {
-                    var surveyActivationStatus = ($scope.surveys[id].is_active == '1') ? 0 : 1;
-                    $scope.surveys[id].is_active = surveyActivationStatus + '';
-                    return surveyFactory.activation(id, surveyActivationStatus);
-                },
-                /**
-                 * Here there are two ways to export, first one when click export all answers related with current filter conditions
-                 * the second one from the answer it self
-                 * @param row_id
-                 * @param survey_id if exist we use it directly rather than we can use the filter survey_id
-                 * @param user_id
-                 * @param is_export_all if we choosed the first way for export from page header
-                */
-                exportAnswers: function (row_id, survey_id, user_id,is_export_all) {
-                    survey_id = (!survey_id) ? $scope.filter_data.survey_id : survey_id;
-
-                    if (is_export_all) {
-                        var is_export_all_options = {};
-                        if ($scope.filter_data.survey_answers_status) {
-                            is_export_all_options.survey_answers_status = $scope.filter_data.survey_answers_status;
-                        }
-                        $scope.survey.isExportAllLoading = true;
-                    } else {
-                        $scope.surveys[row_id].isExportAnswersLoading = true;
-                    }
-                    return surveyFactory.exportAnswers(survey_id, function () {
-                        if (is_export_all) {
-                            $scope.survey.isExportAllLoading = false;
-                        } else {
-                            $scope.surveys[row_id].isExportAnswersLoading = false;
-                        }
-                    }, user_id, is_export_all_options);
-                },
-                editInfo: function (id) {
-                    return surveyFactory.modalInfo('edit', {
-                                id: id
-                            }, {
-                        view: 'datatable',
-                        dtInstance: $scope.dtInstance
-                    });
-                },
-                edit: function (id) {
-                    return surveyFactory.editModal(id, {
-                        view: 'datatable',
-                        dtInstance: $scope.dtInstance
-                    });
-                },
-                clone: function (id) {
-                    return surveyFactory.modalInfo('clone',{id: id}, {
-                        view: 'datatable',
-                        dtInstance: $scope.dtInstance
-                    });
+        case 'requirements':
+        // Add (All) option to filter lists
+        $scope.filter_lists = {};
+        $rootScope.$watch('main_lists', function (n) {
+            angular.forEach($rootScope.main_lists, function (main_list_item, main_list_key) {
+                if (['holy_places', 'subjects', 'sub_subjects','levels','geographical_scopes'].indexOf(main_list_key) > -1) {
+                    $scope.filter_lists[main_list_key] = angular.copy(main_list_item);
+                    $scope.filter_lists[main_list_key].unshift({id: 'all',name: 'الكل'});
                 }
+            });
+        },true);
+
+
+        $scope.participant = {
+            details: {},
+            addRequirement: function () {
+                return participantFactory.saveRequirementModal('add', null, {
+                    view: 'datatable',
+                    dtInstance: $scope.dtInstance
+                });
+            },
+            editRequirement: function (id) {
+                return participantFactory.saveRequirementModal('edit', id, {
+                    view: 'datatable',
+                    dtInstance: $scope.dtInstance
+                });
+            },
+            deleteRequirement: function (id) {
+                return participantFactory.deleteRequirement(id, {
+                    view: 'datatable',
+                    dtInstance: $scope.dtInstance
+                });
+            }
+        };
+            $scope.rowClickHandler = function (f) {
+                return $scope.participant.editRequirement(f.id);
             };
-            $scope.page.subPagesList = [{
-                    list_order: 1,
-                    key: '',
-                    name: 'ادارة الأستبانات',
-                    special_name: 'الأستبانات'
-                },
-                {
-                    list_order: 0,
-                    key: 'answers',
-                    name: 'الأجابات',
-                    special_name: 'الأجابات'
-                }
+            ordering_column = 1;
+
+            var columns_list = [
+                DTColumnBuilder.newColumn('holy_place_name').withTitle('المرحلة').renderWith(function (d, t, f) {
+                    return d;
+                }),
+                DTColumnBuilder.newColumn('subject_name').withTitle('الموضوع').renderWith(function (d, t, f) {
+                    return d;
+                }),
+                DTColumnBuilder.newColumn('sub_subject_name').withTitle('الموضوع الفرعي').renderWith(function (d, t, f) {
+                    return d;
+                }),
+                DTColumnBuilder.newColumn('level_name').withTitle('المستوى').renderWith(function (d, t, f) {
+                    return '<div>' + ((d && d != 'null') ? d : '') + '</div>';
+                }),
+                DTColumnBuilder.newColumn('geographical_scope_name').withTitle('النطاق الجغرافي').renderWith(function (d, t, f) {
+                    return '<div>' + ((d && d != 'null') ? d : '') + '</div>';
+                }),
+                DTColumnBuilder.newColumn('participants_count').withTitle('الجهات المشاركة').renderWith(function (d, t, f) {
+                    return d;
+                }).withOption('searchable', false),
+                DTColumnBuilder.newColumn('actions').withClass('text-left').renderWith(function (d, t, f) {
+                    var editBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="participant.editRequirement(' + f.id + ')"><i class="ic-edit"></i></a>',
+                        deleteBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="participant.deleteRequirement(' + f.id + ')"><i class="ic-delete"></i></a>';
+                    return editBtn + deleteBtn;
+                }).withOption('searchable', false).notSortable()
             ];
-            /* Users Roles List */
-            if ($scope.sub_path && $scope.sub_path == 'answers') {
-                ordering_column = 3;
-
-                $scope.surveys = {};
-
-                var columns_list = [
-                    DTColumnBuilder.newColumn('name').withTitle('المستخدم').renderWith(function (d, t, f) {
-                        return '<div class="widget-table-item-title" ng-click="survey.exportAnswers(' + f.id + ',' + f.survey_id + ',' + f.user_id + ')">' + d + '</div>';
-                    }),
-                    DTColumnBuilder.newColumn('user_role_name').withTitle('نوع المستخدمين').renderWith(function (d, t, f) {
-                        return d;
-                    }),
-                    DTColumnBuilder.newColumn('survey_title').withTitle('الأستبانة').renderWith(function (d, t, f) {
-                        return '<div class="text-truncate">' + d + '</div>';
-                    }).withOption('searchable', false),
-                    DTColumnBuilder.newColumn('completion_rate').withTitle('نسبة الإكمال').renderWith(function (d, t, f) {
-                        return '<div class="progress" uib-tooltip="معدل الإكمال: ' + d + '%"><div class="progress-bar" style="width: ' + d + '%"></div></div>';
-                    }).withOption('searchable', false),
-                    DTColumnBuilder.newColumn('last_answer_at').withTitle('آخر إجابة').renderWith(function (d, t, f) {
-                        return $filter('dateF')(d, 'yyyy/MM/dd HH:mm');
-                    }).withOption('searchable', false),
-                    DTColumnBuilder.newColumn('actions').withClass('text-left').renderWith(function (d, t, f) {
-                        $scope.surveys[f.id] = {};
-                        var exportBtn = '<a class="btn mr-1 btn-icon btn-sm" ng-class="(surveys[' + f.id + '].isExportAnswersLoading) ? \'btn-light\' : \'btn-primary\'" ng-click="survey.exportAnswers(' + f.id + ',' + f.survey_id + ',' + f.user_id + ')" ng-loading="surveys[' + f.id + '].isExportAnswersLoading" tooltip-popup-delay="300" uib-tooltip="تصدير الأجابة"><i class="ic-download"></i></a>';
-                        return exportBtn;
-                    }).withOption('searchable', false).notSortable()
-                ];
-                $scope.Columns = columns_list;
-            } else {
-
-                $scope.rowClickHandler = function (f) {
-                    $scope.survey.edit(f.id);
-                };
-
-                ordering_column = 2;
-
-                $scope.surveys = {};
-
-                var columns_list = [
-                    DTColumnBuilder.newColumn('title').withTitle('العنوان').renderWith(function (d, t, f) {
-                        return '<div class="widget-table-item-title">' + d + '</div>';
-                    }),
-                    DTColumnBuilder.newColumn('user_role_name').withTitle('نوع المستخدمين').renderWith(function (d, t, f) {
-                        return d;
-                    }),
-                    DTColumnBuilder.newColumn('created_at').withTitle('تاريخ الإضافة').renderWith(function (d, t, f) {
-                        return $filter('dateF')(d, 'yyyy/MM/dd HH:mm');
-                    }).withOption('searchable', false),
-                    DTColumnBuilder.newColumn('actions').withClass('text-left').renderWith(function (d, t, f) {
-                        $scope.surveys[f.id] = {
-                            is_active: f.is_active
-                        };
-                        var exportBtn = '<a class="btn mr-1 btn-icon btn-sm" ng-class="(surveys[' + f.id + '].isExportAnswersLoading) ? \'btn-light\' : \'btn-primary\'" ng-click="survey.exportAnswers(' + f.id + ',' + f.id + ')" ng-loading="surveys[' + f.id + '].isExportAnswersLoading" tooltip-popup-delay="300" uib-tooltip="تصدير الأجوبة"><i class="ic-download"></i></a>',
-                            activationBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" tooltip-popup-delay="300" uib-tooltip="{{ (surveys[' + f.id + '].is_active == \'0\') ? \'تفعيل الأستبانة للإجابة عليها\' : \'إلغاء تفعيل الأستبانة\' }}" ng-click="survey.activation(' + f.id + ')"><i ng-class="(surveys[' + f.id + '].is_active == \'0\') ? \'ic-eye-hide\' : \'ic-eye\'"></i></a>',
-                            cloneBtn = '<a class="dropdown-item iconed" ng-click="survey.clone(' + f.id + ')"><i class="ic-copy ml-2"></i>استنساخ الأستبانة</a>',
-                            editBtn = '<a class="dropdown-item iconed" ng-click="survey.editInfo(' + f.id + ')"><i class="ic-edit ml-2"></i>تعديل الأستبانة</a>',
-                            deleteBtn = '<a class="dropdown-item iconed" ng-click="survey.delete(' + f.id + ')"><i class="ic-delete ml-2"></i>حذف الأستبانة</a>',
-                            dropdownMenu = '<div uib-dropdown dropdown-append-to-body="true"><a class="btn btn-light mr-1 btn-icon btn-sm no-caret" ng-class="{\'active\': surveys[' + f.id + '].isDropdownOpen}" uib-dropdown-toggle><i class="ic-dots"></i></a><div class="dropdown-menu" uib-dropdown-menu>' + cloneBtn + editBtn + deleteBtn + '</div></div>';
-                        return '<div class="d-flex justify-content-end">'+exportBtn + activationBtn + dropdownMenu+'</div>';
-                    }).withOption('searchable', false).notSortable()
-                ];
-                $scope.Columns = columns_list;
-            }
+            $scope.Columns = columns_list;
 
 
-            break;
-        case 'users':
-            $scope.page.subPagesList = [{
-                    key: '',
-                    name: 'المستخدمين',
-                    special_name: 'المستخدمين'
-                },
-                {
-                    key: 'roles',
-                    name: 'أنواع المستخدمين',
-                    special_name: 'أنواع المستخدمين'
-                },
-                {
-                    key: 'registrations',
-                    name: 'استعراض طلبات التسجيل',
-                    special_name: 'طلبات التسجيل'
-                },
-            ];
-            /* Users Roles List */
-            if ($scope.sub_path && $scope.sub_path == 'roles') {
-                ordering_column = 4;
-                $scope.userRole = {
-                    add: function () {
-                        return userFactory.roleModal('add', null, {
-                            view: 'datatable',
-                            dtInstance: $scope.dtInstance
-                        });
-                    },
-                    delete: function (id) {
-                        return userFactory.deleteRole(id, {
-                            view: 'datatable',
-                            dtInstance: $scope.dtInstance
-                        });
-                    },
-                    edit: function (id) {
-                        return userFactory.roleModal('edit', id, {
-                            view: 'datatable',
-                            dtInstance: $scope.dtInstance
-                        });
-                    }
-                };
-
-                $scope.rowClickHandler = function (f) {
-                    $scope.userRole.edit(f.id);
-                };
-
-                ordering_column = 2;
-
-                var columns_list = [
-                    DTColumnBuilder.newColumn('name').withTitle('النوع').renderWith(function (d, t, f) {
-                        return '<div class="widget-table-item-title">' + d + '</div>';
-                    }),
-                    DTColumnBuilder.newColumn('users_count').withTitle('عدد المستخدمين').renderWith(function (d, t, f) {
-                        return d;
-                    }).withOption('searchable', false),
-                    DTColumnBuilder.newColumn('created_at').withTitle('تاريخ الإضافة').renderWith(function (d, t, f) {
-                        return $filter('dateF')(d, 'yyyy/MM/dd HH:mm');
-                    }).withOption('searchable', false),
-                    DTColumnBuilder.newColumn('actions').withClass('text-left').renderWith(function (d, t, f) {
-                        var editBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="userRole.edit(' + f.id + ')"><i class="ic-edit"></i></a>',
-                            deleteBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="userRole.delete(' + f.id + ')"><i class="ic-delete"></i></a>';
-                        return editBtn + deleteBtn;
-                    }).withOption('searchable', false).notSortable()
-                ];
-                $scope.Columns = columns_list;
-
-            } else if ($scope.sub_path && $scope.sub_path == 'registrations') {
-
-                $scope.rowClickHandler = function (f) {
-
-                };
-
-                $scope.userRegistration = {
-                    delete: function (id) {
-                        return userFactory.deleteRegistration(id, {
-                            view: 'datatable',
-                            dtInstance: $scope.dtInstance
-                        });
-                    }
-                };
-
-                ordering_column = 2;
-
-                var columns_list = [
-                    DTColumnBuilder.newColumn('delegation_name').withTitle('اسم المفوج').renderWith(function (d, t, f) {
-                        return '<div class="widget-table-item-title">' + d + '</div>';
-                    }),
-                    DTColumnBuilder.newColumn('email').withTitle('البريد الألكتروني').renderWith(function (d, t, f) {
-                        return d;
-                    }),
-                    DTColumnBuilder.newColumn('phone').withClass('ltr').withTitle('رقم الجوال').renderWith(function (d, t, f) {
-                        return d;
-                    }),
-                    DTColumnBuilder.newColumn('country_name').withTitle('الدولة').renderWith(function (d, t, f) {
-                        return d;
-                    }),
-                    DTColumnBuilder.newColumn('created_at').withTitle('تاريخ الطلب').renderWith(function (d, t, f) {
-                        return $filter('dateF')(d, 'yyyy/MM/dd HH:mm');
-                    }).withOption('searchable', false),
-                    DTColumnBuilder.newColumn('actions').withClass('text-left').renderWith(function (d, t, f) {
-                        var deleteBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="userRegistration.delete(' + f.id + ')"><i class="ic-delete"></i></a>';
-                        return deleteBtn;
-                    }).withOption('searchable', false).notSortable()
-                ];
-                $scope.Columns = columns_list;
-
-            } else {
-                /* Users List */
-                ordering_column = 4;
-                $scope.user = {
-                    add: function () {
-                        return userFactory.modal('add', null, {
-                            view: 'datatable',
-                            dtInstance: $scope.dtInstance
-                        });
-                    },
-                    delete: function (id) {
-                        return userFactory.delete(id, {
-                            view: 'datatable',
-                            dtInstance: $scope.dtInstance
-                        });
-                    },
-                    edit: function (id) {
-                        return userFactory.modal('edit', id, {
-                            view: 'datatable',
-                            dtInstance: $scope.dtInstance
-                        });
-                    }
-                };
-
-                $scope.rowClickHandler = function (f) {
-                    $scope.user.edit(f.id);
-                };
-
-                ordering_column = 2;
-
-                var columns_list = [
-                    DTColumnBuilder.newColumn('username').withTitle('اسم المستخدم').renderWith(function (d, t, f) {
-                        return '<div class="widget-table-item-title">' + d + '</div>';
-                    }),
-                    DTColumnBuilder.newColumn('email').withTitle('البريد الألكتروني').renderWith(function (d, t, f) {
-                        return d;
-                    }),
-                    DTColumnBuilder.newColumn('user_role_name').withTitle('نوع المستخدم').renderWith(function (d, t, f) {
-                        return d;
-                    }),
-                    DTColumnBuilder.newColumn('created_at').withTitle('تاريخ الإضافة').renderWith(function (d, t, f) {
-                        return $filter('dateF')(d, 'yyyy/MM/dd HH:mm');
-                    }).withOption('searchable', false),
-                    DTColumnBuilder.newColumn('actions').withClass('text-left').renderWith(function (d, t, f) {
-                        var editBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="user.edit(' + f.id + ')"><i class="ic-edit"></i></a>',
-                            deleteBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="user.delete(' + f.id + ')"><i class="ic-delete"></i></a>';
-                        return editBtn + deleteBtn;
-                    }).withOption('searchable', false).notSortable()
-                ];
-                $scope.Columns = columns_list;
-
-            }
 
 
-            break;
+        break;
         case 'participants':
-            $scope.page.subPagesList = [{
-                    key: '',
-                    name: 'الجهات المشاركة',
-                    special_name: 'الجهات المشاركة'
-                },
-                {
-                    key: 'requirements',
-                    name: 'ادارة المتطلبات',
-                    special_name: 'المتطلبات'
-                }
-            ];
-            $scope.participant = {
-                details: {},
-                show: function (id) {
-                    return participantFactory.showModal(id);
-                },
-                add: function () {
-                    return participantFactory.saveModal('add', null, {
-                        view: 'datatable',
-                        dtInstance: $scope.dtInstance
-                    });
-                },
-                delete: function (id) {
-                    return participantFactory.delete(id, {
-                        view: 'datatable',
-                        dtInstance: $scope.dtInstance
-                    });
-                },
-                edit: function (id) {
-                    return participantFactory.saveModal('edit', id, {
-                        view: 'datatable',
-                        dtInstance: $scope.dtInstance
-                    });
-                },
-                addRequirement: function () {
-                    return participantFactory.saveRequirementModal('add', null, {
-                        view: 'datatable',
-                        dtInstance: $scope.dtInstance
-                    });
-                },
-                editRequirement: function (id) {
-                    return participantFactory.saveRequirementModal('edit', id, {
-                        view: 'datatable',
-                        dtInstance: $scope.dtInstance
-                    });
-                },
-                deleteRequirement: function (id) {
-                    return participantFactory.deleteRequirement(id, {
-                        view: 'datatable',
-                        dtInstance: $scope.dtInstance
-                    });
-                }
-            };
-            /* Requirements */
-            if ($scope.sub_path && $scope.sub_path == 'requirements') {
-                $scope.rowClickHandler = function (f) {
-                    return $scope.participant.editRequirement(f.id);
-                };
-                ordering_column = 1;
-
-                var columns_list = [
-                    DTColumnBuilder.newColumn('holy_place_name').withTitle('المرحلة').renderWith(function (d, t, f) {
-                        return d;
-                    }),
-                    DTColumnBuilder.newColumn('element').withTitle('العنصر').renderWith(function (d, t, f) {
-                        return d;
-                    }),
-                    DTColumnBuilder.newColumn('field').withTitle('المجال').renderWith(function (d, t, f) {
-                        return d;
-                    }),
-                    DTColumnBuilder.newColumn('scope_of_work').withTitle('نطاق الأعمال').renderWith(function (d, t, f) {
-                        return '<div>' + ((d && d != 'null') ? d : '') + '</div>';
-                    }),
-                    DTColumnBuilder.newColumn('requirements').withTitle('المتطلبات').renderWith(function (d, t, f) {
-                        return '<div>' + ((d && d != 'null') ? d : '') + '</div>';
-                    }),
-                    DTColumnBuilder.newColumn('participants_count').withTitle('الجهات المشاركة').renderWith(function (d, t, f) {
-                        return d;
-                    }).withOption('searchable', false),
-                    DTColumnBuilder.newColumn('actions').withClass('text-left').renderWith(function (d, t, f) {
-                        var editBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="participant.editRequirement(' + f.id + ')"><i class="ic-edit"></i></a>',
-                            deleteBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="participant.deleteRequirement(' + f.id + ')"><i class="ic-delete"></i></a>';
-                        return editBtn + deleteBtn;
-                    }).withOption('searchable', false).notSortable()
-                ];
-                $scope.Columns = columns_list;
-            } else {
+        $scope.participant = {
+            details: {},
+            show: function (id) {
+                return participantFactory.showModal(id);
+            },
+            add: function () {
+                return participantFactory.saveModal('add', null, {
+                    view: 'datatable',
+                    dtInstance: $scope.dtInstance
+                });
+            },
+            delete: function (id) {
+                return participantFactory.delete(id, {
+                    view: 'datatable',
+                    dtInstance: $scope.dtInstance
+                });
+            },
+            edit: function (id) {
+                return participantFactory.saveModal('edit', id, {
+                    view: 'datatable',
+                    dtInstance: $scope.dtInstance
+                });
+            }
+        };
                 /* Participants */
                 $scope.rowClickHandler = function (f) {
                     return $scope.participant.show(f.id);
@@ -586,6 +227,9 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
                     DTColumnBuilder.newColumn('name').withTitle('الجهة المشاركة').renderWith(function (d, t, f) {
                         return '<div class="widget-table-item-title">' + d + '</div>';
                     }),
+                    DTColumnBuilder.newColumn('requirements_count').withTitle('عدد المتطلبات').renderWith(function (d, t, f) {
+                        return d;
+                    }).withOption('searchable', false),
                     DTColumnBuilder.newColumn('actions').withClass('text-left').renderWith(function (d, t, f) {
                         var printBtn = '<a class="btn btn-light-dark btn-icon btn-sm" target="_blank" uib-tooltip="طباعة المتطلبات" href="' + $rootScope.baseUrl + '/print/participant/' + f.id + '"><i class="ic-print-f"></i></a>',
                             editBtn = '<a class="btn btn-light mr-1 btn-icon btn-sm" ng-click="participant.edit(' + f.id + ')"><i class="ic-edit"></i></a>',
@@ -594,15 +238,8 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
                     }).withOption('searchable', false).notSortable()
                 ];
                 $scope.Columns = columns_list;
-            }
 
-
-
-
-
-            break;
-
-
+        break;
 
     }
 
@@ -689,9 +326,13 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
         };
 
         switch ($scope.parent_path) {
-            case 'surveys':
-                $scope.filter_data.status = 'all';
-                break;
+            case 'requirements':
+                $scope.filter_data.holy_place_id = 'all';
+                $scope.filter_data.subject_id = 'all';
+                $scope.filter_data.sub_subject_id = 'all';
+                $scope.filter_data.level_id = 'all';
+                $scope.filter_data.geographical_scope_id = 'all';
+            break;
 
         }
 
@@ -711,17 +352,24 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
         if ($routeParams.id) {
             $scope.filter_data['id'] = $routeParams.id;
         }
-        if ($routeParams.user_role_id) {
-            $scope.filter_data['user_role_id'] = $routeParams.user_role_id;
+        if ($routeParams.holy_place_id) {
+            $scope.filter_data['holy_place_id'] = parseInt($routeParams.holy_place_id);
         }
+        if ($routeParams.subject_id) {
+            $scope.filter_data['subject_id'] = parseInt($routeParams.subject_id);
+        }
+        if ($routeParams.sub_subject_id) {
+            $scope.filter_data['sub_subject_id'] = parseInt($routeParams.sub_subject_id);
+        }
+        if ($routeParams.level_id) {
+            $scope.filter_data['level_id'] = parseInt($routeParams.level_id);
+        }
+        if ($routeParams.geographical_scope_id) {
+            $scope.filter_data['geographical_scope_id'] = parseInt($routeParams.geographical_scope_id);
+        }
+
         if ($routeParams.is_active) {
             $scope.filter_data['is_active'] = $routeParams.is_active;
-        }
-        if ($routeParams.survey_id) {
-            $scope.filter_data['survey_id'] = $routeParams.survey_id;
-        }
-        if ($routeParams.survey_answers_status) {
-            $scope.filter_data['survey_answers_status'] = $routeParams.survey_answers_status;
         }
         if ($routeParams.search) {
             $scope.datatable_search = $routeParams.search;
@@ -774,25 +422,25 @@ App.controller('DatatableCtrl', function ($http, $httpParamSerializer, $filter, 
                 $scope.filter_data['is_active'] = val;
                 $location.search('is_active', val);
                 break;
-            case 'survey_id':
-                $scope.filter_data['survey_id'] = val;
-                $location.search('survey_id', val);
+            case 'holy_place_id':
+                $scope.filter_data['holy_place_id'] = val;
+                $location.search('holy_place_id', val);
                 break;
-            case 'survey_answers_status':
-                $scope.filter_data['survey_answers_status'] = val;
-                $location.search('survey_answers_status', val);
+            case 'level_id':
+                $scope.filter_data['level_id'] = val;
+                $location.search('level_id', val);
                 break;
-            case 'user_role_id':
-                $scope.filter_data['user_role_id'] = val;
-                $location.search('user_role_id', val);
+            case 'subject_id':
+                $scope.filter_data['subject_id'] = val;
+                $location.search('subject_id', val);
                 break;
-            case 'cancel_survey_filter':
-                $scope.filter_data['survey_answers_status'] = null;
-                $location.search('survey_answers_status', null);
-                $scope.filter_data['user_role_id'] = null;
-                $location.search('user_role_id', null);
-                $scope.filter_data['survey_id'] = null;
-                $location.search('survey_id', null);
+            case 'sub_subject_id':
+                $scope.filter_data['sub_subject_id'] = val;
+                $location.search('sub_subject_id', val);
+                break;
+            case 'geographical_scope_id':
+                $scope.filter_data['geographical_scope_id'] = val;
+                $location.search('geographical_scope_id', val);
                 break;
             case 'date':
 

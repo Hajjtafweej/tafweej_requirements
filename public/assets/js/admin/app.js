@@ -202,11 +202,14 @@ App.factory('Helpers', function($cacheFactory,$timeout,$http, Flash, $location,$
     * @return Flash
     **/
     initMainLists: function() {
-      $rootScope.main_lists = {};
+      if (!$rootScope.main_lists) {
+          $rootScope.main_lists = {};
+      }
+      
       API.GET('helpers/main-lists',{},true).then(function(d){
         $timeout(function(){
 
-          $rootScope.main_lists = d.data;
+          $rootScope.main_lists = angular.extend($rootScope.main_lists,d.data);
         },2000);
       });
     }
@@ -229,47 +232,20 @@ App.config(['$sceDelegateProvider','$routeProvider', '$locationProvider', '$inte
   var templates_path = baseUrl+'/assets/templates/admin/';
 
   $routeProvider
-  .when('/admin/dashboard', {
-    templateUrl: templates_path+'pages/dashboard.html?v='+assets_ver,
-    controller: 'DashboardCtrl'
-  })
-  .when('/admin/surveys', {
-    templateUrl: templates_path+'pages/surveys.html?v='+assets_ver,
-    controller: 'DatatableCtrl'
-  })
-  .when('/admin/surveys/answers', {
-    templateUrl: templates_path+'pages/surveys.html?v='+assets_ver,
-    controller: 'DatatableCtrl'
-  })
-  .when('/admin/users', {
-    templateUrl: templates_path+'pages/users.html?v='+assets_ver,
-    controller: 'DatatableCtrl'
-  })
-  .when('/admin/users/roles', {
-    templateUrl: templates_path+'pages/users.html?v='+assets_ver,
-    controller: 'DatatableCtrl'
-  })
-  .when('/admin/users/registrations', {
-    templateUrl: templates_path+'pages/users.html?v='+assets_ver,
-    controller: 'DatatableCtrl'
-  })
-  .when('/admin/presentations', {
-    templateUrl: templates_path+'pages/presentations.html?v='+assets_ver,
-    controller: 'DatatableCtrl'
-  })
-  .when('/admin/gallery', {
-    templateUrl: templates_path+'pages/gallery.html?v='+assets_ver,
-    controller: 'DatatableCtrl'
-  })
+  // .when('/admin/dashboard', {
+  //   templateUrl: templates_path+'pages/dashboard.html?v='+assets_ver,
+  //   controller: 'DashboardCtrl'
+  // })
   .when('/admin/participants', {
     templateUrl: templates_path + 'pages/participants.html?v=' + assets_ver,
     controller: 'DatatableCtrl'
   })
-  .when('/admin/participants/requirements', {
-      templateUrl: templates_path + 'pages/participants.html?v=' + assets_ver,
+  .when('/admin/requirements', {
+      templateUrl: templates_path + 'pages/requirements.html?v=' + assets_ver,
       controller: 'DatatableCtrl'
   })
-  $routeProvider.otherwise('/admin/dashboard');
+  // $routeProvider.otherwise('/admin/dashboard');
+  $routeProvider.otherwise('/admin/requirements');
 
 }]);
 

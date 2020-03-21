@@ -68,12 +68,8 @@
             <div class="row justify-content-center">
               <div class="col-xl-9">
                 <ul findactivetab="2">
-                  <li><a href="#/admin/dashboard"><i class="ic-bar-chart"></i>الأحصائيات</a></li>
-                  <!-- <li><a href="#/admin/presentations"><i class="ic-presentation"></i>العروض المرئية</a></li>
-                  <li><a href="#/admin/gallery"><i class="ic-photo-gallery"></i>الصور والفيديو</a></li> -->
-                  <li><a href="#/admin/surveys/answers"><i class="ic-checklist"></i>الأستبانات</a></li>
-                  <li><a href="#/admin/participants"><i class="ic-file"></i>الجهات المشاركة</a></li>
-                  <li><a href="#/admin/users"><i class="ic-user-2"></i>المستخدمين</a></li>
+                  <li><a href="#/admin/requirements"><i class="ic-file"></i>المتطلبات</a></li>
+                  <li><a href="#/admin/participants"><i class="ic-briefcase"></i>الجهات المشاركة</a></li>
                 </ul>
               </div>
             </div>
